@@ -10,6 +10,7 @@ A static, RTL experience that turns the first 50 assets in Bit24's public market
 - A coin can belong to multiple constellations.
 - Logarithmic market-cap scaling controls each planet's visual radius.
 - Search, category navigation, coin inspection, and a link to the Bit24 asset page.
+- Free canvas navigation: drag to orbit around the current view, mouse wheel to zoom, and pinch on touch devices.
 - Snapshot data only; no live prices, accounts, trading, or API keys in the browser.
 - Responsive layout with a reduced-motion preference.
 

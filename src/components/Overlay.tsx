@@ -77,7 +77,7 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, onSelectGalaxy, onS
         </div>
       </aside>
 
-      <div className="scroll-hint"><span className="scroll-line" /><span>DRAG TO EXPLORE</span></div>
+      <div className="scroll-hint"><span className="scroll-line" /><span>DRAG TO ROTATE&nbsp; · &nbsp;SCROLL TO ZOOM</span></div>
       <div className="coordinates">35° 43' 45" N<br />51° 23' 20" E</div>
       <div className="footer-note">BIT24 DIGITAL ASSET ATLAS <span>—</span> DATA SNAPSHOT</div>
 

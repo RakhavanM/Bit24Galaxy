@@ -6,6 +6,7 @@ import { GalaxyCore, GalaxyNodes } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
+import { clampOrbitDistance, focusPoseFor, orbitPosition, zoomDistance } from '../camera'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -31,6 +32,9 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
       camera={{ position: [0, 0.4, 16], fov: 47, near: 0.1, far: 80 }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       onPointerMissed={onClearSelection}
+      onCreated={({ gl }) => {
+        gl.domElement.style.touchAction = 'none'
+      }}
     >
       <color attach="background" args={['#070b18']} />
       <SceneFog />
@@ -59,32 +63,113 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
   )
 }
 
-function CameraFlight({ activeGalaxy, activeSymbol, positioned }: { activeGalaxy: GalaxyDefinition | null; activeSymbol: string | null; positioned: Map<string, PositionedCoin[]> }) {
-  const { camera } = useThree()
-  const destination = useRef(new THREE.Vector3(0, 0.4, 16))
-  const lookAt = useRef(new THREE.Vector3(0, 0, 0))
+type CameraFlightProps = {
+  activeGalaxy: GalaxyDefinition | null
+  activeSymbol: string | null
+  positioned: Map<string, PositionedCoin[]>
+}
+
+function CameraFlight({ activeGalaxy, activeSymbol, positioned }: CameraFlightProps) {
+  const { camera, gl } = useThree()
+  const target = useRef(new THREE.Vector3(0, 0, 0))
+  const desiredTarget = useRef(new THREE.Vector3(0, 0, 0))
+  const desiredPosition = useRef(new THREE.Vector3(0, 0.4, 16))
+  const distance = useRef(16)
+  const azimuth = useRef(0)
+  const polar = useRef(0.05)
+  const drag = useRef({ active: false, x: 0, y: 0, moved: false })
+  const pinchDistance = useRef<number | null>(null)
+  const pointerCount = useRef(0)
+  const lastAutoTarget = useRef('overview')
 
   useEffect(() => {
-    if (!activeGalaxy) {
-      destination.current.set(0, 0.4, 16)
-      lookAt.current.set(0, 0, 0)
-      return
+    let nextTarget: [number, number, number] = [0, 0, 0]
+    let nextDistance = activeGalaxy ? 7.6 : 16
+    const targetKey = activeGalaxy ? `${activeGalaxy.id}:${activeSymbol ?? ''}` : 'overview'
+
+    if (activeGalaxy) {
+      nextTarget = activeGalaxy.position
+      if (activeSymbol) {
+        const coin = positioned.get(activeGalaxy.id)?.find((item) => item.symbol === activeSymbol)
+        if (coin) {
+          nextTarget = coin.position
+          nextDistance = 5.4
+        }
+      }
     }
-    let target = new THREE.Vector3(...activeGalaxy.position)
-    if (activeSymbol) {
-      const coin = positioned.get(activeGalaxy.id)?.find((item) => item.symbol === activeSymbol)
-      if (coin) target = new THREE.Vector3(...coin.position)
+
+    if (lastAutoTarget.current !== targetKey) {
+      desiredTarget.current.set(...nextTarget)
+      distance.current = clampOrbitDistance(nextDistance)
+      lastAutoTarget.current = targetKey
     }
-    lookAt.current.copy(target)
-    destination.current.copy(target).add(new THREE.Vector3(0, 0.8, 7.6))
   }, [activeGalaxy, activeSymbol, positioned])
+
+  useEffect(() => {
+    const element = gl.domElement
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault()
+      distance.current = zoomDistance(distance.current, event.deltaY)
+    }
+    const onPointerDown = (event: PointerEvent) => {
+      pointerCount.current += 1
+      if (pointerCount.current === 1) {
+        drag.current = { active: true, x: event.clientX, y: event.clientY, moved: false }
+      }
+      element.setPointerCapture?.(event.pointerId)
+    }
+    const onPointerMove = (event: PointerEvent) => {
+      if (pointerCount.current === 2) return
+      if (!drag.current.active) return
+      const dx = event.clientX - drag.current.x
+      const dy = event.clientY - drag.current.y
+      if (Math.abs(dx) + Math.abs(dy) > 2) drag.current.moved = true
+      azimuth.current -= dx * 0.006
+      polar.current = Math.max(-1.1, Math.min(1.1, polar.current + dy * 0.004))
+      drag.current.x = event.clientX
+      drag.current.y = event.clientY
+    }
+    const onPointerUp = (event: PointerEvent) => {
+      pointerCount.current = Math.max(0, pointerCount.current - 1)
+      if (pointerCount.current === 0) drag.current.active = false
+      element.releasePointerCapture?.(event.pointerId)
+    }
+    const onTouchMove = (event: TouchEvent) => {
+      if (event.touches.length !== 2) return
+      event.preventDefault()
+      const [first, second] = Array.from(event.touches)
+      const current = Math.hypot(first.clientX - second.clientX, first.clientY - second.clientY)
+      if (pinchDistance.current !== null) {
+        distance.current = zoomDistance(distance.current, pinchDistance.current - current)
+      }
+      pinchDistance.current = current
+    }
+    const onTouchEnd = () => { pinchDistance.current = null }
+    element.addEventListener('wheel', onWheel, { passive: false })
+    element.addEventListener('pointerdown', onPointerDown)
+    element.addEventListener('pointermove', onPointerMove)
+    element.addEventListener('pointerup', onPointerUp)
+    element.addEventListener('pointercancel', onPointerUp)
+    element.addEventListener('touchmove', onTouchMove, { passive: false })
+    element.addEventListener('touchend', onTouchEnd)
+    return () => {
+      element.removeEventListener('wheel', onWheel)
+      element.removeEventListener('pointerdown', onPointerDown)
+      element.removeEventListener('pointermove', onPointerMove)
+      element.removeEventListener('pointerup', onPointerUp)
+      element.removeEventListener('pointercancel', onPointerUp)
+      element.removeEventListener('touchmove', onTouchMove)
+      element.removeEventListener('touchend', onTouchEnd)
+    }
+  }, [gl])
 
   useFrame((_, delta) => {
     const ease = 1 - Math.pow(0.001, delta)
-    camera.position.lerp(destination.current, ease)
-    const currentLook = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).add(camera.position)
-    currentLook.lerp(lookAt.current, ease)
-    camera.lookAt(currentLook)
+    target.current.lerp(desiredTarget.current, ease)
+    const [x, y, z] = orbitPosition([target.current.x, target.current.y, target.current.z], distance.current, azimuth.current, polar.current)
+    desiredPosition.current.set(x, y + 0.8, z)
+    camera.position.lerp(desiredPosition.current, ease)
+    camera.lookAt(target.current)
   })
 
   return null
