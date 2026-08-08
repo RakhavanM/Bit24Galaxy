@@ -11,6 +11,7 @@ A static, RTL experience that turns the first 50 assets in Bit24's public market
 - Logarithmic market-cap scaling controls each planet's visual radius.
 - Search, category navigation, coin inspection, and a link to the Bit24 asset page.
 - Free canvas navigation: drag to orbit around the current view, mouse wheel to zoom, and pinch on touch devices.
+- Procedural planet rendering: logo-anchored colors, distinct surface families, atmosphere rims, rings, axial tilt, and deterministic rotation.
 - Snapshot data only; no live prices, accounts, trading, or API keys in the browser.
 - Responsive layout with a reduced-motion preference.
 
@@ -57,6 +58,7 @@ Internal Bit24 prototype. Add the organization's preferred license before public
 ## Implementation notes
 
 - The WebGL scene uses React Three Fiber and Drei.
+- Planet surfaces use a custom shader with seeded noise families (ocean, marble, gas, lava, ice, desert, storm, crystal, shadow, and neon), so the asset logo remains the color anchor without requiring 50 separate PNG textures.
 - The background star field is a lightweight point cloud; coin nodes are ordinary meshes for the Phase 1 dataset size.
 - UI is an HTML overlay above the canvas, keeping search, accessibility, RTL text, and links usable.
 - Production hardening should add a source data review step, image caching policy, analytics consent, and mobile/device performance profiling.

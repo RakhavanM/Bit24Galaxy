@@ -1,9 +1,12 @@
-import { Html, Line, Sphere } from '@react-three/drei'
+import { Html, Line, Sphere, Torus } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import type { CSSProperties } from 'react'
 import type { GalaxyDefinition, PositionedCoin } from '../types'
 import { categoryColor, formatCompactMarketCap } from '../types'
 import { coinIconUrl } from '../data'
+import { planetProfile } from '../planets'
+import { PlanetMaterial } from './PlanetMaterial'
 import * as THREE from 'three'
 
 type GalaxyNodesProps = {
@@ -50,7 +53,7 @@ export function GalaxyNodes({
         </Html>
       </group>
       {coins.map((coin) => (
-        <CoinNode key={`${galaxy.id}-${coin.symbol}`} coin={coin} color={color} active={coin.symbol === activeSymbol} onSelect={onSelectCoin} />
+        <CoinNode key={`${galaxy.id}-${coin.symbol}`} coin={coin} active={coin.symbol === activeSymbol} onSelect={onSelectCoin} />
       ))}
     </group>
   )
@@ -58,14 +61,20 @@ export function GalaxyNodes({
 
 type CoinNodeProps = {
   coin: PositionedCoin
-  color: string
   active: boolean
   onSelect: (coin: PositionedCoin) => void
 }
 
-function CoinNode({ coin, color, active, onSelect }: CoinNodeProps) {
+function CoinNode({ coin, active, onSelect }: CoinNodeProps) {
   const group = useRef<THREE.Group>(null)
-  const [x, y, z] = coin.position
+  const profile = useMemo(() => planetProfile(coin), [coin.symbol, coin.categories])
+
+  useFrame((_, delta) => {
+    if (!group.current) return
+    group.current.rotation.y += delta * profile.rotationSpeed
+    group.current.rotation.x = profile.tilt
+  })
+
   return (
     <group
       ref={group}
@@ -75,9 +84,15 @@ function CoinNode({ coin, color, active, onSelect }: CoinNodeProps) {
       onPointerOut={() => { document.body.style.cursor = 'default' }}
       scale={active ? 1.22 : 1}
     >
-      <Sphere args={[coin.radius, 20, 20]}>
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={active ? 1.5 : 0.58} roughness={0.28} metalness={0.2} />
+      <Sphere args={[coin.radius, 48, 32]}>
+        <PlanetMaterial profile={profile} active={active} />
       </Sphere>
+      {profile.ring && (
+        <Torus args={[coin.radius * 1.36, Math.max(0.018, coin.radius * 0.045), 48, 8]} rotation={[profile.tilt + 0.65, 0.15, 0]}>
+          <meshBasicMaterial color={profile.accent} transparent opacity={active ? 0.9 : 0.54} blending={THREE.AdditiveBlending} />
+        </Torus>
+      )}
+      <Atmosphere radius={coin.radius} color={profile.accent} intensity={profile.atmosphere * (active ? 1.4 : 1)} />
       <Html center distanceFactor={9} style={{ pointerEvents: 'none' }}>
         <div className={`coin-label ${active ? 'coin-label--active' : ''}`}>
           <img src={coinIconUrl(coin)} alt="" />
@@ -93,6 +108,14 @@ function CoinNode({ coin, color, active, onSelect }: CoinNodeProps) {
         </Html>
       )}
     </group>
+  )
+}
+
+function Atmosphere({ radius, color, intensity }: { radius: number; color: string; intensity: number }) {
+  return (
+    <Sphere args={[radius * 1.055, 32, 24]}>
+      <meshBasicMaterial color={color} transparent opacity={Math.min(0.28, intensity * 0.2)} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+    </Sphere>
   )
 }
 
