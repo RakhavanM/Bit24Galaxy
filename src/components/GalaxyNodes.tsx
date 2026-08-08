@@ -84,12 +84,12 @@ function CoinNode({ coin, active, onSelect }: CoinNodeProps) {
       onPointerOut={() => { document.body.style.cursor = 'default' }}
       scale={active ? 1.22 : 1}
     >
-      <Sphere args={[coin.radius, 48, 32]}>
+      <Sphere args={[coin.radius, 64, 48]}>
         <PlanetMaterial profile={profile} active={active} />
       </Sphere>
       {profile.ring && (
-        <Torus args={[coin.radius * 1.36, Math.max(0.018, coin.radius * 0.045), 48, 8]} rotation={[profile.tilt + 0.65, 0.15, 0]}>
-          <meshBasicMaterial color={profile.accent} transparent opacity={active ? 0.9 : 0.54} blending={THREE.AdditiveBlending} />
+        <Torus args={[coin.radius * 1.36, Math.max(0.012, coin.radius * 0.026), 64, 12]} rotation={[profile.tilt + 0.65, 0.15, 0]}>
+          <meshBasicMaterial color={profile.accent} transparent opacity={active ? 0.68 : 0.32} blending={THREE.AdditiveBlending} />
         </Torus>
       )}
       <Atmosphere radius={coin.radius} color={profile.accent} intensity={profile.atmosphere * (active ? 1.4 : 1)} />
@@ -114,7 +114,7 @@ function CoinNode({ coin, active, onSelect }: CoinNodeProps) {
 function Atmosphere({ radius, color, intensity }: { radius: number; color: string; intensity: number }) {
   return (
     <Sphere args={[radius * 1.055, 32, 24]}>
-      <meshBasicMaterial color={color} transparent opacity={Math.min(0.28, intensity * 0.2)} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+      <meshBasicMaterial color={color} transparent opacity={Math.min(0.14, intensity * 0.1)} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
     </Sphere>
   )
 }

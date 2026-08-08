@@ -4,9 +4,9 @@ import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { GalaxyCore, GalaxyNodes } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
-import { positionCoins } from '../layout'
+import { overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
-import { clampOrbitDistance, focusPoseFor, orbitPosition, zoomDistance } from '../camera'
+import { clampOrbitDistance, orbitPosition, zoomDistance } from '../camera'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -21,10 +21,13 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
   const positioned = useMemo(() => {
     const map = new Map<string, PositionedCoin[]>()
     GALAXIES.forEach((galaxy) => {
-      map.set(galaxy.id, positionCoins(coins, galaxy, coins.filter((coin) => coin.categories.includes(galaxy.id))))
+      const categoryCoins = activeGalaxy
+        ? coins.filter((coin) => coin.categories.includes(galaxy.id))
+        : overviewCoinsForGalaxy(coins, galaxy)
+      map.set(galaxy.id, positionCoins(coins, galaxy, categoryCoins))
     })
     return map
-  }, [coins])
+  }, [coins, activeGalaxy])
 
   return (
     <Canvas

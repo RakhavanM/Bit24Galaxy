@@ -1,5 +1,5 @@
-import type { Coin, GalaxyDefinition, GalaxyLayout, PositionedCoin } from './types'
-import { CATEGORY_COLORS } from './types'
+import type { CategoryId, Coin, GalaxyDefinition, GalaxyLayout, PositionedCoin } from './types'
+import { CATEGORY_COLORS, CATEGORY_ORDER } from './types'
 
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
 const MIN_RADIUS = 0.16
@@ -47,6 +47,14 @@ export function positionCoins(coins: Coin[], galaxy: GalaxyDefinition, categoryC
       radius: radiusForMarketCap(coin.marketCap, minMarketCap, maxMarketCap),
     }
   })
+}
+
+export function primaryCategoryForCoin(coin: Coin): CategoryId {
+  return coin.categories.find((category) => CATEGORY_ORDER.includes(category)) ?? 'core'
+}
+
+export function overviewCoinsForGalaxy(coins: Coin[], galaxy: GalaxyDefinition): Coin[] {
+  return coins.filter((coin) => primaryCategoryForCoin(coin) === galaxy.id)
 }
 
 export function galaxyColor(galaxy: GalaxyDefinition): string {

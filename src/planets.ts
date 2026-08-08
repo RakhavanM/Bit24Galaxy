@@ -95,7 +95,9 @@ export function logoColor(symbol: string): string {
 export function planetProfile(coin: Pick<Coin, 'symbol' | 'categories'>): PlanetProfile {
   const hash = hashSymbol(coin.symbol)
   const categoryStyle = coin.categories.map((category) => CATEGORY_STYLE[category]).find(Boolean)
-  const style = categoryStyle ?? STYLE_ORDER[hash % STYLE_ORDER.length]
+  // Category style is a palette bias, not a hard template. This keeps DeFi/AI
+  // assets related while preventing an entire constellation from looking cloned.
+  const style = categoryStyle && hash % 4 === 0 ? categoryStyle : STYLE_ORDER[hash % STYLE_ORDER.length]
   const base = logoColor(coin.symbol)
   const accent = mixColors(base, STYLE_ACCENTS[style], 0.32)
   const deep = mixColors(STYLE_DEEP[style], base, 0.16)
@@ -110,9 +112,9 @@ export function planetProfile(coin: Pick<Coin, 'symbol' | 'categories'>): Planet
     seed: (hash % 10000) / 1000,
     rotationSpeed,
     tilt,
-    ring: ['BTC', 'ETH', 'USDT', 'SOL', 'XAUT', 'PAXG', 'SAT'].includes(coin.symbol) || style === 'crystal',
-    atmosphere: 0.24 + ((hash >>> 16) % 30) / 100,
-    cloudiness: 0.2 + ((hash >>> 24) % 60) / 100,
+    ring: ['BTC', 'ETH', 'SOL', 'XAUT', 'PAXG'].includes(coin.symbol) || hash % 19 === 0,
+    atmosphere: 0.14 + ((hash >>> 16) % 18) / 100,
+    cloudiness: 0.14 + ((hash >>> 24) % 42) / 100,
   }
 }
 

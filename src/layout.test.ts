@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { positionCoins, radiusForMarketCap } from './layout'
+import { positionCoins, radiusForMarketCap, overviewCoinsForGalaxy } from './layout'
 import { GALAXIES, type Coin } from './types'
 
 describe('market-cap galaxy layout', () => {
@@ -35,5 +35,25 @@ describe('market-cap galaxy layout', () => {
     expect(first).toHaveLength(4)
     expect(first.map((coin) => coin.position)).toEqual(second.map((coin) => coin.position))
     expect(first.every((coin) => coin.radius >= 0.16 && coin.radius <= 1.11)).toBe(true)
+  })
+
+  it('assigns a multi-category coin to only one galaxy in the overview', () => {
+    const btc = {
+      rank: 1,
+      symbol: 'BTC',
+      nameFa: 'بیت کوین',
+      nameEn: 'Bitcoin',
+      slug: 'btc',
+      marketCap: 1_000_000,
+      marketCapCurrency: 'USDT',
+      change24h: 0,
+      priceIrt: 1,
+      categories: ['core', 'networks', 'defi'],
+      iconUrl: '',
+      bit24Url: '',
+    } as Coin
+    const overviewEntries = GALAXIES.flatMap((galaxy) => overviewCoinsForGalaxy([btc], galaxy))
+
+    expect(overviewEntries.map((coin) => coin.symbol)).toEqual(['BTC'])
   })
 })

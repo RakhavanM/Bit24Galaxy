@@ -18,26 +18,17 @@ const PlanetShaderMaterial = shaderMaterial(
   },
   /* glsl */`
     varying vec3 vNormal;
-    varying vec3 vWorldPosition;
-    varying vec2 vUv;
-    uniform float uTime;
-    uniform float uSeed;
-    uniform float uStyle;
+    varying vec3 vLocalPosition;
 
     void main() {
-      vUv = uv;
       vNormal = normalize(normalMatrix * normal);
-      vec4 world = modelMatrix * vec4(position, 1.0);
-      vWorldPosition = world.xyz;
-      float drift = sin(uTime * 0.05 + uSeed) * 0.018;
-      vec3 transformed = position + normal * drift;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
+      vLocalPosition = normalize(position);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `,
   /* glsl */`
     varying vec3 vNormal;
-    varying vec3 vWorldPosition;
-    varying vec2 vUv;
+    varying vec3 vLocalPosition;
     uniform float uTime;
     uniform float uSeed;
     uniform vec3 uBase;
@@ -47,89 +38,109 @@ const PlanetShaderMaterial = shaderMaterial(
     uniform float uCloudiness;
     uniform float uAtmosphere;
 
-    float hash21(vec2 p) {
-      p = fract(p * vec2(123.34, 456.21));
-      p += dot(p, p + 45.32);
-      return fract(p.x * p.y);
+    float hash13(vec3 p) {
+      p = fract(p * 0.1031);
+      p += dot(p, p.yzx + 33.33);
+      return fract((p.x + p.y) * p.z);
     }
 
-    float noise(vec2 p) {
-      vec2 i = floor(p);
-      vec2 f = fract(p);
+    float noise3(vec3 p) {
+      vec3 i = floor(p);
+      vec3 f = fract(p);
       f = f * f * (3.0 - 2.0 * f);
-      float a = hash21(i);
-      float b = hash21(i + vec2(1.0, 0.0));
-      float c = hash21(i + vec2(0.0, 1.0));
-      float d = hash21(i + vec2(1.0, 1.0));
-      return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      float n000 = hash13(i + vec3(0.0, 0.0, 0.0));
+      float n100 = hash13(i + vec3(1.0, 0.0, 0.0));
+      float n010 = hash13(i + vec3(0.0, 1.0, 0.0));
+      float n110 = hash13(i + vec3(1.0, 1.0, 0.0));
+      float n001 = hash13(i + vec3(0.0, 0.0, 1.0));
+      float n101 = hash13(i + vec3(1.0, 0.0, 1.0));
+      float n011 = hash13(i + vec3(0.0, 1.0, 1.0));
+      float n111 = hash13(i + vec3(1.0, 1.0, 1.0));
+      float nx00 = mix(n000, n100, f.x);
+      float nx10 = mix(n010, n110, f.x);
+      float nx01 = mix(n001, n101, f.x);
+      float nx11 = mix(n011, n111, f.x);
+      return mix(mix(nx00, nx10, f.y), mix(nx01, nx11, f.y), f.z);
     }
 
-    float fbm(vec2 p) {
+    float fbm3(vec3 p) {
       float value = 0.0;
       float amplitude = 0.5;
       for (int i = 0; i < 5; i++) {
-        value += amplitude * noise(p);
-        p = p * 2.04 + 13.17;
+        value += amplitude * noise3(p);
+        p = p * 2.02 + vec3(17.3, 3.7, 11.1);
         amplitude *= 0.5;
       }
       return value;
     }
 
-    vec3 palette(float value) {
+    vec3 surfacePalette(float macro, float detail) {
       float style = floor(uStyle + 0.5);
-      if (style < 0.5) { // ocean
-        float land = smoothstep(0.47, 0.63, value);
-        return mix(uBase * 0.36, mix(uBase, uAccent, 0.72), land);
+      vec3 baseTone = mix(uDeep, uBase, 0.68);
+      vec3 lightTone = mix(uBase, uAccent, 0.34);
+
+      if (style < 0.5) { // ocean: soft continents, not hard pixels
+        float land = smoothstep(0.53, 0.66, macro);
+        vec3 ocean = mix(uDeep * 0.7, uBase * 0.88, smoothstep(0.18, 0.82, macro));
+        vec3 landTone = mix(uBase * 0.72, lightTone, detail * 0.5 + 0.22);
+        return mix(ocean, landTone, land);
       }
-      if (style < 1.5) { // marble
-        float veins = smoothstep(0.4, 0.7, abs(sin(value * 17.0 + fbm(vUv * 11.0) * 4.0)));
-        return mix(uDeep * 0.85, mix(uBase, uAccent, 0.6), veins);
+      if (style < 1.5) { // marble: quiet flowing veins
+        float vein = 1.0 - smoothstep(0.02, 0.12, abs(macro - 0.51 + (detail - 0.5) * 0.16));
+        return mix(baseTone, mix(lightTone, vec3(0.96, 0.95, 0.9), 0.28), vein * 0.58);
       }
-      if (style < 2.5) { // gas giant
-        float bands = 0.5 + 0.5 * sin(vUv.y * 42.0 + fbm(vUv * 5.0) * 8.0);
-        float storm = smoothstep(0.62, 0.84, fbm(vUv * 8.0 + vec2(uSeed)));
-        return mix(mix(uDeep, uBase, bands), uAccent, storm * 0.62);
+      if (style < 2.5) { // gas giant: broad atmospheric bands
+        float bands = 0.5 + 0.5 * sin(vLocalPosition.y * 17.0 + detail * 3.0 + uSeed);
+        float softBands = smoothstep(0.17, 0.83, bands);
+        float storm = smoothstep(0.61, 0.83, fbm3(vLocalPosition * 4.0 + vec3(uSeed)));
+        return mix(mix(uDeep, uBase, softBands), lightTone, storm * 0.32);
       }
-      if (style < 3.5) { // lava
-        float cracks = smoothstep(0.59, 0.76, fbm(vUv * 12.0 + uSeed));
-        return mix(uDeep * 0.3, mix(uBase, uAccent, 0.8), cracks);
+      if (style < 3.5) { // lava: subdued volcanic fissures
+        float crust = smoothstep(0.22, 0.78, macro);
+        float fissure = smoothstep(0.73, 0.86, detail);
+        vec3 rock = mix(uDeep * 0.5, uBase * 0.68, crust);
+        return mix(rock, mix(uAccent, vec3(1.0, 0.36, 0.1), 0.3), fissure * 0.58);
       }
-      if (style < 4.5) { // ice
-        float frost = smoothstep(0.28, 0.78, fbm(vUv * 7.0));
-        return mix(uDeep, mix(uBase, uAccent, 0.78), frost);
+      if (style < 4.5) { // ice: pale frost fields
+        float frost = smoothstep(0.38, 0.76, macro + detail * 0.16);
+        return mix(uDeep, mix(uBase, uAccent, 0.46), frost);
       }
-      if (style < 5.5) { // desert
-        float dunes = 0.5 + 0.5 * sin(vUv.y * 24.0 + fbm(vUv * 4.0) * 5.0);
-        return mix(uDeep, mix(uBase, uAccent, dunes), 0.78);
+      if (style < 5.5) { // desert: elegant dune gradients
+        float dunes = 0.5 + 0.5 * sin(vLocalPosition.y * 13.0 + macro * 4.0 + uSeed);
+        return mix(uDeep, mix(uBase, uAccent, 0.25), smoothstep(0.16, 0.9, dunes));
       }
-      if (style < 6.5) { // storm
-        float swirls = fbm(vUv * 10.0 + vec2(cos(uTime * 0.04), sin(uTime * 0.04)));
-        return mix(uDeep, mix(uBase, uAccent, swirls), 0.86);
+      if (style < 6.5) { // storm: soft blue-violet turbulence
+        float swirl = fbm3(vLocalPosition * 5.5 + vec3(uSeed, uTime * 0.012, 0.0));
+        return mix(uDeep, mix(uBase, uAccent, swirl * 0.48), smoothstep(0.22, 0.9, swirl));
       }
-      if (style < 7.5) { // crystal / luminous lattice
-        float grid = max(abs(sin(vUv.x * 34.0)), abs(sin(vUv.y * 28.0)));
-        return mix(uDeep, uAccent, smoothstep(0.82, 0.98, grid));
+      if (style < 7.5) { // crystal: facets by tone, no wireframe grid
+        float facet = smoothstep(0.34, 0.72, fbm3(vLocalPosition * 7.5 + vec3(uSeed)));
+        vec3 facetTone = mix(uBase, uAccent, 0.32 + detail * 0.25);
+        return mix(baseTone, facetTone, facet * 0.72);
       }
-      if (style < 8.5) { // shadow / obsidian
-        float glint = smoothstep(0.68, 0.9, fbm(vUv * 18.0));
-        return mix(uDeep * 0.5, mix(uBase, uAccent, 0.8), glint);
+      if (style < 8.5) { // shadow: polished obsidian
+        float glint = smoothstep(0.66, 0.9, fbm3(vLocalPosition * 8.0 + vec3(uSeed)));
+        return mix(uDeep * 0.34, mix(uBase, uAccent, 0.42), glint * 0.74);
       }
-      // neon / AI circuitry
-      float circuit = smoothstep(0.72, 0.92, abs(sin(vUv.x * 62.0) * sin(vUv.y * 38.0)));
-      return mix(uBase * 0.22, uAccent, circuit);
+      // neon: subtle bioluminescent clouds for AI assets
+      float pulse = smoothstep(0.5, 0.84, fbm3(vLocalPosition * 6.0 + vec3(uSeed, uTime * 0.016, 0.0)));
+      return mix(uBase * 0.18, mix(uBase, uAccent, 0.75), pulse);
     }
 
     void main() {
       vec3 normal = normalize(vNormal);
-      vec3 lightDirection = normalize(vec3(-0.55, 0.7, 1.0));
-      float diffuse = max(dot(normal, lightDirection), 0.0);
-      float rim = pow(1.0 - max(dot(normal, vec3(0.0, 0.0, 1.0)), 0.0), 2.8);
-      float texture = fbm(vUv * (5.0 + uStyle * 0.6) + vec2(uSeed, uTime * 0.008));
-      vec3 surface = palette(texture);
-      float cloud = smoothstep(0.58, 0.83, fbm(vUv * 9.0 + vec2(uSeed * 2.0, uTime * 0.012))) * uCloudiness;
-      surface = mix(surface, surface + vec3(0.34), cloud * 0.22);
-      vec3 shaded = surface * (0.22 + diffuse * 0.92);
-      vec3 finalColor = shaded + uAccent * rim * uAtmosphere * 0.7;
+      vec3 viewDirection = normalize(vec3(0.0, 0.0, 1.0));
+      vec3 lightDirection = normalize(vec3(-0.6, 0.72, 1.0));
+      float wrappedLight = clamp((dot(normal, lightDirection) + 0.32) / 1.32, 0.0, 1.0);
+      float specular = pow(max(dot(reflect(-lightDirection, normal), viewDirection), 0.0), 38.0) * 0.22;
+      float rim = pow(1.0 - max(dot(normal, viewDirection), 0.0), 3.2);
+      float macro = fbm3(vLocalPosition * 3.2 + vec3(uSeed));
+      float detail = fbm3(vLocalPosition * 9.0 + vec3(uSeed * 1.7, uTime * 0.008, 0.0));
+      vec3 surface = surfacePalette(macro, detail);
+      float cloud = smoothstep(0.6, 0.82, fbm3(vLocalPosition * 5.0 + vec3(uSeed * 2.0, uTime * 0.01, 0.0))) * uCloudiness;
+      surface = mix(surface, mix(surface, vec3(0.96, 0.98, 1.0), 0.25), cloud * 0.14);
+      vec3 shaded = surface * (0.2 + wrappedLight * 0.92);
+      vec3 finalColor = shaded + vec3(1.0) * specular + uAccent * rim * uAtmosphere * 0.52;
       gl_FragColor = vec4(finalColor, 1.0);
     }
   `,
@@ -167,14 +178,8 @@ export function PlanetMaterial({ profile, active }: PlanetMaterialProps) {
   useFrame((_, delta) => {
     material.uTime += delta
     material.uCloudiness = profile.cloudiness
-    material.uAtmosphere = profile.atmosphere * (active ? 1.25 : 1)
+    material.uAtmosphere = profile.atmosphere * (active ? 1.18 : 1)
   })
 
-  return (
-    <primitive
-      object={material}
-      attach="material"
-    />
-  )
+  return <primitive object={material} attach="material" />
 }
-
