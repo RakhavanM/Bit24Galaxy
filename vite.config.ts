@@ -4,4 +4,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/Bit24Galaxy/',
   plugins: [react()],
+  server: {
+    host: '127.0.0.1',
+    allowedHosts: ['.lhr.life'],
+  },
 })
