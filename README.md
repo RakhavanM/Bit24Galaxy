@@ -1,13 +1,13 @@
 # Bit24Galaxy
 
-Interactive Bit24 crypto galaxy explorer — Phase 1.
+Interactive Bit24 crypto galaxy explorer — v0.2.
 
-## Phase 1 scope
+## v0.2 scope
 
-A static, RTL experience that turns the first 50 assets in Bit24's public market-cap table into a navigable star atlas:
+A static, RTL experience that turns an exact editorial list of 50 Bit24-listed assets into a navigable star atlas:
 
-- Topic-based constellations: core assets, networks, AI, DeFi, memes, stablecoins, RWA / Stocks, exchange tokens, and privacy.
-- A coin can belong to multiple constellations.
+- Eight editorial constellations: Core / Layer 1, Stablecoins, DeFi, Layer 2, AI / DePIN, GameFi / Metaverse, Exchange Tokens, and Meme Coins.
+- The v0.2 taxonomy contains 50 unique assets; each asset belongs to the requested constellation.
 - Logarithmic market-cap scaling controls each planet's visual radius.
 - Search, category navigation, coin inspection, and a link to the Bit24 asset page.
 - Free canvas navigation: drag to orbit around the current view, mouse wheel to zoom, and pinch on touch devices.
@@ -35,13 +35,13 @@ npm run build
 
 ## Refresh the snapshot
 
-The snapshot script reads Bit24's public market table, stores 50 rows in `public/data/coins.json`, and downloads the corresponding icons into `public/coin-icons/`:
+The snapshot script reads the requested assets from Bit24 public coin pages, with the public OTC endpoint as a fallback, stores the exact 50 assets in `public/data/coins.json`, and downloads the corresponding icons into `public/coin-icons/`:
 
 ```bash
 python3 scripts/snapshot_bit24.py
 ```
 
-The generated file records its UTC timestamp and source URL. Category assignments are intentionally maintained in the script so the editorial classification remains reviewable.
+The generated file records its UTC timestamp, source endpoints, requested categories, and the `RNDR` → `RENDER` Bit24 alias. Category assignments are intentionally maintained in the script so the editorial classification remains reviewable.
 
 ## Deploy
 
@@ -49,7 +49,7 @@ The Vite base path is `/Bit24Galaxy/`, ready for GitHub Pages. A GitHub Actions 
 
 ## Data provenance
 
-Source: [Bit24 public coin table](https://bit24.cash/coins/). The snapshot is contextual and not a live market feed. Verify current values on Bit24 before making financial decisions.
+Source: [Bit24 public coin pages](https://bit24.cash/coins/) and its public OTC market endpoint. The snapshot is contextual and not a live market feed. Verify current values on Bit24 before making financial decisions.
 
 ## License
 

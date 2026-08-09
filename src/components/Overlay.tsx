@@ -41,7 +41,7 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgres
           <span className="brand-spark">✦</span>
           <span><b>BIT24</b><em>GALAXY</em></span>
         </button>
-        <div className="topbar-status"><span className="status-dot" /> STATIC MARKET-CAP ATLAS <span>·</span> PHASE 01</div>
+        <div className="topbar-status"><span className="status-dot" /> STATIC MARKET-CAP ATLAS <span>·</span> PHASE 02</div>
         <button className="menu-trigger" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen}>
           <span /> <span />
         </button>

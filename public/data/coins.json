@@ -1,839 +1,1033 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-08-08T19:36:56Z",
-  "source": "https://bit24.cash/coins/",
-  "selection": "First 50 rows of Bit24's public market-cap table",
-  "note": "Static Phase 1 snapshot. Prices are contextual only and are not live data.",
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-09T07:13:23Z",
+  "source": [
+    "https://bit24.cash/coins/",
+    "https://otc-api.bit24.cash/api/v1/coins/price"
+  ],
+  "selection": "The exact 50-symbol v0.2 editorial taxonomy supplied by Bit24",
+  "note": "Static snapshot. Values are contextual and not a live market feed.",
+  "aliases": {
+    "RNDR": "RENDER"
+  },
+  "categories": {
+    "core": [
+      "BTC",
+      "ETH",
+      "SOL",
+      "ADA",
+      "TON",
+      "AVAX",
+      "DOT"
+    ],
+    "stablecoins": [
+      "USDT",
+      "USDC",
+      "DAI",
+      "FDUSD",
+      "USDE",
+      "TUSD"
+    ],
+    "defi": [
+      "UNI",
+      "AAVE",
+      "MKR",
+      "CRV",
+      "LDO",
+      "SNX"
+    ],
+    "layer2": [
+      "ARB",
+      "OP",
+      "STRK",
+      "MNT",
+      "ZK",
+      "MANTA"
+    ],
+    "ai": [
+      "TAO",
+      "RNDR",
+      "FET",
+      "AKT",
+      "IO",
+      "GRT"
+    ],
+    "gamefi": [
+      "AXS",
+      "SAND",
+      "MANA",
+      "GALA",
+      "BEAM",
+      "ENJ"
+    ],
+    "exchange": [
+      "BNB",
+      "OKB",
+      "KCS",
+      "BGB",
+      "CRO",
+      "LEO"
+    ],
+    "memes": [
+      "DOGE",
+      "SHIB",
+      "PEPE",
+      "WIF",
+      "FLOKI",
+      "BONK",
+      "BRETT"
+    ]
+  },
   "coins": [
     {
       "rank": 1,
+      "selectionRank": 1,
       "symbol": "BTC",
+      "sourceSymbol": "BTC",
       "nameFa": "بیت کوین",
-      "nameEn": "BTC",
+      "nameEn": "Bitcoin",
       "slug": "btc",
-      "marketCap": 1303854280497.0,
+      "marketCap": 1000000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": -0.12,
-      "priceIrt": 12118547263.0,
+      "change24h": -0.23,
+      "priceIrt": 12084066600.0,
       "categories": [
-        "core",
-        "networks",
-        "defi"
+        "core"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Bitcoin%20-%20BTC.png",
-      "bit24Url": "https://bit24.cash/coins/btc/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/0137011f-2a4a-44bd-8e2f-b36f7722feec.png",
+      "bit24Url": "https://bit24.cash/coins/btc/",
+      "sourceType": "public-coin-page"
     },
     {
       "rank": 2,
+      "selectionRank": 2,
       "symbol": "ETH",
+      "sourceSymbol": "ETH",
       "nameFa": "اتریوم",
-      "nameEn": "ETH",
+      "nameEn": "Ethereum",
       "slug": "eth",
-      "marketCap": 231660612395.0,
+      "marketCap": 231000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": -0.06,
-      "priceIrt": 357792564.0,
+      "change24h": 0.16,
+      "priceIrt": 357577330.6,
       "categories": [
-        "core",
-        "networks",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Ethereum%20-%20ETH.png",
-      "bit24Url": "https://bit24.cash/coins/eth/"
-    },
-    {
-      "rank": 3,
-      "symbol": "USDT",
-      "nameFa": "تتر",
-      "nameEn": "USDT",
-      "slug": "usdt",
-      "marketCap": 183114368489.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.15,
-      "priceIrt": 186360.0,
-      "categories": [
-        "stablecoins",
         "core"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Tether%20-%20USDT.png",
-      "bit24Url": "https://bit24.cash/coins/usdt/"
-    },
-    {
-      "rank": 4,
-      "symbol": "BNB",
-      "nameFa": "بایننس کوین",
-      "nameEn": "BNB",
-      "slug": "bnb",
-      "marketCap": 80290462473.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.6,
-      "priceIrt": 112442781.0,
-      "categories": [
-        "core",
-        "networks",
-        "exchange",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Binance%20-%20BNB.png",
-      "bit24Url": "https://bit24.cash/coins/bnb/"
-    },
-    {
-      "rank": 5,
-      "symbol": "USDC",
-      "nameFa": "یو اس دی سی",
-      "nameEn": "USDC",
-      "slug": "usdc",
-      "marketCap": 72165097132.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.15,
-      "priceIrt": 186453.0,
-      "categories": [
-        "stablecoins",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/USDC.png",
-      "bit24Url": "https://bit24.cash/coins/usdc/"
-    },
-    {
-      "rank": 6,
-      "symbol": "XRP",
-      "nameFa": "ریپل",
-      "nameEn": "XRP",
-      "slug": "xrp",
-      "marketCap": 65084783420.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.53,
-      "priceIrt": 194056.0,
-      "categories": [
-        "core",
-        "networks"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Ripple%20-%20XRP.png",
-      "bit24Url": "https://bit24.cash/coins/xrp/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/675b4eab-2946-42dc-8c78-1240255c646b.png",
+      "bit24Url": "https://bit24.cash/coins/eth/",
+      "sourceType": "public-coin-page"
     },
     {
       "rank": 7,
+      "selectionRank": 3,
       "symbol": "SOL",
+      "sourceSymbol": "SOL",
       "nameFa": "سولانا",
-      "nameEn": "SOL",
+      "nameEn": "Solana",
       "slug": "sol",
-      "marketCap": 44242671432.0,
+      "marketCap": 44000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": 2.81,
-      "priceIrt": 14170814.0,
+      "change24h": 2.09,
+      "priceIrt": 14224768.499999998,
       "categories": [
-        "core",
-        "networks",
-        "defi"
+        "core"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Solana%20-%20SOL.png",
-      "bit24Url": "https://bit24.cash/coins/sol/"
-    },
-    {
-      "rank": 8,
-      "symbol": "TRX",
-      "nameFa": "ترون",
-      "nameEn": "TRX",
-      "slug": "trx",
-      "marketCap": 31184180353.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 0.27,
-      "priceIrt": 61252.0,
-      "categories": [
-        "networks"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Tron%20-%20TRX.png",
-      "bit24Url": "https://bit24.cash/coins/trx/"
-    },
-    {
-      "rank": 9,
-      "symbol": "STETH",
-      "nameFa": "لیدو استیک اتریوم",
-      "nameEn": "STETH",
-      "slug": "steth",
-      "marketCap": 18153233596.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 0.23,
-      "priceIrt": 358538004.0,
-      "categories": [
-        "defi",
-        "networks"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/StETH.png",
-      "bit24Url": "https://bit24.cash/coins/steth/"
-    },
-    {
-      "rank": 10,
-      "symbol": "HYPE",
-      "nameFa": "هایپرلیکوئید",
-      "nameEn": "HYPE",
-      "slug": "hype",
-      "marketCap": 13855193445.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 0.43,
-      "priceIrt": 10227436.0,
-      "categories": [
-        "exchange",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Hyperliquid%20-%20HYPE.png",
-      "bit24Url": "https://bit24.cash/coins/hype/"
-    },
-    {
-      "rank": 11,
-      "symbol": "DOGE",
-      "nameFa": "دوج کوین",
-      "nameEn": "DOGE",
-      "slug": "doge",
-      "marketCap": 12132946783.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.38,
-      "priceIrt": 13225.0,
-      "categories": [
-        "memes"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Dogecoin%20-%20DOGE.png",
-      "bit24Url": "https://bit24.cash/coins/doge/"
-    },
-    {
-      "rank": 12,
-      "symbol": "RAIN",
-      "nameFa": "رین",
-      "nameEn": "RAIN",
-      "slug": "rain",
-      "marketCap": 9062956109.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.59,
-      "priceIrt": 2362.0,
-      "categories": [
-        "rwa"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/RAIN.png",
-      "bit24Url": "https://bit24.cash/coins/rain/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/abac10b5-e236-4919-b55b-e6aa784b1796.png",
+      "bit24Url": "https://bit24.cash/coins/sol/",
+      "sourceType": "public-coin-page"
     },
     {
       "rank": 13,
-      "symbol": "LEO",
-      "nameFa": "لئو",
-      "nameEn": "LEO",
-      "slug": "leo",
-      "marketCap": 8926711878.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.29,
-      "priceIrt": 1814587.0,
-      "categories": [
-        "exchange"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/LEO.png",
-      "bit24Url": "https://bit24.cash/coins/leo/"
-    },
-    {
-      "rank": 14,
-      "symbol": "ZEC",
-      "nameFa": "زد کش",
-      "nameEn": "ZEC",
-      "slug": "zec",
-      "marketCap": 8551987811.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -1.11,
-      "priceIrt": 94996722.0,
-      "categories": [
-        "privacy"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Zcash%20-%20ZEC.png",
-      "bit24Url": "https://bit24.cash/coins/zec/"
-    },
-    {
-      "rank": 15,
-      "symbol": "WBTC",
-      "nameFa": "رپد بیت کوین",
-      "nameEn": "WBTC",
-      "slug": "wbtc",
-      "marketCap": 7574137886.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.18,
-      "priceIrt": 12117339235.0,
-      "categories": [
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/WBTC.png",
-      "bit24Url": "https://bit24.cash/coins/wbtc/"
-    },
-    {
-      "rank": 16,
+      "selectionRank": 4,
       "symbol": "ADA",
+      "sourceSymbol": "ADA",
       "nameFa": "کاردانو",
-      "nameEn": "ADA",
+      "nameEn": "Cardano",
       "slug": "ada",
-      "marketCap": 7316210689.0,
+      "marketCap": 7000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": -0.55,
-      "priceIrt": 37402.0,
+      "change24h": null,
+      "priceIrt": 37082.916,
       "categories": [
-        "networks"
+        "core"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Cardano%20-%20ADA.png",
-      "bit24Url": "https://bit24.cash/coins/ada/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/44c411d0-05c5-40e0-952a-33d5b173e0d3.png",
+      "bit24Url": "https://bit24.cash/coins/ada/",
+      "sourceType": "public-coin-page"
     },
     {
-      "rank": 17,
-      "symbol": "XMR",
-      "nameFa": "مونرو",
-      "nameEn": "XMR",
-      "slug": "xmr",
-      "marketCap": 7220185464.0,
+      "rank": 3584,
+      "selectionRank": 5,
+      "symbol": "TON",
+      "sourceSymbol": "TON",
+      "nameFa": "تون کوین",
+      "nameEn": "Toncoin",
+      "slug": "ton",
+      "marketCap": 15000.0,
       "marketCapCurrency": "USDT",
-      "change24h": 2.58,
-      "priceIrt": 71327426.0,
+      "change24h": null,
+      "priceIrt": 274704.0,
       "categories": [
-        "privacy"
+        "core"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Monero%20-%20XMR.png",
-      "bit24Url": "https://bit24.cash/coins/xmr/"
-    },
-    {
-      "rank": 18,
-      "symbol": "LINK",
-      "nameFa": "چین لینک",
-      "nameEn": "LINK",
-      "slug": "link",
-      "marketCap": 6225441062.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.14,
-      "priceIrt": 1551819.0,
-      "categories": [
-        "defi",
-        "networks",
-        "ai"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Chainlink%20-%20LINK.png",
-      "bit24Url": "https://bit24.cash/coins/link/"
-    },
-    {
-      "rank": 19,
-      "symbol": "XLM",
-      "nameFa": "استلار",
-      "nameEn": "XLM",
-      "slug": "xlm",
-      "marketCap": 5684227120.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.64,
-      "priceIrt": 30730.0,
-      "categories": [
-        "networks"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Stellar%20-%20XLM.png",
-      "bit24Url": "https://bit24.cash/coins/xlm/"
-    },
-    {
-      "rank": 20,
-      "symbol": "BCH",
-      "nameFa": "بیت کوین کش",
-      "nameEn": "BCH",
-      "slug": "bch",
-      "marketCap": 4346717480.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 0.03,
-      "priceIrt": 40367439.0,
-      "categories": [
-        "networks"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Bitcoincash%20-%20BCH.png",
-      "bit24Url": "https://bit24.cash/coins/bch/"
-    },
-    {
-      "rank": 21,
-      "symbol": "USD1",
-      "nameFa": "یو اس دی وان",
-      "nameEn": "USD1",
-      "slug": "usd1",
-      "marketCap": 3990439952.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.17,
-      "priceIrt": 186380.0,
-      "categories": [
-        "stablecoins"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/USD1.png",
-      "bit24Url": "https://bit24.cash/coins/usd1/"
-    },
-    {
-      "rank": 22,
-      "symbol": "USDE",
-      "nameFa": "اتنا یو اس دی ای",
-      "nameEn": "USDE",
-      "slug": "usde",
-      "marketCap": 3913304551.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.19,
-      "priceIrt": 186401.0,
-      "categories": [
-        "stablecoins",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Ethena%20-%20USDE.png",
-      "bit24Url": "https://bit24.cash/coins/usde/"
-    },
-    {
-      "rank": 23,
-      "symbol": "GRAM",
-      "nameFa": "گرام",
-      "nameEn": "GRAM",
-      "slug": "gram",
-      "marketCap": 3750556684.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 0.75,
-      "priceIrt": 254381.0,
-      "categories": [
-        "networks"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/GRAM.png",
-      "bit24Url": "https://bit24.cash/coins/gram/"
-    },
-    {
-      "rank": 24,
-      "symbol": "CC",
-      "nameFa": "کانتون",
-      "nameEn": "CC",
-      "slug": "cc",
-      "marketCap": 3728848484.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 2.22,
-      "priceIrt": 17681.0,
-      "categories": [
-        "networks",
-        "rwa"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Canton%20-%20CC.png",
-      "bit24Url": "https://bit24.cash/coins/cc/"
-    },
-    {
-      "rank": 25,
-      "symbol": "LTC",
-      "nameFa": "لایت کوین",
-      "nameEn": "LTC",
-      "slug": "ltc",
-      "marketCap": 3552762869.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.2,
-      "priceIrt": 8552060.0,
-      "categories": [
-        "networks"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Litecoin%20-%20LTC.png",
-      "bit24Url": "https://bit24.cash/coins/ltc/"
-    },
-    {
-      "rank": 26,
-      "symbol": "USDG",
-      "nameFa": "گلوبال دلار",
-      "nameEn": "USDG",
-      "slug": "usdg",
-      "marketCap": 3481542353.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.18,
-      "priceIrt": 186420.0,
-      "categories": [
-        "stablecoins"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/USDG.png",
-      "bit24Url": "https://bit24.cash/coins/usdg/"
-    },
-    {
-      "rank": 27,
-      "symbol": "HBAR",
-      "nameFa": "هدرا هشگراف",
-      "nameEn": "HBAR",
-      "slug": "hbar",
-      "marketCap": 3026312308.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.99,
-      "priceIrt": 12877.0,
-      "categories": [
-        "networks",
-        "ai"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Hedera%20-%20HBAR.png",
-      "bit24Url": "https://bit24.cash/coins/hbar/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/811521f1-b52e-4960-ae06-3e477e17442d.png",
+      "bit24Url": "https://bit24.cash/coins/ton/",
+      "sourceType": "public-coin-page"
     },
     {
       "rank": 28,
-      "symbol": "SUI",
-      "nameFa": "سویی",
-      "nameEn": "SUI",
-      "slug": "sui",
-      "marketCap": 2828486977.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 2.98,
-      "priceIrt": 129415.0,
-      "categories": [
-        "networks",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/SUI.png",
-      "bit24Url": "https://bit24.cash/coins/sui/"
-    },
-    {
-      "rank": 29,
+      "selectionRank": 6,
       "symbol": "AVAX",
+      "sourceSymbol": "AVAX",
       "nameFa": "آواکس",
-      "nameEn": "AVAX",
+      "nameEn": "Avalanche",
       "slug": "avax",
-      "marketCap": 2814727248.0,
+      "marketCap": 3000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": 1.12,
-      "priceIrt": 1216744.0,
+      "change24h": null,
+      "priceIrt": 1208317.64,
       "categories": [
-        "networks",
-        "defi"
+        "core"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Avalanche%20-%20AVAX.png",
-      "bit24Url": "https://bit24.cash/coins/avax/"
-    },
-    {
-      "rank": 30,
-      "symbol": "PYUSD",
-      "nameFa": "دلار پی پال",
-      "nameEn": "PYUSD",
-      "slug": "pyusd",
-      "marketCap": 2790735032.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.18,
-      "priceIrt": 186252.0,
-      "categories": [
-        "stablecoins"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/PYUSD.png",
-      "bit24Url": "https://bit24.cash/coins/pyusd/"
-    },
-    {
-      "rank": 31,
-      "symbol": "SHIB",
-      "nameFa": "شیبا اینو",
-      "nameEn": "SHIB",
-      "slug": "shib",
-      "marketCap": 2728310337.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 0.07,
-      "priceIrt": 0.8628467999999999,
-      "categories": [
-        "memes"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Shibainu%20-%20SHIB.png",
-      "bit24Url": "https://bit24.cash/coins/shib/"
-    },
-    {
-      "rank": 32,
-      "symbol": "XAUT",
-      "nameFa": "تتر گلد",
-      "nameEn": "XAUT",
-      "slug": "xaut",
-      "marketCap": 2651434101.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.1,
-      "priceIrt": 806771076.0,
-      "categories": [
-        "rwa"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Tethergold%20-%20XAUT.png",
-      "bit24Url": "https://bit24.cash/coins/xaut/"
-    },
-    {
-      "rank": 33,
-      "symbol": "UNI",
-      "nameFa": "یونی سوآپ",
-      "nameEn": "UNI",
-      "slug": "uni",
-      "marketCap": 2500013827.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.82,
-      "priceIrt": 746930.0,
-      "categories": [
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/75f8f05b-b5cb-4573-a997-5292a9fe2b80.png",
-      "bit24Url": "https://bit24.cash/coins/uni/"
-    },
-    {
-      "rank": 34,
-      "symbol": "CRO",
-      "nameFa": "کرونوس",
-      "nameEn": "CRO",
-      "slug": "cro",
-      "marketCap": 2360703674.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -6.81,
-      "priceIrt": 9208.0,
-      "categories": [
-        "exchange",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Cronos%20-%20CRO.png",
-      "bit24Url": "https://bit24.cash/coins/cro/"
-    },
-    {
-      "rank": 35,
-      "symbol": "TAO",
-      "nameFa": "بیتنسور",
-      "nameEn": "TAO",
-      "slug": "tao",
-      "marketCap": 2212347836.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 2.17,
-      "priceIrt": 36901143.0,
-      "categories": [
-        "ai"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Bittensor%20-%20TAO.png",
-      "bit24Url": "https://bit24.cash/coins/tao/"
-    },
-    {
-      "rank": 36,
-      "symbol": "NEAR",
-      "nameFa": "نیر پروتکل",
-      "nameEn": "NEAR",
-      "slug": "near",
-      "marketCap": 2111667030.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.98,
-      "priceIrt": 303021.0,
-      "categories": [
-        "networks",
-        "ai",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/NEAR%20Protocol%20-%20NEAR.png",
-      "bit24Url": "https://bit24.cash/coins/near/"
-    },
-    {
-      "rank": 37,
-      "symbol": "OKB",
-      "nameFa": "او کی بی",
-      "nameEn": "OKB",
-      "slug": "okb",
-      "marketCap": 1967876669.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 3.47,
-      "priceIrt": 17453510.0,
-      "categories": [
-        "exchange"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/OKB.png",
-      "bit24Url": "https://bit24.cash/coins/okb/"
-    },
-    {
-      "rank": 38,
-      "symbol": "PAXG",
-      "nameFa": "پکس گلد",
-      "nameEn": "PAXG",
-      "slug": "paxg",
-      "marketCap": 1894520057.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 0.07,
-      "priceIrt": 809510568.0,
-      "categories": [
-        "rwa"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Paxgold%20-%20PAXG.png",
-      "bit24Url": "https://bit24.cash/coins/paxg/"
-    },
-    {
-      "rank": 39,
-      "symbol": "ONDO",
-      "nameFa": "اوندو",
-      "nameEn": "ONDO",
-      "slug": "ondo",
-      "marketCap": 1724966764.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.47,
-      "priceIrt": 66095.0,
-      "categories": [
-        "rwa",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/ONDO.png",
-      "bit24Url": "https://bit24.cash/coins/ondo/"
-    },
-    {
-      "rank": 40,
-      "symbol": "ASTER",
-      "nameFa": "آستر",
-      "nameEn": "ASTER",
-      "slug": "aster",
-      "marketCap": 1638355475.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 0.97,
-      "priceIrt": 113120.0,
-      "categories": [
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/ASTER.png",
-      "bit24Url": "https://bit24.cash/coins/aster/"
-    },
-    {
-      "rank": 41,
-      "symbol": "WLFI",
-      "nameFa": "ورلد لیبرتی",
-      "nameEn": "WLFI",
-      "slug": "wlfi",
-      "marketCap": 1630988924.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.54,
-      "priceIrt": 9578.0,
-      "categories": [
-        "rwa",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/World%20Liberty%20Financial%20-%20WLFI.png",
-      "bit24Url": "https://bit24.cash/coins/wlfi/"
-    },
-    {
-      "rank": 42,
-      "symbol": "HTX",
-      "nameFa": "اچ تی ایکس",
-      "nameEn": "HTX",
-      "slug": "htx",
-      "marketCap": 1616329181.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.09,
-      "priceIrt": 0.33513571,
-      "categories": [
-        "exchange"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/HTX.png",
-      "bit24Url": "https://bit24.cash/coins/htx/"
-    },
-    {
-      "rank": 43,
-      "symbol": "RLUSD",
-      "nameFa": "ریپل یو اس دی",
-      "nameEn": "RLUSD",
-      "slug": "rlusd",
-      "marketCap": 1584163592.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -0.2,
-      "priceIrt": 186401.0,
-      "categories": [
-        "stablecoins"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/RLUSD.png",
-      "bit24Url": "https://bit24.cash/coins/rlusd/"
-    },
-    {
-      "rank": 44,
-      "symbol": "M",
-      "nameFa": "میم کور",
-      "nameEn": "M",
-      "slug": "m",
-      "marketCap": 1518779897.0,
-      "marketCapCurrency": "USDT",
-      "change24h": -2.31,
-      "priceIrt": 213028.0,
-      "categories": [
-        "memes"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Memecore%20-%20M.png",
-      "bit24Url": "https://bit24.cash/coins/m/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/a0550389-be33-4cd2-9da9-3079905917c6.png",
+      "bit24Url": "https://bit24.cash/coins/avax/",
+      "sourceType": "public-coin-page"
     },
     {
       "rank": 45,
-      "symbol": "MNT",
-      "nameFa": "منتل",
-      "nameEn": "MNT",
-      "slug": "mnt",
-      "marketCap": 1419664737.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 3.12,
-      "priceIrt": 80235.0,
-      "categories": [
-        "networks",
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Mantle%20-%20MNT.png",
-      "bit24Url": "https://bit24.cash/coins/mnt/"
-    },
-    {
-      "rank": 46,
-      "symbol": "AAVE",
-      "nameFa": "آوه",
-      "nameEn": "AAVE",
-      "slug": "aave",
-      "marketCap": 1406225580.0,
-      "marketCapCurrency": "USDT",
-      "change24h": 1.59,
-      "priceIrt": 17030322.0,
-      "categories": [
-        "defi"
-      ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/AAVE.png",
-      "bit24Url": "https://bit24.cash/coins/aave/"
-    },
-    {
-      "rank": 47,
+      "selectionRank": 7,
       "symbol": "DOT",
-      "nameFa": "پولکادات",
-      "nameEn": "DOT",
+      "sourceSymbol": "DOT",
+      "nameFa": "دات",
+      "nameEn": "polkadot",
       "slug": "dot",
-      "marketCap": 1386789932.0,
+      "marketCap": 1000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": 0.43,
-      "priceIrt": 152198.0,
+      "change24h": null,
+      "priceIrt": 151016.40000000002,
       "categories": [
-        "networks"
+        "core"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Polkadot%20-%20DOT.png",
-      "bit24Url": "https://bit24.cash/coins/dot/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/8faa4ae7-ad40-4d63-aa59-d68ff3a21d46.png",
+      "bit24Url": "https://bit24.cash/coins/dot/",
+      "sourceType": "public-coin-page"
     },
     {
-      "rank": 48,
-      "symbol": "SKY",
-      "nameFa": "اسکای",
-      "nameEn": "SKY",
-      "slug": "sky",
-      "marketCap": 1267251337.0,
+      "rank": 3,
+      "selectionRank": 8,
+      "symbol": "USDT",
+      "sourceSymbol": "USDT",
+      "nameFa": "تتر",
+      "nameEn": "Tether",
+      "slug": "usdt",
+      "marketCap": 183000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": -1.1,
-      "priceIrt": 10106.0,
+      "change24h": -0.01,
+      "priceIrt": 186310.0,
       "categories": [
-        "defi",
         "stablecoins"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/SKY.png",
-      "bit24Url": "https://bit24.cash/coins/sky/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/e9c9428a-99c1-4a85-84ac-0c65f30a8e9f.png",
+      "bit24Url": "https://bit24.cash/coins/usdt/",
+      "sourceType": "public-coin-page"
     },
     {
-      "rank": 49,
-      "symbol": "ICP",
-      "nameFa": "اینترنت کامپیوتر",
-      "nameEn": "ICP",
-      "slug": "icp",
-      "marketCap": 1232427904.0,
+      "rank": 5,
+      "selectionRank": 9,
+      "symbol": "USDC",
+      "sourceSymbol": "USDC",
+      "nameFa": "یو اس دی سی",
+      "nameEn": "USDC",
+      "slug": "usdc",
+      "marketCap": 72000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": 5.52,
-      "priceIrt": 412414.0,
+      "change24h": null,
+      "priceIrt": 186533.22,
       "categories": [
-        "networks",
+        "stablecoins"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/cbcfab26-236f-48d5-910e-f47916ae1d13.png",
+      "bit24Url": "https://bit24.cash/coins/usdc/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 17,
+      "selectionRank": 10,
+      "symbol": "DAI",
+      "sourceSymbol": "DAI",
+      "nameFa": "دای",
+      "nameEn": "DAI",
+      "slug": "dai",
+      "marketCap": 5000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 157977.84038,
+      "categories": [
+        "stablecoins"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/a3d4dcdb-cf1f-461e-9a36-7a74c91a3658.png",
+      "bit24Url": "https://bit24.cash/coins/dai/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 89,
+      "selectionRank": 11,
+      "symbol": "FDUSD",
+      "sourceSymbol": "FDUSD",
+      "nameFa": "فرست دیجیتال یو اس دی",
+      "nameEn": "First Digital USD",
+      "slug": "fdusd",
+      "marketCap": 351000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 186104.408,
+      "categories": [
+        "stablecoins"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/6836d2f9-3b8a-4734-bab4-1453154a8187.png",
+      "bit24Url": "https://bit24.cash/coins/fdusd/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 20,
+      "selectionRank": 12,
+      "symbol": "USDE",
+      "sourceSymbol": "USDE",
+      "nameFa": "یو اس دی اس",
+      "nameEn": "Ethena USDe",
+      "slug": "usde",
+      "marketCap": 4000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 186533.22,
+      "categories": [
+        "stablecoins"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/a636bb85-5bfe-4755-81be-0b2102cd2700.png",
+      "bit24Url": "https://bit24.cash/coins/usde/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 77,
+      "selectionRank": 13,
+      "symbol": "TUSD",
+      "sourceSymbol": "TUSD",
+      "nameFa": "ترو یو اس دی",
+      "nameEn": "TrueUSD",
+      "slug": "tusd",
+      "marketCap": 492000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 185675.596,
+      "categories": [
+        "stablecoins"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/8212c9b6-7765-4ef4-a3fb-c92b9cf7b50d.png",
+      "bit24Url": "https://bit24.cash/coins/tusd/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 31,
+      "selectionRank": 14,
+      "symbol": "UNI",
+      "sourceSymbol": "UNI",
+      "nameFa": "یونی سوآپ",
+      "nameEn": "Uniswap",
+      "slug": "uni",
+      "marketCap": 2000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 740166.8,
+      "categories": [
+        "defi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/75f8f05b-b5cb-4573-a997-5292a9fe2b80.png",
+      "bit24Url": "https://bit24.cash/coins/uni/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 43,
+      "selectionRank": 15,
+      "symbol": "AAVE",
+      "sourceSymbol": "AAVE",
+      "nameFa": "آوه",
+      "nameEn": "Aave",
+      "slug": "aave",
+      "marketCap": 1000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 17098785.28,
+      "categories": [
+        "defi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/8ef1e747-8fa6-44f4-b30f-3322122a069d.png",
+      "bit24Url": "https://bit24.cash/coins/aave/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 4238,
+      "selectionRank": 16,
+      "symbol": "MKR",
+      "sourceSymbol": "MKR",
+      "nameFa": "میکر",
+      "nameEn": "Maker",
+      "slug": "mkr",
+      "marketCap": 0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 178017535.2,
+      "categories": [
+        "defi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/0b378caf-49be-410b-bbb4-05ec46d296f5.png",
+      "bit24Url": "https://bit24.cash/coins/mkr/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 90,
+      "selectionRank": 17,
+      "symbol": "CRV",
+      "sourceSymbol": "CRV",
+      "nameFa": "کرو فایننس",
+      "nameEn": "Curve",
+      "slug": "crv",
+      "marketCap": 349000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 42265.948000000004,
+      "categories": [
+        "defi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/39d6f267-c645-4a87-a3eb-6b413bc30d8f.png",
+      "bit24Url": "https://bit24.cash/coins/crv/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 106,
+      "selectionRank": 18,
+      "symbol": "LDO",
+      "sourceSymbol": "LDO",
+      "nameFa": "لیدو",
+      "nameEn": "Lido Dao",
+      "slug": "ldo",
+      "marketCap": 242000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 53806.584,
+      "categories": [
+        "defi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/af5ffb34-5ad6-4c04-b21b-cd1e620df6e1.png",
+      "bit24Url": "https://bit24.cash/coins/ldo/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 198,
+      "selectionRank": 19,
+      "symbol": "SNX",
+      "sourceSymbol": "SNX",
+      "nameFa": "سینتتیکس",
+      "nameEn": "Synthetix Network Token",
+      "slug": "snx",
+      "marketCap": 74000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 40513.412,
+      "categories": [
+        "defi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/e9629f8d-5f6e-429c-b0f5-43f9c01cc650.png",
+      "bit24Url": "https://bit24.cash/coins/snx/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 74,
+      "selectionRank": 20,
+      "symbol": "ARB",
+      "sourceSymbol": "ARB",
+      "nameFa": "آربیتروم",
+      "nameEn": "Arbitrum",
+      "slug": "arb",
+      "marketCap": 515000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 14523.676,
+      "categories": [
+        "layer2"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/1321cbb4-fb83-4a17-b043-e366bc24bcde.png",
+      "bit24Url": "https://bit24.cash/coins/arb/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 116,
+      "selectionRank": 21,
+      "symbol": "OP",
+      "sourceSymbol": "OP",
+      "nameFa": "آپتیمیزم",
+      "nameEn": "Optimism",
+      "slug": "op",
+      "marketCap": 203000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 16499.94,
+      "categories": [
+        "layer2"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/d934fac4-ee9f-4801-91b5-7e8f179a8805.png",
+      "bit24Url": "https://bit24.cash/coins/op/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 129,
+      "selectionRank": 22,
+      "symbol": "STRK",
+      "sourceSymbol": "STRK",
+      "nameFa": "استارک نت",
+      "nameEn": "StarkNet",
+      "slug": "strk",
+      "marketCap": 171000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 4640.491599999999,
+      "categories": [
+        "layer2"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/3c809a48-e83c-4ad7-bb30-366e38f9deeb.png",
+      "bit24Url": "https://bit24.cash/coins/strk/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 4063,
+      "selectionRank": 23,
+      "symbol": "MNT",
+      "sourceSymbol": "MNT",
+      "nameFa": "منتل",
+      "nameEn": "mantle",
+      "slug": "mnt",
+      "marketCap": 0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 79386.152,
+      "categories": [
+        "layer2"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/85fe32d2-1a2d-40d4-9cea-7fad418ebc1c.png",
+      "bit24Url": "https://bit24.cash/coins/mnt/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 188,
+      "selectionRank": 24,
+      "symbol": "ZK",
+      "sourceSymbol": "ZK",
+      "nameFa": "زی کی سینک",
+      "nameEn": "zkSync",
+      "slug": "zk",
+      "marketCap": 81000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 1484.0624,
+      "categories": [
+        "layer2"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/33067a8e-4339-4631-893e-220b2eda4570.png",
+      "bit24Url": "https://bit24.cash/coins/zk/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 516,
+      "selectionRank": 25,
+      "symbol": "MANTA",
+      "sourceSymbol": "MANTA",
+      "nameFa": "مانتا نتورک",
+      "nameEn": "Manta Network",
+      "slug": "manta",
+      "marketCap": 28000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 11111.824,
+      "categories": [
+        "layer2"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/fae705e8-4e8f-40fc-8400-d9b46013ff8b.png",
+      "bit24Url": "https://bit24.cash/coins/manta/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 33,
+      "selectionRank": 26,
+      "symbol": "TAO",
+      "sourceSymbol": "TAO",
+      "nameFa": "بیتنسور",
+      "nameEn": "Bittensor",
+      "slug": "tao",
+      "marketCap": 2000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 38304098.0,
+      "categories": [
         "ai"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/Internet%20computer%20-%20ICP.png",
-      "bit24Url": "https://bit24.cash/coins/icp/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/77ddf426-5745-4a5e-ba55-7ba3b212c8ac.png",
+      "bit24Url": "https://bit24.cash/coins/tao/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 67,
+      "selectionRank": 27,
+      "symbol": "RNDR",
+      "sourceSymbol": "RENDER",
+      "nameFa": "رندر",
+      "nameEn": "Render",
+      "slug": "render",
+      "marketCap": 688000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 246287.24,
+      "categories": [
+        "ai"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/6ab5ec0b-cead-4868-b83b-b1ce1ef637b7.png",
+      "bit24Url": "https://bit24.cash/coins/render/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 96,
+      "selectionRank": 28,
+      "symbol": "FET",
+      "sourceSymbol": "FET",
+      "nameFa": "فچ",
+      "nameEn": "Fetch.AI",
+      "slug": "fet",
+      "marketCap": 305000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 25467.704,
+      "categories": [
+        "ai"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/5977eedb-9896-4780-bb35-7adc634d693c.png",
+      "bit24Url": "https://bit24.cash/coins/fet/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 138,
+      "selectionRank": 29,
+      "symbol": "AKT",
+      "sourceSymbol": "AKT",
+      "nameFa": "آکاش نتورک",
+      "nameEn": "Akash Network",
+      "slug": "akt",
+      "marketCap": 154000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 96631.852,
+      "categories": [
+        "ai"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/f8ab2af4-42c9-4f6b-991f-157afab28789.png",
+      "bit24Url": "https://bit24.cash/coins/akt/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 349,
+      "selectionRank": 30,
+      "symbol": "IO",
+      "sourceSymbol": "IO",
+      "nameFa": "آی او",
+      "nameEn": "IO.NET",
+      "slug": "io",
+      "marketCap": 46000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 23416.863999999998,
+      "categories": [
+        "ai"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/38b55a7b-6332-41ab-a18d-720ebddffc4b.png",
+      "bit24Url": "https://bit24.cash/coins/io/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 134,
+      "selectionRank": 31,
+      "symbol": "GRT",
+      "sourceSymbol": "GRT",
+      "nameFa": "گراف",
+      "nameEn": "The Graph",
+      "slug": "grt",
+      "marketCap": 161000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 2761.1764,
+      "categories": [
+        "ai"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/a467377d-7a75-4eed-b0f6-0456f660478c.png",
+      "bit24Url": "https://bit24.cash/coins/grt/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 135,
+      "selectionRank": 32,
+      "symbol": "AXS",
+      "sourceSymbol": "AXS",
+      "nameFa": "اکسی اینفینیتی",
+      "nameEn": "Axie Infinity",
+      "slug": "axs",
+      "marketCap": 160000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 170033.28,
+      "categories": [
+        "gamefi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/db215a12-b832-46f7-b86b-87a015f49b80.png",
+      "bit24Url": "https://bit24.cash/coins/axs/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 156,
+      "selectionRank": 33,
+      "symbol": "SAND",
+      "sourceSymbol": "SAND",
+      "nameFa": "سند باکس",
+      "nameEn": "The Sandbox",
+      "slug": "sand",
+      "marketCap": 123000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 7817.4292000000005,
+      "categories": [
+        "gamefi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/6db320e8-98fe-4a39-8b9b-27b47d4a663c.png",
+      "bit24Url": "https://bit24.cash/coins/sand/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 153,
+      "selectionRank": 34,
+      "symbol": "MANA",
+      "sourceSymbol": "MANA",
+      "nameFa": "دیسنترالند",
+      "nameEn": "Decentraland",
+      "slug": "mana",
+      "marketCap": 132000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 12428.0904,
+      "categories": [
+        "gamefi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/0b3beade-8ec3-4cce-83b4-9c56d6b62cd0.png",
+      "bit24Url": "https://bit24.cash/coins/mana/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 35,
+      "selectionRank": 35,
+      "symbol": "GALA",
+      "sourceSymbol": "GALA",
+      "nameFa": "گالا",
+      "nameEn": "GALA",
+      "slug": "gala",
+      "marketCap": 88794847.0,
+      "marketCapCurrency": "USDT",
+      "change24h": 1.68,
+      "priceIrt": 336.0,
+      "categories": [
+        "gamefi"
+      ],
+      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/GALA.png",
+      "bit24Url": "https://bit24.cash/coins/gala/",
+      "sourceType": "public-otc-api"
+    },
+    {
+      "rank": 263,
+      "selectionRank": 36,
+      "symbol": "BEAM",
+      "sourceSymbol": "BEAM",
+      "nameFa": "بیم",
+      "nameEn": "Beam",
+      "slug": "beam",
+      "marketCap": 72000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 1638.99404,
+      "categories": [
+        "gamefi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/5ac091f2-6362-4d43-857b-b989c188c772.png",
+      "bit24Url": "https://bit24.cash/coins/beam/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 333,
+      "selectionRank": 37,
+      "symbol": "ENJ",
+      "sourceSymbol": "ENJ",
+      "nameFa": "انجین",
+      "nameEn": "Enjin Coin",
+      "slug": "enj",
+      "marketCap": 51000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 4800.83,
+      "categories": [
+        "gamefi"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/e9dc1871-e39d-4fec-a44e-e0af3f836c6e.png",
+      "bit24Url": "https://bit24.cash/coins/enj/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 4,
+      "selectionRank": 38,
+      "symbol": "BNB",
+      "sourceSymbol": "BNB",
+      "nameFa": "بایننس کوین",
+      "nameEn": "Binance Coin",
+      "slug": "bnb",
+      "marketCap": 80000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": 1.48,
+      "priceIrt": 112384055.10000001,
+      "categories": [
+        "exchange"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/44e1b8ac-c251-4060-9bde-d1c0c7eaf904.png",
+      "bit24Url": "https://bit24.cash/coins/bnb/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 35,
+      "selectionRank": 39,
+      "symbol": "OKB",
+      "sourceSymbol": "OKB",
+      "nameFa": "او کی بی",
+      "nameEn": "OKB",
+      "slug": "okb",
+      "marketCap": 2000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 17519766.8,
+      "categories": [
+        "exchange"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/a07aba83-93d3-4454-9aa7-6acb907e8ad1.png",
+      "bit24Url": "https://bit24.cash/coins/okb/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 57,
+      "selectionRank": 40,
+      "symbol": "KCS",
+      "sourceSymbol": "KCS",
+      "nameFa": "کوکوین توکن",
+      "nameEn": "KuCoin Token",
+      "slug": "kcs",
+      "marketCap": 917000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 1249148.0,
+      "categories": [
+        "exchange"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/8ddd1e61-5ab6-417a-92f8-c30d4f286819.png",
+      "bit24Url": "https://bit24.cash/coins/kcs/",
+      "sourceType": "public-coin-page"
     },
     {
       "rank": 50,
-      "symbol": "BFUSD",
-      "nameFa": "بی اف یو اس دی",
-      "nameEn": "BFUSD",
-      "slug": "bfusd",
-      "marketCap": 1220135360.0,
+      "selectionRank": 41,
+      "symbol": "BGB",
+      "sourceSymbol": "BGB",
+      "nameFa": "بیت گت توکن",
+      "nameEn": "Bitget Token",
+      "slug": "bgb",
+      "marketCap": 1000000000.0,
       "marketCapCurrency": "USDT",
-      "change24h": -0.18,
-      "priceIrt": 186196.0,
+      "change24h": null,
+      "priceIrt": 304428.554,
       "categories": [
-        "stablecoins",
-        "defi"
+        "exchange"
       ],
-      "iconUrl": "https://exchange-storage.bit24.cash/exchange/icons/BFUSD.png",
-      "bit24Url": "https://bit24.cash/coins/bfusd/"
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/ad8f4063-97d5-49e4-b221-859090f31e2e.png",
+      "bit24Url": "https://bit24.cash/coins/bgb/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 32,
+      "selectionRank": 42,
+      "symbol": "CRO",
+      "sourceSymbol": "CRO",
+      "nameFa": "کرونوس",
+      "nameEn": "Cronos",
+      "slug": "cro",
+      "marketCap": 2000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 9141.153199999999,
+      "categories": [
+        "exchange"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/025ec98c-0549-4cf7-aba2-428c291f59ac.png",
+      "bit24Url": "https://bit24.cash/coins/cro/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 11,
+      "selectionRank": 43,
+      "symbol": "LEO",
+      "sourceSymbol": "LEO",
+      "nameFa": "لئو",
+      "nameEn": "UNUS-SED-LEO",
+      "slug": "leo",
+      "marketCap": 9000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 1826739.12,
+      "categories": [
+        "exchange"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/b9bd7342-4ea2-41d8-9b26-0cbc989d2b85.png",
+      "bit24Url": "https://bit24.cash/coins/leo/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 10,
+      "selectionRank": 44,
+      "symbol": "DOGE",
+      "sourceSymbol": "DOGE",
+      "nameFa": "دوج کوین",
+      "nameEn": "Dogecoin",
+      "slug": "doge",
+      "marketCap": 12000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": -0.25,
+      "priceIrt": 13064.057200000001,
+      "categories": [
+        "memes"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/e6e3aa1c-3b4f-4efd-b152-9ca496a8d3d4.png",
+      "bit24Url": "https://bit24.cash/coins/doge/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 29,
+      "selectionRank": 45,
+      "symbol": "SHIB",
+      "sourceSymbol": "SHIB",
+      "nameFa": "شیبا اینو",
+      "nameEn": "SHIBA INU",
+      "slug": "shib",
+      "marketCap": 3000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": -1.46,
+      "priceIrt": 0.8607522,
+      "categories": [
+        "memes"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/8e5c4fe2-fda3-4bcd-9279-12623d4a9765.png",
+      "bit24Url": "https://bit24.cash/coins/shib/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 49,
+      "selectionRank": 46,
+      "symbol": "PEPE",
+      "sourceSymbol": "PEPE",
+      "nameFa": "پپه",
+      "nameEn": "Pepe",
+      "slug": "pepe",
+      "marketCap": 1000000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": 0.0,
+      "priceIrt": 0.53433708,
+      "categories": [
+        "memes"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/e0468dd0-d6f9-498b-b3ca-bc6033c75bc2.png",
+      "bit24Url": "https://bit24.cash/coins/pepe/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 144,
+      "selectionRank": 47,
+      "symbol": "WIF",
+      "sourceSymbol": "WIF",
+      "nameFa": "ویف",
+      "nameEn": "dogwifhat",
+      "slug": "wif",
+      "marketCap": 142000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 26530.412,
+      "categories": [
+        "memes"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/47ae2f41-6082-4a95-b6b4-feb06d6de377.png",
+      "bit24Url": "https://bit24.cash/coins/wif/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 118,
+      "selectionRank": 48,
+      "symbol": "FLOKI",
+      "sourceSymbol": "FLOKI",
+      "nameFa": "فلوکی",
+      "nameEn": "Floki Inu",
+      "slug": "floki",
+      "marketCap": 202000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 3.9320196,
+      "categories": [
+        "memes"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/ff82caec-f110-433d-8f6a-c8aeb618a0f6.png",
+      "bit24Url": "https://bit24.cash/coins/floki/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 113,
+      "selectionRank": 49,
+      "symbol": "BONK",
+      "sourceSymbol": "BONK",
+      "nameFa": "بونک",
+      "nameEn": "Bonk",
+      "slug": "bonk",
+      "marketCap": 219000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 0.46032036,
+      "categories": [
+        "memes"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/1f1dc869-bb1b-46e4-bb26-c7fd55ecb4fb.png",
+      "bit24Url": "https://bit24.cash/coins/bonk/",
+      "sourceType": "public-coin-page"
+    },
+    {
+      "rank": 386,
+      "selectionRank": 50,
+      "symbol": "BRETT",
+      "sourceSymbol": "BRETT",
+      "nameFa": "برت",
+      "nameEn": "Brett",
+      "slug": "brett",
+      "marketCap": 42000000.0,
+      "marketCapCurrency": "USDT",
+      "change24h": null,
+      "priceIrt": 782.6751200000001,
+      "categories": [
+        "memes"
+      ],
+      "iconUrl": "https://storage2.bit24.cash/public/uploads/coins/53c4acf3-cb02-42b9-a9f8-5db769659050.png",
+      "bit24Url": "https://bit24.cash/coins/brett/",
+      "sourceType": "public-coin-page"
     }
   ]
 }

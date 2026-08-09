@@ -48,7 +48,7 @@ describe('market-cap galaxy layout', () => {
       marketCapCurrency: 'USDT',
       change24h: 0,
       priceIrt: 1,
-      categories: ['core', 'networks', 'defi'],
+      categories: ['core', 'stablecoins', 'defi'],
       iconUrl: '',
       bit24Url: '',
     } as Coin

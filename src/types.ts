@@ -1,13 +1,12 @@
 export type CategoryId =
   | 'core'
-  | 'networks'
-  | 'ai'
-  | 'defi'
-  | 'memes'
   | 'stablecoins'
-  | 'rwa'
+  | 'defi'
+  | 'layer2'
+  | 'ai'
+  | 'gamefi'
   | 'exchange'
-  | 'privacy'
+  | 'memes'
 
 export type Coin = {
   rank: number
@@ -86,38 +85,35 @@ export type SearchResult = Coin & {
 
 export const CATEGORY_ORDER: CategoryId[] = [
   'core',
-  'networks',
-  'ai',
-  'defi',
-  'memes',
   'stablecoins',
-  'rwa',
+  'defi',
+  'layer2',
+  'ai',
+  'gamefi',
   'exchange',
-  'privacy',
+  'memes',
 ]
 
 export const CATEGORY_LABELS: Record<CategoryId, string> = {
   core: 'ارزهای اصلی',
-  networks: 'شبکه‌های اصلی',
-  ai: 'هوش مصنوعی',
-  defi: 'دیفای',
-  memes: 'میم‌کوین‌ها',
   stablecoins: 'استیبل‌کوین‌ها',
-  rwa: 'RWA / Stocks',
+  defi: 'دیفای',
+  layer2: 'لایه دوم',
+  ai: 'هوش مصنوعی و DePIN',
+  gamefi: 'گیم‌فای و متاورس',
   exchange: 'توکن صرافی',
-  privacy: 'پرایوسی',
+  memes: 'میم‌کوین‌ها',
 }
 
 export const CATEGORY_COLORS: Record<CategoryId, string> = {
   core: '#d7f6ff',
-  networks: '#6e9eff',
-  ai: '#79e9d5',
-  defi: '#bd8cff',
-  memes: '#ff719e',
   stablecoins: '#a6dc89',
-  rwa: '#ffca78',
+  defi: '#bd8cff',
+  layer2: '#ffad62',
+  ai: '#79e9d5',
+  gamefi: '#ff83c6',
   exchange: '#ff956d',
-  privacy: '#b5a7ff',
+  memes: '#ff719e',
 }
 
 export const GALAXIES: GalaxyDefinition[] = [
@@ -132,24 +128,14 @@ export const GALAXIES: GalaxyDefinition[] = [
     position: [-6, 2.3, 1],
   },
   {
-    id: 'networks',
-    label: 'شبکه‌های اصلی',
-    shortLabel: 'Networks',
-    eyebrow: 'THE LAYERS',
-    description: 'زیرساخت‌هایی که اقتصاد باز رمزارز روی آن‌ها حرکت می‌کند.',
-    accent: CATEGORY_COLORS.networks,
-    accentRgb: '110, 158, 255',
+    id: 'stablecoins',
+    label: 'استیبل‌کوین‌ها',
+    shortLabel: 'Stablecoins',
+    eyebrow: 'THE LIQUIDITY',
+    description: 'واحدهای باثبات برای حرکت نقدینگی در بازار.',
+    accent: CATEGORY_COLORS.stablecoins,
+    accentRgb: '166, 220, 137',
     position: [5.8, 2.1, -1.4],
-  },
-  {
-    id: 'ai',
-    label: 'هوش مصنوعی',
-    shortLabel: 'AI',
-    eyebrow: 'THE INTELLIGENCE',
-    description: 'تقاطع محاسبات، داده و اقتصاد غیرمتمرکز.',
-    accent: CATEGORY_COLORS.ai,
-    accentRgb: '121, 233, 213',
-    position: [-5.2, -2.3, -1.8],
   },
   {
     id: 'defi',
@@ -159,37 +145,37 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'پروتکل‌ها و دارایی‌های مالی بدون واسطه.',
     accent: CATEGORY_COLORS.defi,
     accentRgb: '189, 140, 255',
+    position: [-5.2, -2.3, -1.8],
+  },
+  {
+    id: 'layer2',
+    label: 'لایه دوم',
+    shortLabel: 'Layer 2',
+    eyebrow: 'THE SCALERS',
+    description: 'راهکارهایی برای مقیاس‌پذیری نسل بعدی شبکه‌ها.',
+    accent: CATEGORY_COLORS.layer2,
+    accentRgb: '255, 173, 98',
     position: [4.8, -2.4, 0.8],
   },
   {
-    id: 'memes',
-    label: 'میم‌کوین‌ها',
-    shortLabel: 'Memes',
-    eyebrow: 'THE CULTURE',
-    description: 'جامعه، شوخی و انرژی جمعی بازار.',
-    accent: CATEGORY_COLORS.memes,
-    accentRgb: '255, 113, 158',
+    id: 'ai',
+    label: 'هوش مصنوعی و DePIN',
+    shortLabel: 'AI / DePIN',
+    eyebrow: 'THE INTELLIGENCE',
+    description: 'تقاطع محاسبات، داده و زیرساخت غیرمتمرکز.',
+    accent: CATEGORY_COLORS.ai,
+    accentRgb: '121, 233, 213',
     position: [-0.3, -4.7, 1.2],
   },
   {
-    id: 'stablecoins',
-    label: 'استیبل‌کوین‌ها',
-    shortLabel: 'Stablecoins',
-    eyebrow: 'THE LIQUIDITY',
-    description: 'واحدهای باثبات برای حرکت نقدینگی در بازار.',
-    accent: CATEGORY_COLORS.stablecoins,
-    accentRgb: '166, 220, 137',
+    id: 'gamefi',
+    label: 'گیم‌فای و متاورس',
+    shortLabel: 'GameFi',
+    eyebrow: 'THE WORLDS',
+    description: 'اقتصادهای بازی، جهان‌های مجازی و مالکیت دیجیتال.',
+    accent: CATEGORY_COLORS.gamefi,
+    accentRgb: '255, 131, 198',
     position: [0.6, 4.7, -0.6],
-  },
-  {
-    id: 'rwa',
-    label: 'RWA / Stocks',
-    shortLabel: 'RWA',
-    eyebrow: 'THE BRIDGE',
-    description: 'دارایی‌هایی که دنیای واقعی را به زنجیره می‌آورند.',
-    accent: CATEGORY_COLORS.rwa,
-    accentRgb: '255, 202, 120',
-    position: [-9.1, 0.1, -1],
   },
   {
     id: 'exchange',
@@ -199,17 +185,17 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'توکن‌های اکوسیستم‌ها و بازارهای مبادله.',
     accent: CATEGORY_COLORS.exchange,
     accentRgb: '255, 149, 109',
-    position: [9, 0.1, 1.1],
+    position: [-9.1, 0.1, -1],
   },
   {
-    id: 'privacy',
-    label: 'پرایوسی',
-    shortLabel: 'Privacy',
-    eyebrow: 'THE SHADOWS',
-    description: 'پروژه‌هایی با تمرکز بر حریم خصوصی و اختیار کاربر.',
-    accent: CATEGORY_COLORS.privacy,
-    accentRgb: '181, 167, 255',
-    position: [0, 0, -3.2],
+    id: 'memes',
+    label: 'میم‌کوین‌ها',
+    shortLabel: 'Memes',
+    eyebrow: 'THE CULTURE',
+    description: 'جامعه، شوخی و انرژی جمعی بازار.',
+    accent: CATEGORY_COLORS.memes,
+    accentRgb: '255, 113, 158',
+    position: [9, 0.1, 1.1],
   },
 ]
 

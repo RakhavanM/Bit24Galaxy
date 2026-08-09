@@ -32,10 +32,11 @@ const STYLE_ORDER: PlanetStyle[] = ['ocean', 'marble', 'gas', 'lava', 'ice', 'de
 const CATEGORY_STYLE: Partial<Record<CategoryId, PlanetStyle>> = {
   ai: 'neon',
   defi: 'crystal',
+  gamefi: 'gas',
+  layer2: 'storm',
   memes: 'lava',
   stablecoins: 'ice',
-  rwa: 'desert',
-  privacy: 'shadow',
+  exchange: 'desert',
 }
 
 const STYLE_ACCENTS: Record<PlanetStyle, string> = {
