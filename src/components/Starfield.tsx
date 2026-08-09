@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
-const STAR_COUNT = 4200
+const STAR_COUNT = 5200
 
 export function Starfield() {
   const positions = useMemo(() => {

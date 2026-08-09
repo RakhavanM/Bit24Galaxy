@@ -4,8 +4,8 @@ import { CATEGORY_COLORS, CATEGORY_ORDER } from './types'
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
 const MIN_RADIUS = 0.15
 const MAX_RADIUS = 0.92
-const ORBIT_INNER = 2.75
-const ORBIT_OUTER = 6.7
+const ORBIT_INNER = 3.1
+const ORBIT_OUTER = 8.8
 
 export function radiusForMarketCap(marketCap: number, minMarketCap: number, maxMarketCap: number): number {
   const safeMin = Math.max(1, minMarketCap)
@@ -33,7 +33,7 @@ export function positionCoins(coins: Coin[], galaxy: GalaxyDefinition, categoryC
   const sorted = [...categoryCoins].sort((a, b) => b.marketCap - a.marketCap)
   const [cx, cy, cz] = galaxy.position
   const orbitSpan = ORBIT_OUTER - ORBIT_INNER
-  const radialStep = sorted.length > 1 ? orbitSpan / Math.max(2, Math.ceil(Math.sqrt(sorted.length)) + 0.5) : 0
+  const radialStep = sorted.length > 1 ? orbitSpan / Math.max(2, Math.ceil(Math.sqrt(sorted.length)) + 0.25) : 0
 
   return sorted.map((coin, index) => {
     const angle = index * GOLDEN_ANGLE + galaxy.position[0] * 0.13
@@ -43,7 +43,8 @@ export function positionCoins(coins: Coin[], galaxy: GalaxyDefinition, categoryC
     const x = cx + Math.cos(angle) * radial
     const y = cy + Math.sin(angle) * radial * inclination
     const depthPhase = (index * 1.618 + Math.abs(galaxy.position[2]) * 0.37) % 1
-    const z = cz + (depthPhase - 0.5) * 5.6 + Math.sin(angle * 1.7 + galaxy.position[2]) * (0.5 + (index % 3) * 0.12)
+    const depthBand = (depthPhase - 0.5) * 10.5
+    const z = cz + depthBand + Math.sin(angle * 1.7 + galaxy.position[2]) * (0.7 + (index % 3) * 0.16)
     return {
       ...coin,
       galaxyId: galaxy.id,

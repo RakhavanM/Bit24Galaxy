@@ -6,7 +6,7 @@ import { GalaxyNodes } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
-import { clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, OVERVIEW_DISTANCE } from '../camera'
+import { clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -86,6 +86,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
   const drag = useRef({ active: false, x: 0, y: 0, moved: false })
   const pinchDistance = useRef<number | null>(null)
   const pointerCount = useRef(0)
+  const pointerNdc = useRef<[number, number]>([0, 0])
   const lastAutoTarget = useRef('overview')
   const lastZoomDistance = useRef(OVERVIEW_DISTANCE)
   const activeGalaxyRef = useRef(activeGalaxy)
@@ -98,7 +99,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
 
   useEffect(() => {
     let nextTarget: [number, number, number] = [0, 0, 0]
-    let nextDistance = activeGalaxy ? 9.2 : OVERVIEW_DISTANCE
+    let nextDistance = activeGalaxy ? 12.5 : OVERVIEW_DISTANCE
     const targetKey = activeGalaxy ? `${activeGalaxy.id}:${activeSymbol ?? ''}` : 'overview'
 
     if (activeGalaxy) {
@@ -107,7 +108,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
         const coin = positioned.get(activeGalaxy.id)?.find((item) => item.symbol === activeSymbol)
         if (coin) {
           nextTarget = coin.position
-          nextDistance = 6.2
+          nextDistance = 8.4
         }
       }
     }
@@ -124,7 +125,24 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
     const element = gl.domElement
     const onWheel = (event: WheelEvent) => {
       event.preventDefault()
+      const rect = element.getBoundingClientRect()
+      pointerNdc.current = [
+        (event.clientX - rect.left) / rect.width,
+        1 - (event.clientY - rect.top) / rect.height,
+      ]
+      const zoomBefore = distance.current
       distance.current = zoomDistance(distance.current, event.deltaY)
+      const zoomAmount = Math.max(-1, Math.min(1, (distance.current - zoomBefore) / Math.max(zoomBefore, 1)))
+      const ray = new THREE.Raycaster()
+      ray.setFromCamera(new THREE.Vector2(pointerNdc.current[0] * 2 - 1, pointerNdc.current[1] * 2 - 1), camera)
+      const rayPoint = ray.ray.origin.clone().add(ray.ray.direction.clone().multiplyScalar(Math.max(1, zoomBefore * 0.55)))
+      const pointerTarget = zoomTargetForPointer(
+        [target.current.x, target.current.y, target.current.z],
+        [rayPoint.x, rayPoint.y, rayPoint.z],
+        zoomBefore,
+        distance.current,
+      )
+      desiredTarget.current.lerp(new THREE.Vector3(...pointerTarget), Math.min(0.32, Math.abs(zoomAmount) * 0.55))
       if (activeGalaxyRef.current && shouldExitGalaxy(distance.current)) onZoomedOutRef.current()
     }
     const onPointerDown = (event: PointerEvent) => {
@@ -156,7 +174,16 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
       const [first, second] = Array.from(event.touches)
       const current = Math.hypot(first.clientX - second.clientX, first.clientY - second.clientY)
       if (pinchDistance.current !== null) {
+        const zoomBefore = distance.current
         distance.current = zoomDistance(distance.current, pinchDistance.current - current)
+        const zoomAmount = Math.max(-1, Math.min(1, (distance.current - zoomBefore) / Math.max(zoomBefore, 1)))
+        const pointerTarget = zoomTargetForPointer(
+          [target.current.x, target.current.y, target.current.z],
+          [target.current.x, target.current.y, target.current.z],
+          zoomBefore,
+          distance.current,
+        )
+        desiredTarget.current.lerp(new THREE.Vector3(...pointerTarget), Math.min(0.2, Math.abs(zoomAmount) * 0.4))
         if (activeGalaxyRef.current && shouldExitGalaxy(distance.current)) onZoomedOutRef.current()
       }
       pinchDistance.current = current

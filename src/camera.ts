@@ -1,10 +1,10 @@
 import type { GalaxyFocus } from './types'
 
 export const MIN_ORBIT_DISTANCE = 2.2
-export const MAX_ORBIT_DISTANCE = 58
-export const OVERVIEW_DISTANCE = 38
-export const HERO_FADE_DISTANCE = 21
-export const GALAXY_EXIT_DISTANCE = 15.5
+export const MAX_ORBIT_DISTANCE = 110
+export const OVERVIEW_DISTANCE = 78
+export const HERO_FADE_DISTANCE = 42
+export const GALAXY_EXIT_DISTANCE = 25
 
 export function clampOrbitDistance(distance: number): number {
   return Math.max(MIN_ORBIT_DISTANCE, Math.min(MAX_ORBIT_DISTANCE, distance))
@@ -47,5 +47,20 @@ export function orbitPosition(target: [number, number, number], distance: number
 
 export function zoomDistance(distance: number, delta: number): number {
   return clampOrbitDistance(distance * Math.exp(delta * 0.0012))
+}
+
+export function zoomTargetForPointer(
+  target: [number, number, number],
+  pointerWorld: [number, number, number],
+  previousDistance: number,
+  nextDistance: number,
+): [number, number, number] {
+  const safePrevious = Math.max(MIN_ORBIT_DISTANCE, previousDistance)
+  const influence = 1 - clampOrbitDistance(nextDistance) / safePrevious
+  return [
+    target[0] + (pointerWorld[0] - target[0]) * influence,
+    target[1] + (pointerWorld[1] - target[1]) * influence,
+    target[2] + (pointerWorld[2] - target[2]) * influence,
+  ]
 }
 

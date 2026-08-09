@@ -63,7 +63,7 @@ describe('market-cap galaxy layout', () => {
     const distances = positioned.map((coin) => Math.hypot(coin.position[0] - galaxy.position[0], coin.position[1] - galaxy.position[1], coin.position[2] - galaxy.position[2]))
 
     expect(Math.min(...distances)).toBeGreaterThan(2.7)
-    expect(Math.max(...distances)).toBeLessThan(7.6)
+    expect(Math.max(...distances)).toBeLessThan(9.8)
   })
 
   it('assigns a multi-category coin to only one galaxy in the overview', () => {
