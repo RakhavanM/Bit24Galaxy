@@ -88,6 +88,13 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
   const pointerCount = useRef(0)
   const lastAutoTarget = useRef('overview')
   const lastZoomDistance = useRef(OVERVIEW_DISTANCE)
+  const activeGalaxyRef = useRef(activeGalaxy)
+  const onZoomedOutRef = useRef(onZoomedOut)
+
+  useEffect(() => {
+    activeGalaxyRef.current = activeGalaxy
+    onZoomedOutRef.current = onZoomedOut
+  }, [activeGalaxy, onZoomedOut])
 
   useEffect(() => {
     let nextTarget: [number, number, number] = [0, 0, 0]
@@ -118,7 +125,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
     const onWheel = (event: WheelEvent) => {
       event.preventDefault()
       distance.current = zoomDistance(distance.current, event.deltaY)
-      if (activeGalaxy && shouldExitGalaxy(distance.current)) onZoomedOut()
+      if (activeGalaxyRef.current && shouldExitGalaxy(distance.current)) onZoomedOutRef.current()
     }
     const onPointerDown = (event: PointerEvent) => {
       pointerCount.current += 1
@@ -150,7 +157,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
       const current = Math.hypot(first.clientX - second.clientX, first.clientY - second.clientY)
       if (pinchDistance.current !== null) {
         distance.current = zoomDistance(distance.current, pinchDistance.current - current)
-        if (activeGalaxy && shouldExitGalaxy(distance.current)) onZoomedOut()
+        if (activeGalaxyRef.current && shouldExitGalaxy(distance.current)) onZoomedOutRef.current()
       }
       pinchDistance.current = current
     }
@@ -180,7 +187,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
     desiredPosition.current.set(x, y + 0.8, z)
     camera.position.lerp(desiredPosition.current, ease)
     camera.lookAt(target.current)
-    if (!activeGalaxy && Math.abs(lastZoomDistance.current - distance.current) > 0.01) {
+    if (!activeGalaxyRef.current && Math.abs(lastZoomDistance.current - distance.current) > 0.01) {
       onOverviewZoomChange(overviewExplorationProgress(distance.current))
       lastZoomDistance.current = distance.current
     }
