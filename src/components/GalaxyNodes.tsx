@@ -7,7 +7,7 @@ import { categoryColor, formatCompactMarketCap } from '../types'
 import { coinIconUrl } from '../data'
 import { planetProfile } from '../planets'
 import { PlanetMaterial } from './PlanetMaterial'
-import { SunMaterial } from './SunMaterial'
+import { SunCorona, SunMaterial } from './SunMaterial'
 import { sunProfile } from '../suns'
 import * as THREE from 'three'
 
@@ -72,9 +72,6 @@ function GalaxySun({ galaxy, active, onSelect }: { galaxy: GalaxyDefinition; act
       <Sphere args={[profile.radius, 64, 48]}>
         <SunMaterial profile={profile} />
       </Sphere>
-      <Sphere args={[profile.radius * 1.06, 48, 32]}>
-        <meshBasicMaterial color={profile.glow} transparent opacity={active ? 0.065 : 0.035} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
-      </Sphere>
       <SunCorona profile={profile} active={active} />
       <Html center distanceFactor={10} style={{ pointerEvents: 'none' }}>
         <div className={`galaxy-label ${active ? 'galaxy-label--active' : ''}`} style={{ '--accent': profile.base } as CSSProperties}>
@@ -86,18 +83,6 @@ function GalaxySun({ galaxy, active, onSelect }: { galaxy: GalaxyDefinition; act
   )
 }
 
-function SunCorona({ profile, active }: { profile: ReturnType<typeof sunProfile>; active: boolean }) {
-  return (
-    <group>
-      <Torus args={[profile.radius * 1.22, profile.radius * 0.012, 64, 8]} rotation={[0.4, 0.15, 0.2]}>
-        <meshBasicMaterial color={profile.glow} transparent opacity={active ? 0.44 : 0.2} blending={THREE.AdditiveBlending} depthWrite={false} />
-      </Torus>
-      <Torus args={[profile.radius * 1.34, profile.radius * 0.008, 64, 8]} rotation={[-0.58, 0.2, -0.3]}>
-        <meshBasicMaterial color={profile.base} transparent opacity={active ? 0.28 : 0.11} blending={THREE.AdditiveBlending} depthWrite={false} />
-      </Torus>
-    </group>
-  )
-}
 
 type CoinNodeProps = {
   coin: PositionedCoin
@@ -157,9 +142,5 @@ function Atmosphere({ radius, color, intensity }: { radius: number; color: strin
       <meshBasicMaterial color={color} transparent opacity={Math.min(0.14, intensity * 0.1)} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
     </Sphere>
   )
-}
-
-export function GalaxyCore({ galaxy, active, onSelect }: { galaxy: GalaxyDefinition; active: boolean; onSelect: (galaxy: GalaxyDefinition) => void }) {
-  return <GalaxySun galaxy={galaxy} active={active} onSelect={onSelect} />
 }
 

@@ -2,7 +2,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Environment } from '@react-three/drei'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import { GalaxyCore, GalaxyNodes } from './GalaxyNodes'
+import { GalaxyNodes } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
@@ -47,7 +47,6 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
       <NebulaDust />
       {GALAXIES.map((galaxy) => (
         <group key={galaxy.id} visible={!activeGalaxy || activeGalaxy.id === galaxy.id}>
-          <GalaxyCore galaxy={galaxy} active={activeGalaxy?.id === galaxy.id} onSelect={onSelectGalaxy} />
           {(!activeGalaxy || activeGalaxy.id === galaxy.id) && (
             <GalaxyNodes
               galaxy={galaxy}

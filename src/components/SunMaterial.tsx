@@ -69,19 +69,30 @@ const SunShaderMaterial = shaderMaterial(
       vec3 normal = normalize(vNormal);
       vec3 viewDirection = normalize(vec3(0.0, 0.0, 1.0));
       vec3 lightDirection = normalize(vec3(-0.52, 0.68, 1.0));
-      float light = clamp((dot(normal, lightDirection) + 0.22) / 1.22, 0.0, 1.0);
-      float rim = pow(1.0 - max(dot(normal, viewDirection), 0.0), 2.3);
-      float slowTime = uTime * 0.012;
-      float largeCells = fbm(normal * uTextureScale + vec3(slowTime, 0.0, uSeed));
-      float fineCells = fbm(normal * 9.0 + vec3(-slowTime * 1.7, uSeed, 0.0));
-      float filament = smoothstep(0.58, 0.76, fineCells + largeCells * 0.38);
-      vec3 surface = mix(uDeep, uBase, smoothstep(0.12, 0.88, largeCells));
-      surface = mix(surface, mix(uBase, uGlow, 0.42), filament * 0.38);
-      float granulation = smoothstep(0.43, 0.67, noise3(normal * 25.0 + vec3(uSeed, slowTime, 0.0)));
-      surface += uGlow * granulation * 0.09;
-      float flare = smoothstep(0.7, 0.98, fbm(normal * 8.0 + vec3(slowTime * 2.0, uSeed, 0.0)));
-      vec3 color = surface * (0.3 + light * 1.05) + uGlow * (rim * 0.28 + flare * 0.08);
-      gl_FragColor = vec4(color, 1.0);
+      float facing = max(dot(normal, viewDirection), 0.0);
+      float light = clamp((dot(normal, lightDirection) + 0.32) / 1.32, 0.0, 1.0);
+      float limb = pow(1.0 - facing, 2.15);
+      float slowTime = uTime * 0.018;
+
+      // One shared solar texture language: broad convection cells, fine
+      // granulation, and a few soft filament ribbons. Only the palette changes
+      // between constellation suns.
+      float cells = fbm(vPosition * uTextureScale + vec3(slowTime, uSeed, 0.0));
+      float granules = fbm(vPosition * 22.0 + vec3(-slowTime * 1.4, uSeed * 1.7, 0.0));
+      float filaments = abs(sin(vPosition.y * 24.0 + fbm(vPosition * 8.0 + vec3(uSeed)) * 8.0 + slowTime));
+      filaments = smoothstep(0.82, 0.985, filaments) * smoothstep(0.35, 0.8, granules);
+      float brightGranules = smoothstep(0.49, 0.77, granules);
+      float darkGranules = smoothstep(0.76, 0.94, 1.0 - granules);
+
+      vec3 surface = mix(uDeep, uBase, smoothstep(0.16, 0.86, cells));
+      surface += uGlow * brightGranules * 0.17;
+      surface *= 1.0 - darkGranules * 0.12;
+      surface = mix(surface, mix(uBase, uGlow, 0.7), filaments * 0.22);
+
+      float hotCore = pow(facing, 0.62);
+      vec3 finalColor = surface * (0.42 + light * 0.76 + hotCore * 0.18);
+      finalColor += uGlow * (limb * 0.35 + hotCore * 0.08);
+      gl_FragColor = vec4(finalColor, 1.0);
     }
   `,
 )
@@ -103,6 +114,7 @@ export function SunMaterial({ profile }: { profile: SunProfile }) {
     instance.uGlow = new THREE.Color(profile.glow)
     instance.uSeed = profile.textureSeed
     instance.uTextureScale = profile.textureScale
+    instance.toneMapped = false
     return instance
   }, [profile])
 
@@ -111,5 +123,24 @@ export function SunMaterial({ profile }: { profile: SunProfile }) {
   })
 
   return <primitive object={material} attach="material" />
+}
+
+export function SunCorona({ profile, active }: { profile: SunProfile; active: boolean }) {
+  return (
+    <group>
+      <SphereShell radius={profile.radius * 1.08} color={profile.glow} opacity={active ? 0.12 : 0.075} />
+      <SphereShell radius={profile.radius * 1.17} color={profile.base} opacity={active ? 0.075 : 0.04} />
+      <SphereShell radius={profile.radius * 1.29} color={profile.glow} opacity={active ? 0.045 : 0.022} />
+    </group>
+  )
+}
+
+function SphereShell({ radius, color, opacity }: { radius: number; color: string; opacity: number }) {
+  return (
+    <mesh scale={radius}>
+      <sphereGeometry args={[1, 40, 28]} />
+      <meshBasicMaterial color={color} transparent opacity={opacity} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+    </mesh>
+  )
 }
 
