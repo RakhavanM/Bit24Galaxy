@@ -7,6 +7,8 @@ import { categoryColor, formatCompactMarketCap } from '../types'
 import { coinIconUrl } from '../data'
 import { planetProfile } from '../planets'
 import { PlanetMaterial } from './PlanetMaterial'
+import { SunMaterial } from './SunMaterial'
+import { sunProfile } from '../suns'
 import * as THREE from 'three'
 
 type GalaxyNodesProps = {
@@ -41,20 +43,58 @@ export function GalaxyNodes({
   return (
     <group>
       <Line points={ringPoints} color={color} transparent opacity={isActive ? 0.42 : 0.15} lineWidth={isActive ? 1.2 : 0.55} />
-      <group position={[x, y, z]} onClick={(event) => { event.stopPropagation(); onSelectGalaxy(galaxy) }}>
-        <Sphere args={[1.25, 32, 32]}>
-          <meshBasicMaterial color={color} transparent opacity={isActive ? 0.16 : 0.055} depthWrite={false} blending={THREE.AdditiveBlending} />
-        </Sphere>
-        <Html center distanceFactor={10} style={{ pointerEvents: 'none' }}>
-          <div className={`galaxy-label ${isActive ? 'galaxy-label--active' : ''}`} style={{ '--accent': color } as CSSProperties}>
-            <span>{galaxy.shortLabel}</span>
-            <strong>{galaxy.label}</strong>
-          </div>
-        </Html>
-      </group>
+      <GalaxySun galaxy={galaxy} active={isActive} onSelect={onSelectGalaxy} />
       {coins.map((coin) => (
         <CoinNode key={`${galaxy.id}-${coin.symbol}`} coin={coin} active={coin.symbol === activeSymbol} onSelect={onSelectCoin} />
       ))}
+    </group>
+  )
+}
+
+function GalaxySun({ galaxy, active, onSelect }: { galaxy: GalaxyDefinition; active: boolean; onSelect: (galaxy: GalaxyDefinition) => void }) {
+  const group = useRef<THREE.Group>(null)
+  const profile = useMemo(() => sunProfile(galaxy), [galaxy])
+  const [x, y, z] = galaxy.position
+
+  useFrame((_, delta) => {
+    if (group.current) group.current.rotation.y += delta * profile.rotationSpeed
+  })
+
+  return (
+    <group
+      ref={group}
+      position={[x, y, z]}
+      onClick={(event) => { event.stopPropagation(); onSelect(galaxy) }}
+      onPointerOver={(event) => { event.stopPropagation(); document.body.style.cursor = 'pointer' }}
+      onPointerOut={() => { document.body.style.cursor = 'default' }}
+      scale={active ? 1.12 : 1}
+    >
+      <Sphere args={[profile.radius, 64, 48]}>
+        <SunMaterial profile={profile} />
+      </Sphere>
+      <Sphere args={[profile.radius * 1.06, 48, 32]}>
+        <meshBasicMaterial color={profile.glow} transparent opacity={active ? 0.065 : 0.035} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </Sphere>
+      <SunCorona profile={profile} active={active} />
+      <Html center distanceFactor={10} style={{ pointerEvents: 'none' }}>
+        <div className={`galaxy-label ${active ? 'galaxy-label--active' : ''}`} style={{ '--accent': profile.base } as CSSProperties}>
+          <span>{galaxy.shortLabel}</span>
+          <strong>{galaxy.label}</strong>
+        </div>
+      </Html>
+    </group>
+  )
+}
+
+function SunCorona({ profile, active }: { profile: ReturnType<typeof sunProfile>; active: boolean }) {
+  return (
+    <group>
+      <Torus args={[profile.radius * 1.22, profile.radius * 0.012, 64, 8]} rotation={[0.4, 0.15, 0.2]}>
+        <meshBasicMaterial color={profile.glow} transparent opacity={active ? 0.44 : 0.2} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </Torus>
+      <Torus args={[profile.radius * 1.34, profile.radius * 0.008, 64, 8]} rotation={[-0.58, 0.2, -0.3]}>
+        <meshBasicMaterial color={profile.base} transparent opacity={active ? 0.28 : 0.11} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </Torus>
     </group>
   )
 }
@@ -120,13 +160,6 @@ function Atmosphere({ radius, color, intensity }: { radius: number; color: strin
 }
 
 export function GalaxyCore({ galaxy, active, onSelect }: { galaxy: GalaxyDefinition; active: boolean; onSelect: (galaxy: GalaxyDefinition) => void }) {
-  const color = categoryColor(galaxy.id)
-  return (
-    <group position={galaxy.position} onClick={(event) => { event.stopPropagation(); onSelect(galaxy) }}>
-      <Sphere args={[0.44, 24, 24]}>
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={active ? 4 : 1.7} toneMapped={false} />
-      </Sphere>
-    </group>
-  )
+  return <GalaxySun galaxy={galaxy} active={active} onSelect={onSelect} />
 }
 
