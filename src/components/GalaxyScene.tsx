@@ -6,7 +6,7 @@ import { GalaxyNodes } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { compactGalaxyCenters, localGalaxyFootprint, localGalaxyRadius, overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
-import { clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
+import { clampOrbitDistance, overviewExplorationProgress, pointerWorldOnTargetPlane, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -100,6 +100,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
   const pinchDistance = useRef<number | null>(null)
   const pointerCount = useRef(0)
   const pointerNdc = useRef<[number, number]>([0, 0])
+  const pointerPlane = useRef<[number, number, number]>([0, 0, 0])
   const lastAutoTarget = useRef('overview')
   const lastZoomDistance = useRef(OVERVIEW_DISTANCE)
   const activeGalaxyRef = useRef(activeGalaxy)
@@ -148,13 +149,18 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
       const zoomAmount = Math.max(-1, Math.min(1, (distance.current - zoomBefore) / Math.max(zoomBefore, 1)))
       const ray = new THREE.Raycaster()
       ray.setFromCamera(new THREE.Vector2(pointerNdc.current[0] * 2 - 1, pointerNdc.current[1] * 2 - 1), camera)
-      const rayPoint = ray.ray.origin.clone().add(ray.ray.direction.clone().multiplyScalar(Math.max(1, zoomBefore * 0.55)))
+      const rayPoint = pointerWorldOnTargetPlane(
+        [ray.ray.origin.x, ray.ray.origin.y, ray.ray.origin.z],
+        [ray.ray.direction.x, ray.ray.direction.y, ray.ray.direction.z],
+        [target.current.x, target.current.y, target.current.z],
+      )
       const pointerTarget = zoomTargetForPointer(
         [target.current.x, target.current.y, target.current.z],
-        [rayPoint.x, rayPoint.y, rayPoint.z],
+        rayPoint,
         zoomBefore,
         distance.current,
       )
+      pointerPlane.current = pointerTarget
       desiredTarget.current.lerp(new THREE.Vector3(...pointerTarget), Math.min(0.32, Math.abs(zoomAmount) * 0.55))
       if (activeGalaxyRef.current && shouldExitGalaxy(distance.current)) onZoomedOutRef.current()
     }
@@ -225,6 +231,14 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
     target.current.lerp(desiredTarget.current, ease)
     const [x, y, z] = orbitPosition([target.current.x, target.current.y, target.current.z], distance.current, azimuth.current, polar.current)
     desiredPosition.current.set(x, y + 0.8, z)
+    if (!activeGalaxyRef.current && Math.abs(lastZoomDistance.current - distance.current) > 0.01) {
+      const pointerShift = new THREE.Vector3(
+        pointerPlane.current[0] - target.current.x,
+        pointerPlane.current[1] - target.current.y,
+        pointerPlane.current[2] - target.current.z,
+      )
+      desiredPosition.current.add(pointerShift.multiplyScalar(0.32))
+    }
     camera.position.lerp(desiredPosition.current, ease)
     camera.lookAt(target.current)
     if (!activeGalaxyRef.current && Math.abs(lastZoomDistance.current - distance.current) > 0.01) {

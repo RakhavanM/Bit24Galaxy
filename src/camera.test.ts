@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { focusPoseFor, clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, zoomTargetForPointer } from './camera'
+import { focusPoseFor, clampOrbitDistance, overviewExplorationProgress, pointerWorldOnTargetPlane, shouldExitGalaxy, zoomTargetForPointer } from './camera'
 
 describe('free galaxy camera navigation', () => {
   it('creates a camera pose in front of a selected target', () => {
@@ -32,6 +32,12 @@ describe('free galaxy camera navigation', () => {
     expect(target[0]).toBeCloseTo(0.1)
     expect(target[1]).toBeCloseTo(0.1)
     expect(target[2]).toBeCloseTo(0)
+  })
+
+  it('projects a pointer ray onto the current target plane', () => {
+    const point = pointerWorldOnTargetPlane([0, 0, 10], [0, 0, -1], [0, 0, 0])
+
+    expect(point).toEqual([0, 0, 0])
   })
 })
 

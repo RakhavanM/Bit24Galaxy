@@ -64,3 +64,18 @@ export function zoomTargetForPointer(
   ]
 }
 
+export function pointerWorldOnTargetPlane(
+  rayOrigin: [number, number, number],
+  rayDirection: [number, number, number],
+  planePoint: [number, number, number],
+): [number, number, number] {
+  const denominator = rayDirection[2]
+  if (Math.abs(denominator) < 0.00001) return planePoint
+  const distance = (planePoint[2] - rayOrigin[2]) / denominator
+  return [
+    rayOrigin[0] + rayDirection[0] * distance,
+    rayOrigin[1] + rayDirection[1] * distance,
+    planePoint[2],
+  ]
+}
+
