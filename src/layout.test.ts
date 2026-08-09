@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { positionCoins, radiusForMarketCap, overviewCoinsForGalaxy } from './layout'
+import { compactGalaxyCenters, INTER_SYSTEM_MARGIN, minimumSystemCenterDistance, positionCoins, radiusForMarketCap, overviewCoinsForGalaxy } from './layout'
 import { GALAXIES, type Coin } from './types'
 
 describe('market-cap galaxy layout', () => {
@@ -64,6 +64,27 @@ describe('market-cap galaxy layout', () => {
 
     expect(Math.min(...distances)).toBeGreaterThan(2.7)
     expect(Math.max(...distances)).toBeLessThan(9.8)
+  })
+
+  it('uses the requested safe center-distance rule for two system footprints', () => {
+    expect(minimumSystemCenterDistance(10, 12)).toBe(14)
+    expect(INTER_SYSTEM_MARGIN).toBe(2)
+  })
+
+  it('compacts hubs into a balanced 3D arrangement without violating pairwise safety', () => {
+    const radii = new Map(GALAXIES.map((galaxy, index) => [galaxy.id, 8 + (index % 3) * 0.7] as const))
+    const centers = compactGalaxyCenters(GALAXIES, radii)
+    const values = Array.from(centers.values())
+    const centroid = values.reduce((sum, point) => [sum[0] + point[0], sum[1] + point[1], sum[2] + point[2]], [0, 0, 0]).map((value) => value / values.length)
+
+    expect(Math.hypot(...centroid)).toBeLessThan(1)
+    for (let first = 0; first < GALAXIES.length; first += 1) {
+      for (let second = first + 1; second < GALAXIES.length; second += 1) {
+        const a = centers.get(GALAXIES[first].id)!
+        const b = centers.get(GALAXIES[second].id)!
+        expect(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2])).toBeGreaterThanOrEqual(minimumSystemCenterDistance(radii.get(GALAXIES[first].id)!, radii.get(GALAXIES[second].id)!))
+      }
+    }
   })
 
   it('assigns a multi-category coin to only one galaxy in the overview', () => {

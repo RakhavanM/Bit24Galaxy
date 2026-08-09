@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { GalaxyNodes } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
-import { overviewCoinsForGalaxy, positionCoins } from '../layout'
+import { compactGalaxyCenters, localGalaxyFootprint, localGalaxyRadius, overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
 import { clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
 
@@ -20,16 +20,29 @@ type GalaxySceneProps = {
 }
 
 export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, onSelectGalaxy, onClearSelection, onOverviewZoomChange, onZoomedOut }: GalaxySceneProps) {
+  const sceneGalaxies = useMemo(() => {
+    const categoryCoins = new Map(GALAXIES.map((galaxy) => [
+      galaxy.id,
+      activeGalaxy ? coins.filter((coin) => coin.categories.includes(galaxy.id)) : overviewCoinsForGalaxy(coins, galaxy),
+    ] as const))
+    const footprints = new Map(GALAXIES.map((galaxy) => [galaxy.id, localGalaxyFootprint(coins, galaxy, categoryCoins.get(galaxy.id) ?? [])] as const))
+    const radii = new Map(GALAXIES.map((galaxy) => [galaxy.id, localGalaxyRadius(coins, galaxy, categoryCoins.get(galaxy.id) ?? [])] as const))
+    const centers = compactGalaxyCenters(GALAXIES, radii, footprints)
+    return GALAXIES.map((galaxy) => ({ ...galaxy, position: centers.get(galaxy.id) ?? galaxy.position }))
+  }, [coins, activeGalaxy])
+
   const positioned = useMemo(() => {
     const map = new Map<string, PositionedCoin[]>()
-    GALAXIES.forEach((galaxy) => {
+    sceneGalaxies.forEach((galaxy) => {
       const categoryCoins = activeGalaxy
         ? coins.filter((coin) => coin.categories.includes(galaxy.id))
         : overviewCoinsForGalaxy(coins, galaxy)
       map.set(galaxy.id, positionCoins(coins, galaxy, categoryCoins))
     })
     return map
-  }, [coins, activeGalaxy])
+  }, [coins, activeGalaxy, sceneGalaxies])
+
+  const activeSceneGalaxy = activeGalaxy ? sceneGalaxies.find((galaxy) => galaxy.id === activeGalaxy.id) ?? null : null
 
   return (
     <Canvas
@@ -47,7 +60,7 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
       <pointLight position={[0, 0, 4]} color="#97bfff" intensity={20} distance={22} />
       <Starfield />
       <NebulaDust />
-      {GALAXIES.map((galaxy) => (
+      {sceneGalaxies.map((galaxy) => (
         <group key={galaxy.id} visible={!activeGalaxy || activeGalaxy.id === galaxy.id}>
           {(!activeGalaxy || activeGalaxy.id === galaxy.id) && (
             <GalaxyNodes
@@ -61,7 +74,7 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
           )}
         </group>
       ))}
-      <CameraFlight activeGalaxy={activeGalaxy} activeSymbol={activeSymbol} positioned={positioned} onOverviewZoomChange={onOverviewZoomChange} onZoomedOut={onZoomedOut} />
+      <CameraFlight activeGalaxy={activeSceneGalaxy} activeSymbol={activeSymbol} positioned={positioned} onOverviewZoomChange={onOverviewZoomChange} onZoomedOut={onZoomedOut} />
       <Environment preset="night" environmentIntensity={0.18} />
     </Canvas>
   )
