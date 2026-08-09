@@ -89,11 +89,13 @@ const PlanetShaderMaterial = shaderMaterial(
         float vein = 1.0 - smoothstep(0.02, 0.12, abs(macro - 0.51 + (detail - 0.5) * 0.16));
         return mix(baseTone, mix(lightTone, vec3(0.96, 0.95, 0.9), 0.28), vein * 0.58);
       }
-      if (style < 2.5) { // gas giant: broad atmospheric bands
-        float bands = 0.5 + 0.5 * sin(vLocalPosition.y * 17.0 + detail * 3.0 + uSeed);
-        float softBands = smoothstep(0.17, 0.83, bands);
-        float storm = smoothstep(0.61, 0.83, fbm3(vLocalPosition * 4.0 + vec3(uSeed)));
-        return mix(mix(uDeep, uBase, softBands), lightTone, storm * 0.32);
+      if (style < 2.5) { // gas giant: soft cloud masses and rounded eddies, never regular bands
+        float cloudMass = fbm3(vLocalPosition * 3.8 + vec3(uSeed, uTime * 0.006, uSeed * 0.7));
+        float eddies = fbm3(vLocalPosition * 8.5 + vec3(uSeed * 1.4, -uTime * 0.01, uSeed));
+        float cloud = smoothstep(0.26, 0.76, cloudMass);
+        vec3 atmosphere = mix(mix(uDeep, uBase, cloud * 0.86), mix(lightTone, uAccent, eddies * 0.28), cloud * 0.34);
+        float highlight = smoothstep(0.62, 0.88, eddies + cloud * 0.18);
+        return mix(atmosphere, lightTone, highlight * 0.22);
       }
       if (style < 3.5) { // lava: subdued volcanic fissures
         float crust = smoothstep(0.22, 0.78, macro);
@@ -105,9 +107,12 @@ const PlanetShaderMaterial = shaderMaterial(
         float frost = smoothstep(0.38, 0.76, macro + detail * 0.16);
         return mix(uDeep, mix(uBase, uAccent, 0.46), frost);
       }
-      if (style < 5.5) { // desert: elegant dune gradients
-        float dunes = 0.5 + 0.5 * sin(vLocalPosition.y * 13.0 + macro * 4.0 + uSeed);
-        return mix(uDeep, mix(uBase, uAccent, 0.25), smoothstep(0.16, 0.9, dunes));
+      if (style < 5.5) { // desert: soft cellular dunes without parallel striping
+        float duneMass = fbm3(vLocalPosition * 4.2 + vec3(uSeed * 0.8, 0.0, uSeed * 1.3));
+        float duneDetail = fbm3(vLocalPosition * 10.0 + vec3(uSeed * 1.9, uSeed, 0.0));
+        float dunes = smoothstep(0.28, 0.78, duneMass + duneDetail * 0.18);
+        vec3 sand = mix(uDeep, mix(uBase, uAccent, 0.25), dunes);
+        return mix(sand, lightTone, smoothstep(0.68, 0.9, duneDetail) * 0.12);
       }
       if (style < 6.5) { // storm: soft blue-violet turbulence
         float swirl = fbm3(vLocalPosition * 5.5 + vec3(uSeed, uTime * 0.012, 0.0));
@@ -126,10 +131,12 @@ const PlanetShaderMaterial = shaderMaterial(
       float pulse = smoothstep(0.5, 0.84, fbm3(vLocalPosition * 6.0 + vec3(uSeed, uTime * 0.016, 0.0)));
       return mix(uBase * 0.18, mix(uBase, uAccent, 0.75), pulse);
       }
-      if (style < 10.5) { // aurora: cool ribbons with a soft polar glow
-        float ribbons = 0.5 + 0.5 * sin(vLocalPosition.y * 10.0 + fbm3(vLocalPosition * 4.0 + vec3(uSeed)) * 5.0);
+      if (style < 10.5) { // aurora: irregular polar veils, never evenly spaced ribbons
+        float veilNoise = fbm3(vLocalPosition * 4.6 + vec3(uSeed, uTime * 0.008, uSeed * 0.5));
+        float veil = smoothstep(0.38, 0.76, veilNoise);
         float polar = smoothstep(0.25, 0.9, abs(vLocalPosition.y));
-        return mix(mix(uDeep, uBase, ribbons * 0.58), uAccent, polar * 0.28);
+        vec3 aurora = mix(uDeep, uBase, veil * 0.58);
+        return mix(aurora, uAccent, polar * veil * 0.32);
       }
       if (style < 11.5) { // volcanic: dark basalt with restrained molten seams
         float rock = fbm3(vLocalPosition * 6.5 + vec3(uSeed));

@@ -47,5 +47,10 @@ describe('planet profiles', () => {
     expect(profile.tilt).toBeGreaterThan(-0.8)
     expect(profile.tilt).toBeLessThan(0.8)
   })
+
+  it('avoids the old regular banding styles for exchange assets', () => {
+    expect(planetProfile(coin('BNB', ['exchange'])).style).not.toBe('gas')
+    expect(planetProfile(coin('LEO', ['exchange'])).style).not.toBe('desert')
+  })
 })
 
