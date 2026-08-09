@@ -8,9 +8,9 @@ describe('market-cap galaxy layout', () => {
     const middle = radiusForMarketCap(1_000_000_000, 1_000_000, 1_000_000_000_000)
     const biggest = radiusForMarketCap(1_000_000_000_000, 1_000_000, 1_000_000_000_000)
 
-    expect(smallest).toBeCloseTo(0.16)
+    expect(smallest).toBeCloseTo(0.15)
     expect(middle).toBeGreaterThan(smallest)
-    expect(biggest).toBeCloseTo(1.11)
+    expect(biggest).toBeCloseTo(0.92)
   })
 
   it('places each category coin deterministically around its galaxy', () => {
@@ -34,7 +34,30 @@ describe('market-cap galaxy layout', () => {
 
     expect(first).toHaveLength(4)
     expect(first.map((coin) => coin.position)).toEqual(second.map((coin) => coin.position))
-    expect(first.every((coin) => coin.radius >= 0.16 && coin.radius <= 1.11)).toBe(true)
+    expect(first.every((coin) => coin.radius >= 0.15 && coin.radius <= 0.92)).toBe(true)
+  })
+
+  it('keeps planets in a safe orbital band away from their sun', () => {
+    const coins = Array.from({ length: 7 }, (_, index) => ({
+      rank: index + 1,
+      symbol: `T${index}`,
+      nameFa: `توکن ${index}`,
+      nameEn: `Token ${index}`,
+      slug: `t${index}`,
+      marketCap: 10_000_000 * (index + 1),
+      marketCapCurrency: 'USDT',
+      change24h: 0,
+      priceIrt: 1,
+      categories: ['core'],
+      iconUrl: '',
+      bit24Url: '',
+    })) as Coin[]
+    const galaxy = GALAXIES.find((item) => item.id === 'core')!
+    const positioned = positionCoins(coins, galaxy, coins)
+    const distances = positioned.map((coin) => Math.hypot(coin.position[0] - galaxy.position[0], coin.position[1] - galaxy.position[1], coin.position[2] - galaxy.position[2]))
+
+    expect(Math.min(...distances)).toBeGreaterThan(2.7)
+    expect(Math.max(...distances)).toBeLessThan(7.6)
   })
 
   it('assigns a multi-category coin to only one galaxy in the overview', () => {

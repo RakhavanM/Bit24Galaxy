@@ -1,10 +1,10 @@
 import type { GalaxyFocus } from './types'
 
 export const MIN_ORBIT_DISTANCE = 2.2
-export const MAX_ORBIT_DISTANCE = 38
-export const OVERVIEW_DISTANCE = 25
-export const HERO_FADE_DISTANCE = 14
-export const GALAXY_EXIT_DISTANCE = 12.5
+export const MAX_ORBIT_DISTANCE = 58
+export const OVERVIEW_DISTANCE = 38
+export const HERO_FADE_DISTANCE = 21
+export const GALAXY_EXIT_DISTANCE = 15.5
 
 export function clampOrbitDistance(distance: number): number {
   return Math.max(MIN_ORBIT_DISTANCE, Math.min(MAX_ORBIT_DISTANCE, distance))

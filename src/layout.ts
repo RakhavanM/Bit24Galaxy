@@ -2,8 +2,10 @@ import type { CategoryId, Coin, GalaxyDefinition, GalaxyLayout, PositionedCoin }
 import { CATEGORY_COLORS, CATEGORY_ORDER } from './types'
 
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
-const MIN_RADIUS = 0.16
-const MAX_RADIUS = 1.11
+const MIN_RADIUS = 0.15
+const MAX_RADIUS = 0.92
+const ORBIT_INNER = 2.75
+const ORBIT_OUTER = 6.7
 
 export function radiusForMarketCap(marketCap: number, minMarketCap: number, maxMarketCap: number): number {
   const safeMin = Math.max(1, minMarketCap)
@@ -30,16 +32,17 @@ export function positionCoins(coins: Coin[], galaxy: GalaxyDefinition, categoryC
   const maxMarketCap = Math.max(...coins.map((coin) => coin.marketCap))
   const sorted = [...categoryCoins].sort((a, b) => b.marketCap - a.marketCap)
   const [cx, cy, cz] = galaxy.position
-  const spread = 1.35 + Math.min(1.8, Math.sqrt(sorted.length) * 0.36)
+  const orbitSpan = ORBIT_OUTER - ORBIT_INNER
+  const radialStep = sorted.length > 1 ? orbitSpan / Math.max(2, Math.ceil(Math.sqrt(sorted.length)) + 0.5) : 0
 
   return sorted.map((coin, index) => {
     const angle = index * GOLDEN_ANGLE + galaxy.position[0] * 0.13
     const ring = Math.floor(Math.sqrt(index + 1))
-    const radial = 0.45 + ring * (0.66 + (index % 3) * 0.07)
-    const wobble = Math.sin(index * 2.21 + galaxy.position[1]) * 0.16
-    const x = cx + Math.cos(angle) * (radial * spread * 0.92 + wobble)
-    const y = cy + Math.sin(angle) * (radial * spread * 0.58 - wobble * 0.34)
-    const z = cz + Math.sin(angle * 1.7) * 1.15 + (index % 4) * 0.16
+    const radial = Math.min(ORBIT_OUTER, ORBIT_INNER + ring * radialStep + (index % 2) * 0.18)
+    const inclination = 0.68 + (index % 3) * 0.07
+    const x = cx + Math.cos(angle) * radial
+    const y = cy + Math.sin(angle) * radial * inclination
+    const z = cz + Math.sin(angle * 1.7 + galaxy.position[2]) * (0.72 + (index % 3) * 0.12)
     return {
       ...coin,
       galaxyId: galaxy.id,

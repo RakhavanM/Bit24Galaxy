@@ -128,7 +128,7 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'دارایی‌هایی که نقشه بازار را تعریف می‌کنند.',
     accent: CATEGORY_COLORS.core,
     accentRgb: '215, 246, 255',
-    position: [-6, 2.3, 1],
+    position: [-10, 4.2, 1.8],
   },
   {
     id: 'stablecoins',
@@ -138,7 +138,7 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'واحدهای باثبات برای حرکت نقدینگی در بازار.',
     accent: CATEGORY_COLORS.stablecoins,
     accentRgb: '166, 220, 137',
-    position: [5.8, 2.1, -1.4],
+    position: [9.4, 4.1, -2.4],
   },
   {
     id: 'defi',
@@ -148,7 +148,7 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'پروتکل‌ها و دارایی‌های مالی بدون واسطه.',
     accent: CATEGORY_COLORS.defi,
     accentRgb: '189, 140, 255',
-    position: [-5.2, -2.3, -1.8],
+    position: [-9.2, -3.8, -2.6],
   },
   {
     id: 'layer2',
@@ -158,7 +158,7 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'راهکارهایی برای مقیاس‌پذیری نسل بعدی شبکه‌ها.',
     accent: CATEGORY_COLORS.layer2,
     accentRgb: '255, 173, 98',
-    position: [4.8, -2.4, 0.8],
+    position: [8.2, -3.8, 2.1],
   },
   {
     id: 'ai',
@@ -168,7 +168,7 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'تقاطع محاسبات، داده و زیرساخت غیرمتمرکز.',
     accent: CATEGORY_COLORS.ai,
     accentRgb: '121, 233, 213',
-    position: [-0.3, -4.7, 1.2],
+    position: [-1.1, -8.0, 1.4],
   },
   {
     id: 'gamefi',
@@ -178,7 +178,7 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'اقتصادهای بازی، جهان‌های مجازی و مالکیت دیجیتال.',
     accent: CATEGORY_COLORS.gamefi,
     accentRgb: '255, 131, 198',
-    position: [0.6, 4.7, -0.6],
+    position: [1.8, 8.0, -1.5],
   },
   {
     id: 'exchange',
@@ -188,7 +188,7 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'توکن‌های اکوسیستم‌ها و بازارهای مبادله.',
     accent: CATEGORY_COLORS.exchange,
     accentRgb: '255, 149, 109',
-    position: [-9.1, 0.1, -1],
+    position: [-15.0, 0.0, -1.0],
   },
   {
     id: 'memes',
@@ -198,7 +198,7 @@ export const GALAXIES: GalaxyDefinition[] = [
     description: 'جامعه، شوخی و انرژی جمعی بازار.',
     accent: CATEGORY_COLORS.memes,
     accentRgb: '255, 113, 158',
-    position: [9, 0.1, 1.1],
+    position: [14.8, 0.0, 1.3],
   },
 ]
 

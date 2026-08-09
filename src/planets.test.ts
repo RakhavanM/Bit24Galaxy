@@ -27,13 +27,14 @@ describe('planet profiles', () => {
   })
 
   it('assigns deterministic but varied planet styles and rotation', () => {
-    const symbols = ['BTC', 'ETH', 'USDT', 'SOL', 'DOGE', 'TAO', 'XAUT', 'AAVE', 'ZEC']
+    const symbols = ['BTC', 'ETH', 'USDT', 'SOL', 'DOGE', 'TAO', 'AAVE', 'ZEC', 'RNDR', 'GALA', 'MANTA', 'BRETT', 'FLOKI', 'KCS']
     const profiles = symbols.map((symbol) => planetProfile(coin(symbol)))
     const styles = new Set(profiles.map((profile) => profile.style))
     const speeds = new Set(profiles.map((profile) => profile.rotationSpeed))
 
-    expect(styles.size).toBeGreaterThanOrEqual(5)
+    expect(styles.size).toBeGreaterThanOrEqual(8)
     expect(speeds.size).toBe(symbols.length)
+    expect(styles.size).toBeGreaterThanOrEqual(8)
     expect(profiles.every((profile) => profile.base.startsWith('#'))).toBe(true)
   })
 

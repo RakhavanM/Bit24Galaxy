@@ -42,7 +42,7 @@ export function GalaxyNodes({
 
   return (
     <group>
-      <Line points={ringPoints} color={color} transparent opacity={isActive ? 0.42 : 0.15} lineWidth={isActive ? 1.2 : 0.55} />
+      <Line points={ringPoints} color={color} transparent opacity={isActive ? 0.42 : 0.12} lineWidth={isActive ? 1.2 : 0.5} />
       <GalaxySun galaxy={galaxy} active={isActive} onSelect={onSelectGalaxy} />
       {coins.map((coin) => (
         <CoinNode key={`${galaxy.id}-${coin.symbol}`} coin={coin} active={coin.symbol === activeSymbol} onSelect={onSelectCoin} />
@@ -73,7 +73,7 @@ function GalaxySun({ galaxy, active, onSelect }: { galaxy: GalaxyDefinition; act
         <SunMaterial profile={profile} />
       </Sphere>
       <SunCorona profile={profile} active={active} />
-      <Html center distanceFactor={10} style={{ pointerEvents: 'none' }}>
+      <Html center distanceFactor={13} style={{ pointerEvents: 'none' }}>
         <div className={`galaxy-label ${active ? 'galaxy-label--active' : ''}`} style={{ '--accent': galaxy.accent } as CSSProperties}>
           <span>{galaxy.shortLabel}</span>
           <strong>{galaxy.label}</strong>
@@ -118,7 +118,7 @@ function CoinNode({ coin, active, onSelect }: CoinNodeProps) {
         </Torus>
       )}
       <Atmosphere radius={coin.radius} color={profile.accent} intensity={profile.atmosphere * (active ? 1.4 : 1)} />
-      <Html center distanceFactor={9} style={{ pointerEvents: 'none' }}>
+      <Html center distanceFactor={11} style={{ pointerEvents: 'none' }}>
         <div className={`coin-label ${active ? 'coin-label--active' : ''}`}>
           <img src={coinIconUrl(coin)} alt="" />
           <span>{coin.symbol}</span>

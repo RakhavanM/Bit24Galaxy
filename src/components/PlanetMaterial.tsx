@@ -122,9 +122,29 @@ const PlanetShaderMaterial = shaderMaterial(
         float glint = smoothstep(0.66, 0.9, fbm3(vLocalPosition * 8.0 + vec3(uSeed)));
         return mix(uDeep * 0.34, mix(uBase, uAccent, 0.42), glint * 0.74);
       }
-      // neon: subtle bioluminescent clouds for AI assets
+      if (style < 9.5) { // neon: subtle bioluminescent clouds for AI assets
       float pulse = smoothstep(0.5, 0.84, fbm3(vLocalPosition * 6.0 + vec3(uSeed, uTime * 0.016, 0.0)));
       return mix(uBase * 0.18, mix(uBase, uAccent, 0.75), pulse);
+      }
+      if (style < 10.5) { // aurora: cool ribbons with a soft polar glow
+        float ribbons = 0.5 + 0.5 * sin(vLocalPosition.y * 10.0 + fbm3(vLocalPosition * 4.0 + vec3(uSeed)) * 5.0);
+        float polar = smoothstep(0.25, 0.9, abs(vLocalPosition.y));
+        return mix(mix(uDeep, uBase, ribbons * 0.58), uAccent, polar * 0.28);
+      }
+      if (style < 11.5) { // volcanic: dark basalt with restrained molten seams
+        float rock = fbm3(vLocalPosition * 6.5 + vec3(uSeed));
+        float seam = smoothstep(0.67, 0.82, fbm3(vLocalPosition * 13.0 + vec3(uSeed * 1.9)));
+        return mix(mix(uDeep * 0.72, uBase * 0.74, rock), mix(uAccent, vec3(1.0, 0.32, 0.08), 0.24), seam * 0.46);
+      }
+      if (style < 12.5) { // savanna: warm matte continents and thin cloud cover
+        float land = smoothstep(0.44, 0.64, fbm3(vLocalPosition * 3.4 + vec3(uSeed)));
+        float cloudBand = smoothstep(0.62, 0.82, fbm3(vLocalPosition * 8.0 + vec3(uSeed * 1.4)));
+        vec3 ground = mix(uDeep * 0.55, mix(uBase, uAccent, 0.42), land);
+        return mix(ground, vec3(0.92, 0.88, 0.72), cloudBand * 0.16);
+      }
+      // twilight: deep violet atmosphere with quiet luminous streaks
+      float streak = smoothstep(0.55, 0.86, fbm3(vLocalPosition * 5.5 + vec3(uSeed, uTime * 0.008, 0.0)));
+      return mix(uDeep * 0.48, mix(uBase, uAccent, 0.55), streak);
     }
 
     void main() {
@@ -169,7 +189,7 @@ export function PlanetMaterial({ profile, active }: PlanetMaterialProps) {
     instance.uBase = new THREE.Color(...hexToColor(profile.base))
     instance.uAccent = new THREE.Color(...hexToColor(profile.accent))
     instance.uDeep = new THREE.Color(...hexToColor(profile.deep))
-    instance.uStyle = ['ocean', 'marble', 'gas', 'lava', 'ice', 'desert', 'storm', 'crystal', 'shadow', 'neon'].indexOf(profile.style)
+    instance.uStyle = ['ocean', 'marble', 'gas', 'lava', 'ice', 'desert', 'storm', 'crystal', 'shadow', 'neon', 'aurora', 'volcanic', 'savanna', 'twilight'].indexOf(profile.style)
     instance.uCloudiness = profile.cloudiness
     instance.uAtmosphere = profile.atmosphere
     return instance

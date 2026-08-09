@@ -98,7 +98,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
 
   useEffect(() => {
     let nextTarget: [number, number, number] = [0, 0, 0]
-    let nextDistance = activeGalaxy ? 7.6 : OVERVIEW_DISTANCE
+    let nextDistance = activeGalaxy ? 9.2 : OVERVIEW_DISTANCE
     const targetKey = activeGalaxy ? `${activeGalaxy.id}:${activeSymbol ?? ''}` : 'overview'
 
     if (activeGalaxy) {
@@ -107,7 +107,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
         const coin = positioned.get(activeGalaxy.id)?.find((item) => item.symbol === activeSymbol)
         if (coin) {
           nextTarget = coin.position
-          nextDistance = 5.4
+          nextDistance = 6.2
         }
       }
     }

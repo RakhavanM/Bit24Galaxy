@@ -1,6 +1,6 @@
 import type { CategoryId, Coin } from './types'
 
-export type PlanetStyle = 'ocean' | 'marble' | 'gas' | 'lava' | 'ice' | 'desert' | 'storm' | 'crystal' | 'shadow' | 'neon'
+export type PlanetStyle = 'ocean' | 'marble' | 'gas' | 'lava' | 'ice' | 'desert' | 'storm' | 'crystal' | 'shadow' | 'neon' | 'aurora' | 'volcanic' | 'savanna' | 'twilight'
 
 export type PlanetProfile = {
   base: string
@@ -27,7 +27,7 @@ const LOGO_COLORS: Record<string, string> = {
   XRP: '#f0f0f0', ZEC: '#f4b728',
 }
 
-const STYLE_ORDER: PlanetStyle[] = ['ocean', 'marble', 'gas', 'lava', 'ice', 'desert', 'storm', 'crystal', 'shadow', 'neon']
+const STYLE_ORDER: PlanetStyle[] = ['ocean', 'marble', 'gas', 'lava', 'ice', 'desert', 'storm', 'crystal', 'shadow', 'neon', 'aurora', 'volcanic', 'savanna', 'twilight']
 
 const CATEGORY_STYLE: Partial<Record<CategoryId, PlanetStyle>> = {
   ai: 'neon',
@@ -50,6 +50,10 @@ const STYLE_ACCENTS: Record<PlanetStyle, string> = {
   crystal: '#e1aaff',
   shadow: '#7f72d9',
   neon: '#61ffdf',
+  aurora: '#8fe8ff',
+  volcanic: '#ff865f',
+  savanna: '#d6c66f',
+  twilight: '#9d8cff',
 }
 
 const STYLE_DEEP: Record<PlanetStyle, string> = {
@@ -63,6 +67,10 @@ const STYLE_DEEP: Record<PlanetStyle, string> = {
   crystal: '#291044',
   shadow: '#090719',
   neon: '#063f3a',
+  aurora: '#0b274b',
+  volcanic: '#3b120e',
+  savanna: '#3f3215',
+  twilight: '#211640',
 }
 
 function hashSymbol(symbol: string): number {
@@ -98,7 +106,7 @@ export function planetProfile(coin: Pick<Coin, 'symbol' | 'categories'>): Planet
   const categoryStyle = coin.categories.map((category) => CATEGORY_STYLE[category]).find(Boolean)
   // Category style is a palette bias, not a hard template. This keeps DeFi/AI
   // assets related while preventing an entire constellation from looking cloned.
-  const style = categoryStyle && hash % 4 === 0 ? categoryStyle : STYLE_ORDER[hash % STYLE_ORDER.length]
+  const style = categoryStyle && hash % 5 === 0 ? categoryStyle : STYLE_ORDER[hash % STYLE_ORDER.length]
   const base = logoColor(coin.symbol)
   const accent = mixColors(base, STYLE_ACCENTS[style], 0.32)
   const deep = mixColors(STYLE_DEEP[style], base, 0.16)
@@ -113,7 +121,7 @@ export function planetProfile(coin: Pick<Coin, 'symbol' | 'categories'>): Planet
     seed: (hash % 10000) / 1000,
     rotationSpeed,
     tilt,
-    ring: ['BTC', 'ETH', 'SOL', 'XAUT', 'PAXG'].includes(coin.symbol) || hash % 19 === 0,
+    ring: ['BTC', 'ETH', 'SOL', 'XAUT', 'PAXG'].includes(coin.symbol) || hash % 23 === 0,
     atmosphere: 0.14 + ((hash >>> 16) % 18) / 100,
     cloudiness: 0.14 + ((hash >>> 24) % 42) / 100,
   }
