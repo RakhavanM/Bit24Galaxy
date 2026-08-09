@@ -21,6 +21,9 @@ export type Coin = {
   categories: CategoryId[]
   iconUrl: string
   bit24Url: string
+  sourceSymbol?: string
+  selectionRank?: number
+  sourceType?: string
 }
 
 export type CoinSnapshot = {
