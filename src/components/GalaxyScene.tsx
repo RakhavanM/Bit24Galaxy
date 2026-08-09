@@ -1,12 +1,12 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Environment } from '@react-three/drei'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
-import { GalaxyNodes } from './GalaxyNodes'
+import { GalaxyNodes, type HoverTarget } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { compactGalaxyCenters, localGalaxyFootprint, localGalaxyRadius, overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
-import { clampOrbitDistance, overviewExplorationProgress, pointerWorldOnTargetPlane, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
+import { clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -20,6 +20,10 @@ type GalaxySceneProps = {
 }
 
 export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, onSelectGalaxy, onClearSelection, onOverviewZoomChange, onZoomedOut }: GalaxySceneProps) {
+  const [hoveredTarget, setHoveredTarget] = useState<HoverTarget | null>(null)
+  const handleHoverTarget = (target: HoverTarget | null) => {
+    setHoveredTarget(target)
+  }
   const sceneGalaxies = useMemo(() => {
     const categoryCoins = new Map(GALAXIES.map((galaxy) => [
       galaxy.id,
@@ -68,13 +72,15 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
               coins={positioned.get(galaxy.id) ?? []}
               activeSymbol={activeSymbol}
               activeGalaxy={activeGalaxy?.id ?? null}
+              hoveredTarget={hoveredTarget}
               onSelectCoin={onSelectCoin}
               onSelectGalaxy={onSelectGalaxy}
+              onHoverTarget={handleHoverTarget}
             />
           )}
         </group>
       ))}
-      <CameraFlight activeGalaxy={activeSceneGalaxy} activeSymbol={activeSymbol} positioned={positioned} onOverviewZoomChange={onOverviewZoomChange} onZoomedOut={onZoomedOut} />
+      <CameraFlight activeGalaxy={activeSceneGalaxy} activeSymbol={activeSymbol} positioned={positioned} onOverviewZoomChange={onOverviewZoomChange} onZoomedOut={onZoomedOut} hoveredTarget={hoveredTarget} />
       <Environment preset="night" environmentIntensity={0.18} />
     </Canvas>
   )
@@ -86,9 +92,10 @@ type CameraFlightProps = {
   positioned: Map<string, PositionedCoin[]>
   onOverviewZoomChange: (progress: number) => void
   onZoomedOut: () => void
+  hoveredTarget: HoverTarget | null
 }
 
-function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomChange, onZoomedOut }: CameraFlightProps) {
+function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomChange, onZoomedOut, hoveredTarget }: CameraFlightProps) {
   const { camera, gl } = useThree()
   const target = useRef(new THREE.Vector3(0, 0, 0))
   const desiredTarget = useRef(new THREE.Vector3(0, 0, 0))
@@ -99,8 +106,8 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
   const drag = useRef({ active: false, x: 0, y: 0, moved: false })
   const pinchDistance = useRef<number | null>(null)
   const pointerCount = useRef(0)
-  const pointerNdc = useRef<[number, number]>([0, 0])
-  const pointerPlane = useRef<[number, number, number]>([0, 0, 0])
+
+
   const lastAutoTarget = useRef('overview')
   const lastZoomDistance = useRef(OVERVIEW_DISTANCE)
   const activeGalaxyRef = useRef(activeGalaxy)
@@ -139,29 +146,18 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
     const element = gl.domElement
     const onWheel = (event: WheelEvent) => {
       event.preventDefault()
-      const rect = element.getBoundingClientRect()
-      pointerNdc.current = [
-        (event.clientX - rect.left) / rect.width,
-        1 - (event.clientY - rect.top) / rect.height,
-      ]
       const zoomBefore = distance.current
       distance.current = zoomDistance(distance.current, event.deltaY)
       const zoomAmount = Math.max(-1, Math.min(1, (distance.current - zoomBefore) / Math.max(zoomBefore, 1)))
-      const ray = new THREE.Raycaster()
-      ray.setFromCamera(new THREE.Vector2(pointerNdc.current[0] * 2 - 1, pointerNdc.current[1] * 2 - 1), camera)
-      const rayPoint = pointerWorldOnTargetPlane(
-        [ray.ray.origin.x, ray.ray.origin.y, ray.ray.origin.z],
-        [ray.ray.direction.x, ray.ray.direction.y, ray.ray.direction.z],
-        [target.current.x, target.current.y, target.current.z],
-      )
-      const pointerTarget = zoomTargetForPointer(
-        [target.current.x, target.current.y, target.current.z],
-        rayPoint,
-        zoomBefore,
-        distance.current,
-      )
-      pointerPlane.current = pointerTarget
-      desiredTarget.current.lerp(new THREE.Vector3(...pointerTarget), Math.min(0.32, Math.abs(zoomAmount) * 0.55))
+      if (hoveredTarget) {
+        const hoveredPoint = zoomTargetForPointer(
+          [target.current.x, target.current.y, target.current.z],
+          hoveredTarget.position,
+          zoomBefore,
+          distance.current,
+        )
+        desiredTarget.current.lerp(new THREE.Vector3(...hoveredPoint), Math.min(0.92, 0.3 + Math.abs(zoomAmount) * 1.2))
+      }
       if (activeGalaxyRef.current && shouldExitGalaxy(distance.current)) onZoomedOutRef.current()
     }
     const onPointerDown = (event: PointerEvent) => {
@@ -196,13 +192,15 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
         const zoomBefore = distance.current
         distance.current = zoomDistance(distance.current, pinchDistance.current - current)
         const zoomAmount = Math.max(-1, Math.min(1, (distance.current - zoomBefore) / Math.max(zoomBefore, 1)))
-        const pointerTarget = zoomTargetForPointer(
-          [target.current.x, target.current.y, target.current.z],
-          [target.current.x, target.current.y, target.current.z],
-          zoomBefore,
-          distance.current,
-        )
-        desiredTarget.current.lerp(new THREE.Vector3(...pointerTarget), Math.min(0.2, Math.abs(zoomAmount) * 0.4))
+        if (hoveredTarget) {
+          const hoveredPoint = zoomTargetForPointer(
+            [target.current.x, target.current.y, target.current.z],
+            hoveredTarget.position,
+            zoomBefore,
+            distance.current,
+          )
+          desiredTarget.current.lerp(new THREE.Vector3(...hoveredPoint), Math.min(0.8, 0.25 + Math.abs(zoomAmount) * 0.9))
+        }
         if (activeGalaxyRef.current && shouldExitGalaxy(distance.current)) onZoomedOutRef.current()
       }
       pinchDistance.current = current
@@ -224,21 +222,14 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
       element.removeEventListener('touchmove', onTouchMove)
       element.removeEventListener('touchend', onTouchEnd)
     }
-  }, [gl])
+  }, [gl, hoveredTarget])
 
   useFrame((_, delta) => {
     const ease = 1 - Math.pow(0.001, delta)
     target.current.lerp(desiredTarget.current, ease)
     const [x, y, z] = orbitPosition([target.current.x, target.current.y, target.current.z], distance.current, azimuth.current, polar.current)
     desiredPosition.current.set(x, y + 0.8, z)
-    if (!activeGalaxyRef.current && Math.abs(lastZoomDistance.current - distance.current) > 0.01) {
-      const pointerShift = new THREE.Vector3(
-        pointerPlane.current[0] - target.current.x,
-        pointerPlane.current[1] - target.current.y,
-        pointerPlane.current[2] - target.current.z,
-      )
-      desiredPosition.current.add(pointerShift.multiplyScalar(0.32))
-    }
+
     camera.position.lerp(desiredPosition.current, ease)
     camera.lookAt(target.current)
     if (!activeGalaxyRef.current && Math.abs(lastZoomDistance.current - distance.current) > 0.01) {
