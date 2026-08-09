@@ -74,7 +74,7 @@ function GalaxySun({ galaxy, active, onSelect }: { galaxy: GalaxyDefinition; act
       </Sphere>
       <SunCorona profile={profile} active={active} />
       <Html center distanceFactor={10} style={{ pointerEvents: 'none' }}>
-        <div className={`galaxy-label ${active ? 'galaxy-label--active' : ''}`} style={{ '--accent': profile.base } as CSSProperties}>
+        <div className={`galaxy-label ${active ? 'galaxy-label--active' : ''}`} style={{ '--accent': galaxy.accent } as CSSProperties}>
           <span>{galaxy.shortLabel}</span>
           <strong>{galaxy.label}</strong>
         </div>

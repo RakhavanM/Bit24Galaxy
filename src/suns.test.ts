@@ -2,12 +2,24 @@ import { describe, expect, it } from 'vitest'
 import { GALAXIES } from './types'
 import { sunProfile } from './suns'
 
+function rgb(hex: string): [number, number, number] {
+  const value = hex.slice(1)
+  return [Number.parseInt(value.slice(0, 2), 16), Number.parseInt(value.slice(2, 4), 16), Number.parseInt(value.slice(4, 6), 16)]
+}
+
 describe('galaxy sun profiles', () => {
-  it('uses each galaxy accent as the sun color', () => {
+  it('uses a distinct high-luminance yellow-to-orange palette', () => {
     const profiles = GALAXIES.map((galaxy) => sunProfile(galaxy))
 
-    expect(profiles[0].base).toBe(GALAXIES[0].accent)
     expect(new Set(profiles.map((profile) => profile.base)).size).toBeGreaterThan(4)
+    profiles.forEach((profile, index) => {
+      const [red, green, blue] = rgb(profile.base)
+      expect(profile.base).not.toBe(GALAXIES[index].accent)
+      expect(red).toBeGreaterThanOrEqual(220)
+      expect(green).toBeGreaterThanOrEqual(90)
+      expect(green).toBeGreaterThan(blue)
+      expect(blue).toBeLessThanOrEqual(180)
+    })
   })
 
   it('keeps the same high-quality texture recipe for every sun', () => {

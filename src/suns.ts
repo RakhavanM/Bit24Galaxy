@@ -11,8 +11,13 @@ export type SunProfile = {
   coronaStrength: number
 }
 
-const SUN_DEEP = '#160d22'
-const SUN_GLOW = '#fff4c4'
+const SUN_DEEP = '#5a1706'
+const SUN_GLOW = '#fff2a6'
+
+// The category accent controls the identity of the galaxy label and orbit.
+// Suns deliberately live in a separate yellow→orange solar palette so they
+// remain unmistakable against the cool/multicolor planets.
+const SUN_PALETTE = ['#ffd166', '#ffca5c', '#ffbd45', '#ffad32', '#ff9b2e', '#ff8730', '#ff7428', '#ff6324', '#ff9f1c']
 
 function hexToRgb(hex: string): [number, number, number] {
   const value = hex.replace('#', '')
@@ -31,15 +36,17 @@ function mixColors(first: string, second: string, amount: number): string {
 
 export function sunProfile(galaxy: Pick<GalaxyDefinition, 'accent' | 'position'>): SunProfile {
   const positionSeed = Math.abs(Math.round(galaxy.position[0] * 17 + galaxy.position[1] * 29 + galaxy.position[2] * 41))
+  const paletteIndex = positionSeed % SUN_PALETTE.length
+  const base = SUN_PALETTE[paletteIndex]
   return {
-    base: galaxy.accent,
-    deep: mixColors(SUN_DEEP, galaxy.accent, 0.28),
-    glow: mixColors(galaxy.accent, SUN_GLOW, 0.62),
+    base,
+    deep: mixColors(SUN_DEEP, base, 0.36),
+    glow: mixColors(base, SUN_GLOW, 0.66),
     textureSeed: 7.25,
     textureScale: 3.4,
     radius: 0.58,
     rotationSpeed: 0.025 + (positionSeed % 7) * 0.003,
-    coronaStrength: 0.55,
+    coronaStrength: 0.72,
   }
 }
 

@@ -90,8 +90,8 @@ const SunShaderMaterial = shaderMaterial(
       surface = mix(surface, mix(uBase, uGlow, 0.7), filaments * 0.22);
 
       float hotCore = pow(facing, 0.62);
-      vec3 finalColor = surface * (0.42 + light * 0.76 + hotCore * 0.18);
-      finalColor += uGlow * (limb * 0.35 + hotCore * 0.08);
+      vec3 finalColor = surface * (0.58 + light * 0.92 + hotCore * 0.24);
+      finalColor += uGlow * (limb * 0.52 + hotCore * 0.14);
       gl_FragColor = vec4(finalColor, 1.0);
     }
   `,
@@ -128,9 +128,9 @@ export function SunMaterial({ profile }: { profile: SunProfile }) {
 export function SunCorona({ profile, active }: { profile: SunProfile; active: boolean }) {
   return (
     <group>
-      <SphereShell radius={profile.radius * 1.08} color={profile.glow} opacity={active ? 0.12 : 0.075} />
-      <SphereShell radius={profile.radius * 1.17} color={profile.base} opacity={active ? 0.075 : 0.04} />
-      <SphereShell radius={profile.radius * 1.29} color={profile.glow} opacity={active ? 0.045 : 0.022} />
+      <SphereShell radius={profile.radius * 1.08} color={profile.glow} opacity={active ? 0.16 : 0.105} />
+      <SphereShell radius={profile.radius * 1.17} color={profile.base} opacity={active ? 0.095 : 0.055} />
+      <SphereShell radius={profile.radius * 1.29} color={profile.glow} opacity={active ? 0.06 : 0.032} />
     </group>
   )
 }
