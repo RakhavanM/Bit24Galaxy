@@ -15,7 +15,6 @@ export type OverlayProps = {
 
 export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgress, onSelectGalaxy, onSelectCoin }: OverlayProps) {
   const [search, setSearch] = useState('')
-  const [menuOpen, setMenuOpen] = useState(false)
   const normalized = normalizeSearch(search)
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -42,9 +41,6 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgres
           <span><b>BIT24</b><em>GALAXY</em></span>
         </button>
         <div className="topbar-status"><span className="status-dot" /> STATIC MARKET-CAP ATLAS <span>·</span> PHASE 02</div>
-        <button className="menu-trigger" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen}>
-          <span /> <span />
-        </button>
       </header>
 
       <section className="hero-copy" style={{ opacity: 1 - overviewZoomProgress, transform: `translateY(${-overviewZoomProgress * 18}px)`, pointerEvents: overviewZoomProgress > 0.92 ? 'none' : 'auto' }}>
