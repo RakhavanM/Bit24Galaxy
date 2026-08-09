@@ -8,11 +8,12 @@ export type OverlayProps = {
   coins: Coin[]
   activeGalaxy: GalaxyDefinition | null
   selectedCoin: PositionedCoin | null
+  overviewZoomProgress: number
   onSelectGalaxy: (galaxy: GalaxyDefinition | null) => void
   onSelectCoin: (coin: PositionedCoin | null) => void
 }
 
-export function Overlay({ coins, activeGalaxy, selectedCoin, onSelectGalaxy, onSelectCoin }: OverlayProps) {
+export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgress, onSelectGalaxy, onSelectCoin }: OverlayProps) {
   const [search, setSearch] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   const normalized = normalizeSearch(search)
@@ -46,7 +47,7 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, onSelectGalaxy, onS
         </button>
       </header>
 
-      <section className="hero-copy">
+      <section className="hero-copy" style={{ opacity: 1 - overviewZoomProgress, transform: `translateY(${-overviewZoomProgress * 18}px)`, pointerEvents: overviewZoomProgress > 0.92 ? 'none' : 'auto' }}>
         <p className="kicker">AN IMMERSIVE ASSET MAP</p>
         <h1>بازار را<br /><i>از بالا ببین.</i></h1>
         <p className="hero-description">یک اطلس زنده‌نما از ۵۰ دارایی برتر لیست‌شده در بیت۲۴؛ هر کهکشان یک روایت و هر سیاره یک پروژه است.</p>

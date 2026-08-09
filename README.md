@@ -13,6 +13,7 @@ A static, RTL experience that turns the first 50 assets in Bit24's public market
 - Free canvas navigation: drag to orbit around the current view, mouse wheel to zoom, and pinch on touch devices.
 - Procedural planet rendering: logo-anchored colors, distinct surface families, atmosphere rims, rings, axial tilt, and deterministic rotation.
 - Galaxy centers are shared-texture suns: every constellation uses the same refined solar surface recipe with its own category accent color.
+- v0.2 interaction layer: distant opening overview, denser night-sky starfield, progressive hero fade on zoom-in, and automatic return from a focused galaxy when zooming out.
 - Snapshot data only; no live prices, accounts, trading, or API keys in the browser.
 - Responsive layout with a reduced-motion preference.
 

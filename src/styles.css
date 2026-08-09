@@ -40,7 +40,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
 .status-dot { width: 5px; height: 5px; border-radius: 50%; background: #9ee6bd; box-shadow: 0 0 12px #9ee6bd; }
 .menu-trigger { display: flex; width: 31px; height: 31px; padding: 7px 3px; flex-direction: column; justify-content: center; gap: 6px; background: transparent; }
 .menu-trigger span { display: block; width: 25px; height: 1px; background: var(--ink); }
-.hero-copy { position: absolute; top: 17vh; left: 9vw; width: min(440px, 34vw); direction: rtl; text-align: right; opacity: .78; }
+.hero-copy { position: absolute; top: 17vh; left: 9vw; width: min(440px, 34vw); direction: rtl; text-align: right; opacity: .78; will-change: opacity, transform; transition: opacity .18s ease, transform .18s ease; }
 .kicker, .hero-rule, .nav-heading, .footer-note, .coordinates, .coin-details-heading p, .galaxy-info > p, .coin-stats span, .loader-meta, .coin-tags, .snapshot-note { font-family: var(--mono); }
 .kicker { margin: 0 0 25px; color: var(--dim); direction: ltr; text-align: left; font-size: 10px; letter-spacing: .2em; }
 .hero-copy h1 { margin: 0; color: #eff3ff; font-size: clamp(42px, 4.7vw, 74px); font-weight: 600; letter-spacing: -.075em; line-height: .98; text-shadow: 0 5px 28px rgba(3, 6, 18, .45); }

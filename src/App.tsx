@@ -11,6 +11,7 @@ export default function App() {
   const [progress, setProgress] = useState(8)
   const [activeGalaxy, setActiveGalaxy] = useState<GalaxyDefinition | null>(null)
   const [selectedCoin, setSelectedCoin] = useState<PositionedCoin | null>(null)
+  const [overviewZoomProgress, setOverviewZoomProgress] = useState(0)
 
   useEffect(() => {
     let mounted = true
@@ -41,9 +42,9 @@ export default function App() {
   return (
     <main className="app-shell">
       <div className="canvas-layer">
-        {!loading && <GalaxyScene coins={coins} activeGalaxy={safeGalaxy} activeSymbol={selectedCoin?.symbol ?? null} onSelectCoin={setSelectedCoin} onSelectGalaxy={(galaxy) => { setActiveGalaxy(galaxy); setSelectedCoin(null) }} onClearSelection={() => setSelectedCoin(null)} />}
+        {!loading && <GalaxyScene coins={coins} activeGalaxy={safeGalaxy} activeSymbol={selectedCoin?.symbol ?? null} onSelectCoin={setSelectedCoin} onSelectGalaxy={(galaxy) => { setActiveGalaxy(galaxy); setSelectedCoin(null); setOverviewZoomProgress(1) }} onClearSelection={() => setSelectedCoin(null)} onOverviewZoomChange={setOverviewZoomProgress} onZoomedOut={() => { setActiveGalaxy(null); setSelectedCoin(null); setOverviewZoomProgress(0) }} />}
       </div>
-      {!loading && <Overlay coins={coins} activeGalaxy={safeGalaxy} selectedCoin={selectedCoin} onSelectGalaxy={(galaxy) => { setActiveGalaxy(galaxy); setSelectedCoin(null) }} onSelectCoin={setSelectedCoin} />}
+      {!loading && <Overlay coins={coins} activeGalaxy={safeGalaxy} selectedCoin={selectedCoin} overviewZoomProgress={overviewZoomProgress} onSelectGalaxy={(galaxy) => { setActiveGalaxy(galaxy); setSelectedCoin(null); setOverviewZoomProgress(galaxy ? 1 : 0) }} onSelectCoin={setSelectedCoin} />}
       {loading && <Loader progress={progress} />}
     </main>
   )

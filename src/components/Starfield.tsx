@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
-const STAR_COUNT = 1700
+const STAR_COUNT = 4200
 
 export function Starfield() {
   const positions = useMemo(() => {
@@ -27,7 +27,7 @@ export function Starfield() {
       <PointMaterial
         transparent
         color="#d6e8ff"
-        size={0.045}
+        size={0.035}
         sizeAttenuation
         depthWrite={false}
         blending={THREE.AdditiveBlending}

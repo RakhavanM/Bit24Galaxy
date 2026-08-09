@@ -6,7 +6,7 @@ import { GalaxyNodes } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
-import { clampOrbitDistance, orbitPosition, zoomDistance } from '../camera'
+import { clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, OVERVIEW_DISTANCE } from '../camera'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -15,9 +15,11 @@ type GalaxySceneProps = {
   onSelectCoin: (coin: PositionedCoin) => void
   onSelectGalaxy: (galaxy: GalaxyDefinition) => void
   onClearSelection: () => void
+  onOverviewZoomChange: (progress: number) => void
+  onZoomedOut: () => void
 }
 
-export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, onSelectGalaxy, onClearSelection }: GalaxySceneProps) {
+export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, onSelectGalaxy, onClearSelection, onOverviewZoomChange, onZoomedOut }: GalaxySceneProps) {
   const positioned = useMemo(() => {
     const map = new Map<string, PositionedCoin[]>()
     GALAXIES.forEach((galaxy) => {
@@ -32,7 +34,7 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
   return (
     <Canvas
       dpr={[1, 1.6]}
-      camera={{ position: [0, 0.4, 16], fov: 47, near: 0.1, far: 80 }}
+      camera={{ position: [0, 0.4, OVERVIEW_DISTANCE], fov: 47, near: 0.1, far: 100 }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       onPointerMissed={onClearSelection}
       onCreated={({ gl }) => {
@@ -59,7 +61,7 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
           )}
         </group>
       ))}
-      <CameraFlight activeGalaxy={activeGalaxy} activeSymbol={activeSymbol} positioned={positioned} />
+      <CameraFlight activeGalaxy={activeGalaxy} activeSymbol={activeSymbol} positioned={positioned} onOverviewZoomChange={onOverviewZoomChange} onZoomedOut={onZoomedOut} />
       <Environment preset="night" environmentIntensity={0.18} />
     </Canvas>
   )
@@ -69,24 +71,27 @@ type CameraFlightProps = {
   activeGalaxy: GalaxyDefinition | null
   activeSymbol: string | null
   positioned: Map<string, PositionedCoin[]>
+  onOverviewZoomChange: (progress: number) => void
+  onZoomedOut: () => void
 }
 
-function CameraFlight({ activeGalaxy, activeSymbol, positioned }: CameraFlightProps) {
+function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomChange, onZoomedOut }: CameraFlightProps) {
   const { camera, gl } = useThree()
   const target = useRef(new THREE.Vector3(0, 0, 0))
   const desiredTarget = useRef(new THREE.Vector3(0, 0, 0))
-  const desiredPosition = useRef(new THREE.Vector3(0, 0.4, 16))
-  const distance = useRef(16)
+  const desiredPosition = useRef(new THREE.Vector3(0, 0.4, OVERVIEW_DISTANCE))
+  const distance = useRef(OVERVIEW_DISTANCE)
   const azimuth = useRef(0)
   const polar = useRef(0.05)
   const drag = useRef({ active: false, x: 0, y: 0, moved: false })
   const pinchDistance = useRef<number | null>(null)
   const pointerCount = useRef(0)
   const lastAutoTarget = useRef('overview')
+  const lastZoomDistance = useRef(OVERVIEW_DISTANCE)
 
   useEffect(() => {
     let nextTarget: [number, number, number] = [0, 0, 0]
-    let nextDistance = activeGalaxy ? 7.6 : 16
+    let nextDistance = activeGalaxy ? 7.6 : OVERVIEW_DISTANCE
     const targetKey = activeGalaxy ? `${activeGalaxy.id}:${activeSymbol ?? ''}` : 'overview'
 
     if (activeGalaxy) {
@@ -103,6 +108,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned }: CameraFlightPr
     if (lastAutoTarget.current !== targetKey) {
       desiredTarget.current.set(...nextTarget)
       distance.current = clampOrbitDistance(nextDistance)
+      lastZoomDistance.current = distance.current
       lastAutoTarget.current = targetKey
     }
   }, [activeGalaxy, activeSymbol, positioned])
@@ -112,6 +118,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned }: CameraFlightPr
     const onWheel = (event: WheelEvent) => {
       event.preventDefault()
       distance.current = zoomDistance(distance.current, event.deltaY)
+      if (activeGalaxy && shouldExitGalaxy(distance.current)) onZoomedOut()
     }
     const onPointerDown = (event: PointerEvent) => {
       pointerCount.current += 1
@@ -143,6 +150,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned }: CameraFlightPr
       const current = Math.hypot(first.clientX - second.clientX, first.clientY - second.clientY)
       if (pinchDistance.current !== null) {
         distance.current = zoomDistance(distance.current, pinchDistance.current - current)
+        if (activeGalaxy && shouldExitGalaxy(distance.current)) onZoomedOut()
       }
       pinchDistance.current = current
     }
@@ -172,6 +180,10 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned }: CameraFlightPr
     desiredPosition.current.set(x, y + 0.8, z)
     camera.position.lerp(desiredPosition.current, ease)
     camera.lookAt(target.current)
+    if (!activeGalaxy && Math.abs(lastZoomDistance.current - distance.current) > 0.01) {
+      onOverviewZoomChange(overviewExplorationProgress(distance.current))
+      lastZoomDistance.current = distance.current
+    }
   })
 
   return null
