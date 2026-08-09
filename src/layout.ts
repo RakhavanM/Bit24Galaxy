@@ -42,7 +42,8 @@ export function positionCoins(coins: Coin[], galaxy: GalaxyDefinition, categoryC
     const inclination = 0.68 + (index % 3) * 0.07
     const x = cx + Math.cos(angle) * radial
     const y = cy + Math.sin(angle) * radial * inclination
-    const z = cz + Math.sin(angle * 1.7 + galaxy.position[2]) * (0.72 + (index % 3) * 0.12)
+    const depthPhase = (index * 1.618 + Math.abs(galaxy.position[2]) * 0.37) % 1
+    const z = cz + (depthPhase - 0.5) * 5.6 + Math.sin(angle * 1.7 + galaxy.position[2]) * (0.5 + (index % 3) * 0.12)
     return {
       ...coin,
       galaxyId: galaxy.id,

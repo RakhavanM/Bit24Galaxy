@@ -14,6 +14,7 @@ A static, RTL experience that turns an exact editorial list of 50 Bit24-listed a
 - Procedural planet rendering: logo-anchored colors, distinct surface families, atmosphere rims, rings, axial tilt, and deterministic rotation.
 - Galaxy centers are shared-texture suns: every constellation uses the same refined solar surface recipe with its own category accent color.
 - v0.2 interaction layer: distant opening overview, denser night-sky starfield, progressive hero fade on zoom-in, and automatic return from a focused galaxy when zooming out.
+- v0.2.3 depth pass: galaxies occupy a larger 3D volume, planets use deep staggered orbital layers, and the procedural planet library includes aurora, volcanic, savanna, and twilight surface families.
 - Snapshot data only; no live prices, accounts, trading, or API keys in the browser.
 - Responsive layout with a reduced-motion preference.
 

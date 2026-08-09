@@ -37,6 +37,12 @@ describe('market-cap galaxy layout', () => {
     expect(first.every((coin) => coin.radius >= 0.15 && coin.radius <= 0.92)).toBe(true)
   })
 
+  it('uses a materially deep galaxy volume rather than a thin XY sheet', () => {
+    const depths = GALAXIES.map((galaxy) => galaxy.position[2])
+
+    expect(Math.max(...depths) - Math.min(...depths)).toBeGreaterThan(4)
+  })
+
   it('keeps planets in a safe orbital band away from their sun', () => {
     const coins = Array.from({ length: 7 }, (_, index) => ({
       rank: index + 1,
