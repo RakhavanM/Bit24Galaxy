@@ -28,19 +28,25 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgres
   }, [])
   const results = useMemo(() => {
     if (!normalized) return []
-    return coins
-      .filter((coin) => normalizeSearch(`${coin.symbol} ${coin.nameFa}`).includes(normalized))
-      .slice(0, 6)
+    return coins.filter((coin) => normalizeSearch(`${coin.symbol} ${coin.nameFa}`).includes(normalized)).slice(0, 6)
   }, [coins, normalized])
 
   return (
     <div className="overlay-ui">
       <header className="topbar">
+        <a className="bit24-topbar-logo" href="https://bit24.cash/" target="_blank" rel="noreferrer" aria-label="بیت۲۴">
+          <img src={`${import.meta.env.BASE_URL}bit24-logo-no-slogan.svg`} alt="بیت۲۴" />
+        </a>
         <button className="brand" onClick={() => { onSelectGalaxy(null); onSelectCoin(null) }} aria-label="بازگشت به نمای کلی">
           <span className="brand-spark">✦</span>
-          <span><b>BIT24</b><em>GALAXY</em></span>
+          <span><b>GALAXY</b><em>DIGITAL ASSET ATLAS</em></span>
         </button>
-        <div className="topbar-status"><span className="status-dot" /> STATIC MARKET-CAP ATLAS <span>·</span> PHASE 02</div>
+        <div className="topbar-actions">
+          <span className="topbar-section">50 ASSETS <i /> 8 GALAXIES</span>
+          <button className="menu-trigger" onClick={() => undefined} aria-label="منو">
+            <span /> <span />
+          </button>
+        </div>
       </header>
 
       <section className="hero-copy" style={{ opacity: 1 - overviewZoomProgress, transform: `translateY(${-overviewZoomProgress * 18}px)`, pointerEvents: overviewZoomProgress > 0.92 ? 'none' : 'auto' }}>
@@ -120,4 +126,3 @@ function CoinDetails({ coin, onClose }: { coin: PositionedCoin; onClose: () => v
 }
 
 export default Overlay
-

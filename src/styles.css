@@ -28,20 +28,21 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
 .canvas-layer { position: absolute; inset: 0; z-index: 0; }
 .canvas-layer canvas { display: block; cursor: grab; }
 .canvas-layer canvas:active { cursor: grabbing; }
-.bit24-brand-mark { position: absolute; top: 25px; left: 34px; z-index: 6; display: block; width: 91px; height: 35px; padding: 4px 0; opacity: .94; transition: opacity .2s ease, transform .2s ease; pointer-events: auto; }
-.bit24-brand-mark:hover { opacity: 1; transform: translateY(-1px); }
-.bit24-brand-mark img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: left center; }
-.topbar .brand { margin-left: 118px; }
+
 .overlay-ui { position: absolute; inset: 0; z-index: 4; pointer-events: none; direction: rtl; text-align: right; }
 .topbar, .hero-copy, .search-wrap, .galaxy-nav, .scroll-hint, .coordinates, .footer-note, .galaxy-info, .coin-details { pointer-events: auto; }
-.topbar { position: absolute; top: 26px; left: 34px; right: 34px; height: 34px; display: flex; align-items: center; justify-content: space-between; }
-.brand { display: inline-flex; align-items: center; gap: 11px; padding: 0; color: var(--ink); background: transparent; text-align: right; direction: ltr; }
-.brand-spark { color: #c3d9ff; font-size: 27px; line-height: 1; transform: rotate(18deg); }
-.brand span:last-child { display: flex; flex-direction: column; gap: 1px; font: 700 13px/1 var(--mono); letter-spacing: .12em; }
+.topbar { position: absolute; top: 20px; left: 28px; right: 28px; height: 48px; display: flex; align-items: center; gap: 22px; padding: 6px 8px; border: 1px solid rgba(214, 229, 255, .13); background: linear-gradient(90deg, rgba(9, 15, 34, .78), rgba(9, 15, 34, .42)); box-shadow: 0 14px 40px rgba(0, 0, 0, .16); backdrop-filter: blur(18px); direction: ltr; }
+.bit24-topbar-logo { display: inline-flex; flex: 0 0 auto; width: 82px; height: 34px; align-items: center; padding: 3px 0; transition: opacity .2s ease, transform .2s ease; }
+.bit24-topbar-logo:hover { opacity: .84; transform: translateY(-1px); }
+.bit24-topbar-logo img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: left center; }
+.brand { display: inline-flex; align-items: center; gap: 10px; min-width: 158px; padding: 0; color: var(--ink); background: transparent; text-align: left; direction: ltr; }
+.brand-spark { color: #c3d9ff; font-size: 25px; line-height: 1; transform: rotate(18deg); }
+.brand span:last-child { display: flex; flex-direction: column; gap: 3px; font: 700 13px/1 var(--mono); letter-spacing: .12em; }
 .brand b { font-weight: 500; }
-.brand em { color: var(--dim); font-style: normal; font-size: 9px; letter-spacing: .28em; }
-.topbar-status { display: flex; align-items: center; gap: 9px; color: var(--dim); font: 10px var(--mono); letter-spacing: .15em; }
-.status-dot { width: 5px; height: 5px; border-radius: 50%; background: #9ee6bd; box-shadow: 0 0 12px #9ee6bd; }
+.brand em { color: var(--dim); font-style: normal; font-size: 8px; letter-spacing: .15em; }
+.topbar-actions { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: 20px; }
+.topbar-section { display: inline-flex; align-items: center; gap: 9px; color: var(--faint); font: 8px var(--mono); letter-spacing: .13em; white-space: nowrap; }
+.topbar-section i { width: 3px; height: 3px; border-radius: 50%; background: #69b7ff; box-shadow: 0 0 10px #69b7ff; }
 .hero-copy { position: absolute; top: 17vh; left: 9vw; width: min(440px, 34vw); direction: rtl; text-align: right; opacity: .78; will-change: opacity, transform; transition: opacity .18s ease, transform .18s ease; z-index: 5; }
 .kicker, .hero-rule, .nav-heading, .footer-note, .coordinates, .coin-details-heading p, .galaxy-info > p, .coin-stats span, .loader-meta, .coin-tags, .snapshot-note { font-family: var(--mono); }
 .kicker { margin: 0 0 25px; color: var(--dim); direction: ltr; text-align: left; font-size: 10px; letter-spacing: .2em; }
@@ -132,14 +133,23 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
 .loader-meta { display: flex; width: min(280px, 50vw); justify-content: space-between; margin-top: 10px; color: var(--faint); font-size: 8px; letter-spacing: .12em; direction: ltr; }
 .loader-meta b { color: var(--ink); font-weight: 400; }
 @media (max-width: 900px) {
+  .topbar { left: 16px; right: 16px; }
+  .bit24-topbar-logo { width: 74px; }
+  .brand { min-width: 0; }
+  .topbar-section { display: none; }
   .hero-copy { left: 7vw; width: 320px; }
   .galaxy-nav { right: 22px; width: 180px; }
   .search-wrap { width: 220px; }
   .coin-details { width: 320px; }
 }
 @media (max-width: 650px) {
-  .topbar { top: 18px; left: 17px; right: 17px; }
-  .topbar-status { display: none; }
+  .topbar { top: 12px; left: 12px; right: 12px; height: 44px; gap: 9px; padding: 4px 6px; }
+  .bit24-topbar-logo { width: 62px; height: 29px; }
+  .brand { gap: 6px; }
+  .brand-spark { font-size: 20px; }
+  .brand span:last-child { font-size: 10px; }
+  .brand em { font-size: 6px; letter-spacing: .08em; }
+  .topbar-actions { gap: 0; }
   .hero-copy { top: 12vh; left: 20px; width: 230px; }
   .hero-copy h1 { font-size: 43px; }
   .hero-description { margin-top: 18px; font-size: 11px; line-height: 1.85; }
