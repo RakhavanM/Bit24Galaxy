@@ -44,6 +44,9 @@ export default function App() {
       <div className="canvas-layer">
         {!loading && <GalaxyScene coins={coins} activeGalaxy={safeGalaxy} activeSymbol={selectedCoin?.symbol ?? null} onSelectCoin={setSelectedCoin} onSelectGalaxy={(galaxy) => { setActiveGalaxy(galaxy); setSelectedCoin(null); setOverviewZoomProgress(1) }} onClearSelection={() => setSelectedCoin(null)} onOverviewZoomChange={setOverviewZoomProgress} onZoomedOut={() => { setActiveGalaxy(null); setSelectedCoin(null); setOverviewZoomProgress(0) }} />}
       </div>
+      <a className="bit24-brand-mark" href="https://bit24.cash/" target="_blank" rel="noreferrer" aria-label="بیت۲۴">
+        <img src={`${import.meta.env.BASE_URL}bit24-logo-no-slogan.svg`} alt="بیت۲۴" />
+      </a>
       {!loading && <Overlay coins={coins} activeGalaxy={safeGalaxy} selectedCoin={selectedCoin} overviewZoomProgress={overviewZoomProgress} onSelectGalaxy={(galaxy) => { setActiveGalaxy(galaxy); setSelectedCoin(null); setOverviewZoomProgress(galaxy ? 1 : 0) }} onSelectCoin={setSelectedCoin} />}
       {loading && <Loader progress={progress} />}
     </main>
