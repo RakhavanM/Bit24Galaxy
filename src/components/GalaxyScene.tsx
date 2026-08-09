@@ -7,6 +7,7 @@ import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { compactGalaxyCenters, localGalaxyFootprint, localGalaxyRadius, overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
 import { CAMERA_FAR, clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
+import { getRenderBudget } from '../renderBudget'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -21,6 +22,7 @@ type GalaxySceneProps = {
 
 export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, onSelectGalaxy, onClearSelection, onOverviewZoomChange, onZoomedOut }: GalaxySceneProps) {
   const [hoveredTarget, setHoveredTarget] = useState<HoverTarget | null>(null)
+  const renderBudget = useMemo(() => getRenderBudget(coins.length, Boolean(activeGalaxy)), [coins.length, activeGalaxy])
   const handleHoverTarget = (target: HoverTarget | null) => {
     setHoveredTarget(target)
   }
@@ -50,7 +52,7 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
 
   return (
     <Canvas
-      dpr={[1, 1.6]}
+      dpr={renderBudget.dpr}
       camera={{ position: [0, 0.4, OVERVIEW_DISTANCE], fov: 47, near: 0.1, far: CAMERA_FAR }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       onPointerMissed={onClearSelection}
@@ -73,6 +75,8 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
               activeSymbol={activeSymbol}
               activeGalaxy={activeGalaxy?.id ?? null}
               hoveredTarget={hoveredTarget}
+              assetCount={coins.length}
+              renderBudget={renderBudget}
               onSelectCoin={onSelectCoin}
               onSelectGalaxy={onSelectGalaxy}
               onHoverTarget={handleHoverTarget}

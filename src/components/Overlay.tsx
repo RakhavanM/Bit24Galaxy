@@ -42,7 +42,7 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgres
           <span><b>GALAXY</b><em>DIGITAL ASSET ATLAS</em></span>
         </button>
         <div className="topbar-actions">
-          <span className="topbar-section">50 ASSETS <i /> 8 GALAXIES</span>
+          <span className="topbar-section">{coins.length} ASSETS <i /> {GALAXIES.length} GALAXIES</span>
           <button className="menu-trigger" onClick={() => undefined} aria-label="منو">
             <span /> <span />
           </button>

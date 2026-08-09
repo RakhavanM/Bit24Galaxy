@@ -125,20 +125,20 @@ export function SunMaterial({ profile }: { profile: SunProfile }) {
   return <primitive object={material} attach="material" />
 }
 
-export function SunCorona({ profile, active }: { profile: SunProfile; active: boolean }) {
+export function SunCorona({ profile, active, segments = 40 }: { profile: SunProfile; active: boolean; segments?: number }) {
   return (
     <group>
-      <SphereShell radius={profile.radius * 1.08} color={profile.glow} opacity={active ? 0.16 : 0.105} />
-      <SphereShell radius={profile.radius * 1.17} color={profile.base} opacity={active ? 0.095 : 0.055} />
-      <SphereShell radius={profile.radius * 1.29} color={profile.glow} opacity={active ? 0.06 : 0.032} />
+      <SphereShell radius={profile.radius * 1.08} color={profile.glow} opacity={active ? 0.16 : 0.105} segments={segments} />
+      <SphereShell radius={profile.radius * 1.17} color={profile.base} opacity={active ? 0.095 : 0.055} segments={segments} />
+      <SphereShell radius={profile.radius * 1.29} color={profile.glow} opacity={active ? 0.06 : 0.032} segments={segments} />
     </group>
   )
 }
 
-function SphereShell({ radius, color, opacity }: { radius: number; color: string; opacity: number }) {
+function SphereShell({ radius, color, opacity, segments }: { radius: number; color: string; opacity: number; segments: number }) {
   return (
     <mesh scale={radius}>
-      <sphereGeometry args={[1, 40, 28]} />
+      <sphereGeometry args={[1, segments, Math.max(16, Math.floor(segments * 0.7))]} />
       <meshBasicMaterial color={color} transparent opacity={opacity} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
     </mesh>
   )

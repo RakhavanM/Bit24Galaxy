@@ -9,6 +9,8 @@ import { planetProfile } from '../planets'
 import { PlanetMaterial } from './PlanetMaterial'
 import { SunCorona, SunMaterial } from './SunMaterial'
 import { sunProfile } from '../suns'
+import type { RenderBudget } from '../renderBudget'
+import { shouldRenderOverviewDecoration, shouldRenderOverviewLabel } from '../renderBudget'
 import * as THREE from 'three'
 
 export type HoverTarget =
@@ -21,12 +23,14 @@ type GalaxyNodesProps = {
   activeSymbol: string | null
   activeGalaxy: string | null
   hoveredTarget: HoverTarget | null
+  assetCount: number
+  renderBudget: RenderBudget
   onSelectCoin: (coin: PositionedCoin) => void
   onSelectGalaxy: (galaxy: GalaxyDefinition) => void
   onHoverTarget: (target: HoverTarget | null) => void
 }
 
-export function GalaxyNodes({ galaxy, coins, activeSymbol, activeGalaxy, hoveredTarget, onSelectCoin, onSelectGalaxy, onHoverTarget }: GalaxyNodesProps) {
+export function GalaxyNodes({ galaxy, coins, activeSymbol, activeGalaxy, hoveredTarget, assetCount, renderBudget, onSelectCoin, onSelectGalaxy, onHoverTarget }: GalaxyNodesProps) {
   const [x, y, z] = galaxy.position
   const color = categoryColor(galaxy.id)
   const isActive = activeGalaxy === galaxy.id
@@ -42,21 +46,25 @@ export function GalaxyNodes({ galaxy, coins, activeSymbol, activeGalaxy, hovered
   return (
     <group>
       <Line points={ringPoints} color={color} transparent opacity={isActive ? 0.42 : 0.12} lineWidth={isActive ? 1.2 : 0.5} />
-      <GalaxySun galaxy={galaxy} active={isActive} highlighted={hoveredTarget?.kind === 'sun' && hoveredTarget.id === galaxy.id} onSelect={onSelectGalaxy} onHoverTarget={onHoverTarget} />
-      {coins.map((coin) => (
-        <CoinNode key={`${galaxy.id}-${coin.symbol}`} coin={coin} active={coin.symbol === activeSymbol} highlighted={hoveredTarget?.kind === 'planet' && hoveredTarget.id === coin.symbol} onSelect={onSelectCoin} onHoverTarget={onHoverTarget} />
-      ))}
+      <GalaxySun galaxy={galaxy} active={isActive} highlighted={hoveredTarget?.kind === 'sun' && hoveredTarget.id === galaxy.id} budget={renderBudget} onSelect={onSelectGalaxy} onHoverTarget={onHoverTarget} />
+      {coins.map((coin, index) => {
+        const highlighted = hoveredTarget?.kind === 'planet' && hoveredTarget.id === coin.symbol
+        const active = coin.symbol === activeSymbol
+        const showDecoration = shouldRenderOverviewDecoration(assetCount, index, renderBudget.mode === 'focus', Boolean(highlighted))
+        const showLabel = shouldRenderOverviewLabel(assetCount, index, renderBudget.mode === 'focus', Boolean(highlighted))
+        return <CoinNode key={`${galaxy.id}-${coin.symbol}`} coin={coin} active={active} highlighted={Boolean(highlighted)} showDecoration={showDecoration} showLabel={showLabel} budget={renderBudget} onSelect={onSelectCoin} onHoverTarget={onHoverTarget} />
+      })}
     </group>
   )
 }
 
-function GalaxySun({ galaxy, active, highlighted, onSelect, onHoverTarget }: { galaxy: GalaxyDefinition; active: boolean; highlighted: boolean; onSelect: (galaxy: GalaxyDefinition) => void; onHoverTarget: (target: HoverTarget | null) => void }) {
+function GalaxySun({ galaxy, active, highlighted, budget, onSelect, onHoverTarget }: { galaxy: GalaxyDefinition; active: boolean; highlighted: boolean; budget: RenderBudget; onSelect: (galaxy: GalaxyDefinition) => void; onHoverTarget: (target: HoverTarget | null) => void }) {
   const group = useRef<THREE.Group>(null)
   const profile = useMemo(() => sunProfile(galaxy), [galaxy])
   const [x, y, z] = galaxy.position
 
   useFrame((_, delta) => {
-    if (group.current) group.current.rotation.y += delta * profile.rotationSpeed
+    if (group.current && budget.animateSuns) group.current.rotation.y += delta * profile.rotationSpeed
   })
 
   return (
@@ -68,17 +76,17 @@ function GalaxySun({ galaxy, active, highlighted, onSelect, onHoverTarget }: { g
       onPointerOut={() => { document.body.style.cursor = 'default'; onHoverTarget(null) }}
       scale={active ? 1.12 : highlighted ? 1.06 : 1}
     >
-      <Sphere args={[profile.radius, 64, 48]}>
+      <Sphere args={[profile.radius, budget.sunSegments, Math.max(24, Math.floor(budget.sunSegments * 0.75))]}>
         <SunMaterial profile={profile} />
       </Sphere>
-      <SunCorona profile={profile} active={active || highlighted} />
-      {highlighted && <HighlightShell radius={profile.radius} color={profile.glow} />}
-      <Html center distanceFactor={13} style={{ pointerEvents: 'none' }}>
+      <SunCorona profile={profile} active={active || highlighted} segments={budget.coronaSegments} />
+      {highlighted && <HighlightShell radius={profile.radius} color={profile.glow} segments={budget.atmosphereSegments} />}
+      {(budget.showLabels || active || highlighted) && <Html center distanceFactor={13} style={{ pointerEvents: 'none' }}>
         <div className={`galaxy-label ${active ? 'galaxy-label--active' : ''} ${highlighted ? 'galaxy-label--highlight' : ''}`} style={{ '--accent': galaxy.accent, '--highlight': galaxy.accent } as CSSProperties}>
           <span>{galaxy.shortLabel}</span>
           <strong>{galaxy.label}</strong>
         </div>
-      </Html>
+      </Html>}
     </group>
   )
 }
@@ -87,17 +95,20 @@ type CoinNodeProps = {
   coin: PositionedCoin
   active: boolean
   highlighted: boolean
+  showDecoration: boolean
+  showLabel: boolean
+  budget: RenderBudget
   onSelect: (coin: PositionedCoin) => void
   onHoverTarget: (target: HoverTarget | null) => void
 }
 
-function CoinNode({ coin, active, highlighted, onSelect, onHoverTarget }: CoinNodeProps) {
+function CoinNode({ coin, active, highlighted, showDecoration, showLabel, budget, onSelect, onHoverTarget }: CoinNodeProps) {
   const group = useRef<THREE.Group>(null)
   const profile = useMemo(() => planetProfile(coin), [coin.symbol, coin.categories])
 
   useFrame((_, delta) => {
     if (!group.current) return
-    group.current.rotation.y += delta * profile.rotationSpeed
+    if (budget.animatePlanets) group.current.rotation.y += delta * profile.rotationSpeed
     group.current.rotation.x = profile.tilt
   })
 
@@ -110,22 +121,22 @@ function CoinNode({ coin, active, highlighted, onSelect, onHoverTarget }: CoinNo
       onPointerOut={() => { document.body.style.cursor = 'default'; onHoverTarget(null) }}
       scale={active ? 1.22 : highlighted ? 1.08 : 1}
     >
-      <Sphere args={[coin.radius, 64, 48]}>
-        <PlanetMaterial profile={profile} active={active || highlighted} />
+      <Sphere args={[coin.radius, budget.planetSegments, Math.max(24, Math.floor(budget.planetSegments * 0.75))]}>
+        <PlanetMaterial profile={profile} active={active || highlighted} noiseOctaves={budget.planetNoiseOctaves} />
       </Sphere>
-      {highlighted && <HighlightShell radius={coin.radius} color={profile.accent} />}
-      {profile.ring && (
-        <Torus args={[coin.radius * 1.36, Math.max(0.012, coin.radius * 0.026), 64, 12]} rotation={[profile.tilt + 0.65, 0.15, 0]}>
+      {showDecoration && highlighted && <HighlightShell radius={coin.radius} color={profile.accent} segments={budget.atmosphereSegments} />}
+      {showDecoration && profile.ring && (
+        <Torus args={[coin.radius * 1.36, Math.max(0.012, coin.radius * 0.026), Math.max(24, budget.planetSegments), 12]} rotation={[profile.tilt + 0.65, 0.15, 0]}>
           <meshBasicMaterial color={profile.accent} transparent opacity={active ? 0.68 : 0.32} blending={THREE.AdditiveBlending} />
         </Torus>
       )}
-      <Atmosphere radius={coin.radius} color={profile.accent} intensity={profile.atmosphere * ((active || highlighted) ? 1.4 : 1)} />
-      <Html center distanceFactor={11} style={{ pointerEvents: 'none' }}>
+      {showDecoration && <Atmosphere radius={coin.radius} color={profile.accent} intensity={profile.atmosphere * ((active || highlighted) ? 1.4 : 1)} segments={budget.atmosphereSegments} />}
+      {showLabel && <Html center distanceFactor={11} style={{ pointerEvents: 'none' }}>
         <div className={`coin-label ${active ? 'coin-label--active' : ''} ${highlighted ? 'coin-label--highlight' : ''}`} style={{ '--highlight': profile.accent } as CSSProperties}>
           <img src={coinIconUrl(coin)} alt="" />
           <span>{coin.symbol}</span>
         </div>
-      </Html>
+      </Html>}
       {active && (
         <Html position={[0, coin.radius + 0.42, 0]} center distanceFactor={8} style={{ pointerEvents: 'none' }}>
           <div className="coin-tooltip">
@@ -138,17 +149,17 @@ function CoinNode({ coin, active, highlighted, onSelect, onHoverTarget }: CoinNo
   )
 }
 
-function Atmosphere({ radius, color, intensity }: { radius: number; color: string; intensity: number }) {
+function Atmosphere({ radius, color, intensity, segments }: { radius: number; color: string; intensity: number; segments: number }) {
   return (
-    <Sphere args={[radius * 1.055, 32, 24]}>
+    <Sphere args={[radius * 1.055, segments, Math.max(16, Math.floor(segments * 0.75))]}>
       <meshBasicMaterial color={color} transparent opacity={Math.min(0.14, intensity * 0.1)} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
     </Sphere>
   )
 }
 
-function HighlightShell({ radius, color }: { radius: number; color: string }) {
+function HighlightShell({ radius, color, segments }: { radius: number; color: string; segments: number }) {
   return (
-    <Sphere args={[radius * 1.1, 32, 24]}>
+    <Sphere args={[radius * 1.1, segments, Math.max(16, Math.floor(segments * 0.75))]}>
       <meshBasicMaterial color={color} transparent opacity={0.2} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
     </Sphere>
   )

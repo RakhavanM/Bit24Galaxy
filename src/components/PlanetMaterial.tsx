@@ -15,6 +15,7 @@ const PlanetShaderMaterial = shaderMaterial(
     uStyle: 0,
     uCloudiness: 0.4,
     uAtmosphere: 0.3,
+    uNoiseOctaves: 5,
   },
   /* glsl */`
     varying vec3 vNormal;
@@ -37,6 +38,7 @@ const PlanetShaderMaterial = shaderMaterial(
     uniform float uStyle;
     uniform float uCloudiness;
     uniform float uAtmosphere;
+    uniform float uNoiseOctaves;
 
     float hash13(vec3 p) {
       p = fract(p * 0.1031);
@@ -67,6 +69,7 @@ const PlanetShaderMaterial = shaderMaterial(
       float value = 0.0;
       float amplitude = 0.5;
       for (int i = 0; i < 5; i++) {
+        if (float(i) >= uNoiseOctaves) break;
         value += amplitude * noise3(p);
         p = p * 2.02 + vec3(17.3, 3.7, 11.1);
         amplitude *= 0.5;
@@ -176,6 +179,7 @@ const PlanetShaderMaterial = shaderMaterial(
 type PlanetMaterialProps = {
   profile: PlanetProfile
   active: boolean
+  noiseOctaves?: number
 }
 
 type PlanetShader = THREE.ShaderMaterial & {
@@ -187,9 +191,10 @@ type PlanetShader = THREE.ShaderMaterial & {
   uDeep: THREE.Color
   uCloudiness: number
   uAtmosphere: number
+  uNoiseOctaves: number
 }
 
-export function PlanetMaterial({ profile, active }: PlanetMaterialProps) {
+export function PlanetMaterial({ profile, active, noiseOctaves = 5 }: PlanetMaterialProps) {
   const material = useMemo(() => {
     const instance = new PlanetShaderMaterial() as PlanetShader
     instance.uSeed = profile.seed
@@ -199,8 +204,9 @@ export function PlanetMaterial({ profile, active }: PlanetMaterialProps) {
     instance.uStyle = ['ocean', 'marble', 'gas', 'lava', 'ice', 'desert', 'storm', 'crystal', 'shadow', 'neon', 'aurora', 'volcanic', 'savanna', 'twilight'].indexOf(profile.style)
     instance.uCloudiness = profile.cloudiness
     instance.uAtmosphere = profile.atmosphere
+    instance.uNoiseOctaves = noiseOctaves
     return instance
-  }, [profile])
+  }, [profile, noiseOctaves])
 
   useFrame((_, delta) => {
     material.uTime += delta
