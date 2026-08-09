@@ -6,7 +6,7 @@ import { GalaxyNodes, type HoverTarget } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { compactGalaxyCenters, localGalaxyFootprint, localGalaxyRadius, overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
-import { clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
+import { CAMERA_FAR, clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -51,7 +51,7 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
   return (
     <Canvas
       dpr={[1, 1.6]}
-      camera={{ position: [0, 0.4, OVERVIEW_DISTANCE], fov: 47, near: 0.1, far: 100 }}
+      camera={{ position: [0, 0.4, OVERVIEW_DISTANCE], fov: 47, near: 0.1, far: CAMERA_FAR }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       onPointerMissed={onClearSelection}
       onCreated={({ gl }) => {

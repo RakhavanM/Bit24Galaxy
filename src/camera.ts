@@ -5,6 +5,9 @@ export const MAX_ORBIT_DISTANCE = 110
 export const OVERVIEW_DISTANCE = 78
 export const HERO_FADE_DISTANCE = 42
 export const GALAXY_EXIT_DISTANCE = 25
+export const CAMERA_FAR = 240
+export const FOG_NEAR = 180
+export const FOG_FAR = 520
 
 export function clampOrbitDistance(distance: number): number {
   return Math.max(MIN_ORBIT_DISTANCE, Math.min(MAX_ORBIT_DISTANCE, distance))

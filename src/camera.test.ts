@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { focusPoseFor, clampOrbitDistance, overviewExplorationProgress, pointerWorldOnTargetPlane, shouldExitGalaxy, zoomTargetForPointer } from './camera'
+import { CAMERA_FAR, FOG_FAR, FOG_NEAR, MAX_ORBIT_DISTANCE, focusPoseFor, clampOrbitDistance, overviewExplorationProgress, pointerWorldOnTargetPlane, shouldExitGalaxy, zoomTargetForPointer } from './camera'
 
 describe('free galaxy camera navigation', () => {
   it('creates a camera pose in front of a selected target', () => {
@@ -13,6 +13,12 @@ describe('free galaxy camera navigation', () => {
     expect(clampOrbitDistance(0.2)).toBe(2.2)
     expect(clampOrbitDistance(12)).toBe(12)
     expect(clampOrbitDistance(140)).toBe(110)
+  })
+
+  it('keeps the render frustum and fog beyond the complete zoomed-out world', () => {
+    expect(CAMERA_FAR).toBeGreaterThan(MAX_ORBIT_DISTANCE + 80)
+    expect(FOG_NEAR).toBeGreaterThan(MAX_ORBIT_DISTANCE)
+    expect(FOG_FAR).toBeGreaterThan(CAMERA_FAR)
   })
 
   it('fades the opening copy as the user enters the atlas', () => {

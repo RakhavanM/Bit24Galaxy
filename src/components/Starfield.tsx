@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
+import { FOG_FAR, FOG_NEAR } from '../camera'
 
 const STAR_COUNT = 5200
 
@@ -65,7 +66,7 @@ export function NebulaDust() {
 }
 
 export function SceneFog() {
-  return <fog attach="fog" args={[new THREE.Color('#070b18'), 9, 34]} />
+  return <fog attach="fog" args={[new THREE.Color('#070b18'), FOG_NEAR, FOG_FAR]} />
 }
 
 export default Starfield
