@@ -35,7 +35,7 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgres
     <div className="overlay-ui">
       <header className="topbar">
         <a className="bit24-topbar-logo" href="https://bit24.cash/" target="_blank" rel="noreferrer" aria-label="بیت۲۴">
-          <img src={`${import.meta.env.BASE_URL}bit24-logo-no-slogan.svg`} alt="بیت۲۴" />
+          <img src={`${import.meta.env.BASE_URL}bit24-logo-linked.svg`} alt="بیت۲۴" />
         </a>
         <button className="brand" onClick={() => { onSelectGalaxy(null); onSelectCoin(null) }} aria-label="بازگشت به نمای کلی">
           <span className="brand-spark">✦</span>
