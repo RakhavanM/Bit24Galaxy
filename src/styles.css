@@ -65,7 +65,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
 .search-results b { direction: ltr; font: 11px var(--mono); }
 .search-results span { flex: 1; color: var(--dim); font-size: 11px; }
 .search-results small { color: var(--faint); font: 9px var(--mono); }
-.galaxy-nav { position: absolute; top: 18vh; right: 34px; width: 205px; max-height: 70vh; overflow: auto; direction: rtl; text-align: right; scrollbar-width: thin; scrollbar-color: rgba(190, 215, 255, .32) transparent; }
+.galaxy-nav { position: absolute; top: 18vh; right: 34px; width: 205px; max-height: 70vh; overflow: auto; direction: rtl; text-align: right; scrollbar-width: thin; scrollbar-color: rgba(190, 215, 255, .32) transparent; z-index: 8; }
 .nav-heading { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--dim); font-size: 9px; letter-spacing: .18em; direction: ltr; }
 .nav-heading b { color: #dce8ff; font-weight: 400; }
 .galaxy-list { display: flex; flex-direction: column; }
@@ -78,7 +78,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
 .scroll-hint { position: absolute; right: 50%; bottom: 31px; display: flex; align-items: center; gap: 12px; transform: translateX(50%); color: var(--faint); font: 9px var(--mono); letter-spacing: .12em; direction: ltr; white-space: nowrap; }
 .scroll-line { display: block; width: 37px; height: 1px; background: linear-gradient(90deg, transparent, rgba(203, 222, 255, .75)); }
 .coordinates { position: absolute; bottom: 28px; left: 34px; color: var(--faint); direction: ltr; font-size: 8px; letter-spacing: .08em; line-height: 1.6; }
-.footer-note { position: absolute; bottom: 29px; right: 34px; color: var(--faint); direction: ltr; font-size: 8px; letter-spacing: .13em; }
+.footer-note { position: absolute; bottom: 29px; right: 34px; color: var(--faint); direction: ltr; font-size: 8px; letter-spacing: .13em; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .footer-note span { margin: 0 8px; color: rgba(217, 230, 255, .25); }
 .galaxy-label, .coin-label, .coin-tooltip { user-select: none; white-space: nowrap; }
 .galaxy-label { display: flex; flex-direction: column; align-items: center; gap: 3px; color: rgba(224, 236, 255, .62); transform: translateY(22px); text-shadow: 0 2px 14px #000; }
