@@ -106,7 +106,18 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
 .galaxy-info ol { margin: 12px 0 0; padding: 0; list-style: none; }
 .galaxy-info li { display: flex; justify-content: space-between; padding: 5px 0; border-top: 1px solid rgba(217, 229, 255, .08); color: var(--dim); font: 10px var(--mono); direction: ltr; }
 .galaxy-info li small { color: var(--faint); font-size: 9px; }
-.coin-details { left: auto; right: 34px; width: min(370px, 30vw); border-right: 2px solid #bed7ff; }
+.coin-details-backdrop { position: fixed; inset: 0; z-index: 12; display: flex; align-items: center; justify-content: center; padding: 32px; background: rgba(2, 5, 16, .48); backdrop-filter: blur(7px); pointer-events: auto; direction: rtl; }
+.coin-details { position: relative; inset: auto; width: min(560px, calc(100vw - 64px)); max-height: min(78vh, 680px); overflow: auto; padding: 28px 30px 26px; border: 1px solid rgba(222, 234, 255, .22); border-right: 3px solid var(--accent, #bed7ff); background: linear-gradient(145deg, rgba(11, 20, 46, .96), rgba(5, 10, 27, .96)); box-shadow: 0 28px 100px rgba(0, 0, 0, .55), 0 0 60px color-mix(in srgb, var(--accent, #bed7ff) 14%, transparent); direction: rtl; text-align: right; }
+.coin-details .close-button { top: 14px; left: 16px; }
+.coin-details-heading img { width: 58px; height: 58px; }
+.coin-details-heading h2 { font-size: 30px; }
+.coin-details-heading span { font-size: 12px; }
+.coin-details .coin-stats { margin-top: 26px; gap: 18px; }
+.coin-details .coin-stats span { font-size: 8px; }
+.coin-details .coin-stats b { font-size: 15px; }
+.coin-details .coin-tags { margin-top: 22px; }
+.coin-details .coin-cta { margin-top: 22px; padding: 13px 15px; }
+.coin-details .snapshot-note { margin-top: 15px; font-size: 9px; }
 .coin-details-heading { display: flex; align-items: center; gap: 12px; direction: rtl; text-align: right; }
 .coin-details-heading img { width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 0 24px rgba(185, 215, 255, .26); }
 .coin-details-heading p { margin: 0 0 3px; color: var(--faint); font-size: 8px; letter-spacing: .14em; }
@@ -160,10 +171,16 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
   .galaxy-list button { min-height: 27px; font-size: 9px; }
   .scroll-hint { display: none; }
   .coordinates, .footer-note { display: none; }
-  .galaxy-info, .coin-details { right: 17px; bottom: 17px; left: 17px; width: auto; max-width: none; }
+  .galaxy-info { right: 17px; bottom: 17px; left: 17px; width: auto; max-width: none; }
+  .coin-details-backdrop { padding: 16px; }
+  .coin-details { width: 100%; max-height: 82vh; padding: 24px 20px 20px; }
+  .coin-details-heading img { width: 48px; height: 48px; }
+  .coin-details-heading h2 { font-size: 25px; }
+  .coin-details .coin-stats { gap: 8px; margin-top: 20px; }
+  .coin-details .coin-stats b { font-size: 11px; }
   .galaxy-info { padding: 13px; max-height: 58vh; }
   .galaxy-info ol { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
-  .coin-details { padding: 14px; }
+  .coin-details { padding: 24px 20px 20px; }
   .coin-stats { gap: 6px; }
   .coin-stats b { font-size: 10px; }
 }

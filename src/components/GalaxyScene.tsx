@@ -6,7 +6,7 @@ import { GalaxyNodes, type HoverTarget } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { compactGalaxyCenters, localGalaxyFootprint, localGalaxyRadius, overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
-import { CAMERA_FAR, clampOrbitDistance, focusDistanceForGalaxy, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
+import { CAMERA_FAR, clampOrbitDistance, coinFocusDistance, coinFocusTarget, focusDistanceForGalaxy, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
 import { getRenderBudget } from '../renderBudget'
 
 type GalaxySceneProps = {
@@ -135,8 +135,8 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOvervie
       if (activeSymbol) {
         const coin = positioned.get(activeGalaxy.id)?.find((item) => item.symbol === activeSymbol)
         if (coin) {
-          nextTarget = coin.position
-          nextDistance = 8.4
+          nextTarget = coinFocusTarget(coin.position)
+          nextDistance = coinFocusDistance(coin.radius)
         }
       }
     }
@@ -151,6 +151,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOvervie
 
   useEffect(() => {
     const element = gl.domElement
+    element.style.cursor = activeGalaxy ? 'grab' : 'default'
     const onWheel = (event: WheelEvent) => {
       event.preventDefault()
       const zoomBefore = distance.current
@@ -229,7 +230,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOvervie
       element.removeEventListener('touchmove', onTouchMove)
       element.removeEventListener('touchend', onTouchEnd)
     }
-  }, [gl, hoveredTarget])
+  }, [gl, hoveredTarget, activeGalaxy])
 
   useFrame((_, delta) => {
     const ease = 1 - Math.pow(0.001, delta)

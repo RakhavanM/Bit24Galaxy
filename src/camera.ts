@@ -26,6 +26,14 @@ export function focusDistanceForGalaxy(footprint: number): number {
   return clampOrbitDistance(Math.max(18, Math.min(30, footprint * 2.05)))
 }
 
+export function coinFocusTarget(position: [number, number, number]): [number, number, number] {
+  return position
+}
+
+export function coinFocusDistance(radius: number): number {
+  return Math.max(1.65, Math.min(3.4, radius * 2.5 + 1.2))
+}
+
 export function focusPoseFor(target: [number, number, number], distance = 7.6): { target: [number, number, number]; position: [number, number, number] } {
   const safeDistance = clampOrbitDistance(distance)
   return {

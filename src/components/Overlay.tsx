@@ -114,14 +114,16 @@ function GalaxyInfo({ galaxy, coins, onClose }: { galaxy: GalaxyDefinition; coin
 
 function CoinDetails({ coin, onClose }: { coin: PositionedCoin; onClose: () => void }) {
   return (
-    <section className="coin-details" style={{ '--accent': categoryColor(coin.categories[0]) } as CSSProperties}>
-      <button className="close-button" onClick={onClose}>×</button>
-      <div className="coin-details-heading"><img src={coinIconUrl(coin)} alt="" /><div><p>ASSET {String(coin.rank).padStart(2, '0')}</p><h2>{coin.symbol}</h2><span>{coin.nameFa}</span></div></div>
-      <div className="coin-stats"><div><span>MARKET CAP</span><b>{formatCompactMarketCap(coin.marketCap)} <small>USD</small></b></div><div><span>PRICE SNAPSHOT</span><b>{formatIrt(coin.priceIrt)} <small>IRT</small></b></div><div><span>24H CHANGE</span><b className={coin.change24h !== null && coin.change24h >= 0 ? 'positive' : 'negative'}>{formatPercent(coin.change24h)}</b></div></div>
-      <div className="coin-tags">{coin.categories.map((category) => <span key={category}>{categoryLabel(category)}</span>)}</div>
-      <a className="coin-cta" href={coin.bit24Url} target="_blank" rel="noreferrer">مشاهده صفحه ارز در بیت۲۴ <span>↗</span></a>
-      <p className="snapshot-note">این اعداد مربوط به Snapshot اولیه هستند و قیمت لحظه‌ای نیستند.</p>
-    </section>
+    <div className="coin-details-backdrop" onClick={onClose}>
+      <section className="coin-details" role="dialog" aria-modal="true" aria-label={`اطلاعات ${coin.symbol}`} onClick={(event) => event.stopPropagation()} style={{ '--accent': categoryColor(coin.categories[0]) } as CSSProperties}>
+        <button className="close-button" onClick={onClose}>×</button>
+        <div className="coin-details-heading"><img src={coinIconUrl(coin)} alt="" /><div><p>ASSET {String(coin.rank).padStart(2, '0')}</p><h2>{coin.symbol}</h2><span>{coin.nameFa}</span></div></div>
+        <div className="coin-stats"><div><span>MARKET CAP</span><b>{formatCompactMarketCap(coin.marketCap)} <small>USD</small></b></div><div><span>PRICE SNAPSHOT</span><b>{formatIrt(coin.priceIrt)} <small>IRT</small></b></div><div><span>24H CHANGE</span><b className={coin.change24h !== null && coin.change24h >= 0 ? 'positive' : 'negative'}>{formatPercent(coin.change24h)}</b></div></div>
+        <div className="coin-tags">{coin.categories.map((category) => <span key={category}>{categoryLabel(category)}</span>)}</div>
+        <a className="coin-cta" href={coin.bit24Url} target="_blank" rel="noreferrer">مشاهده صفحه ارز در بیت۲۴ <span>↗</span></a>
+        <p className="snapshot-note">این اعداد مربوط به Snapshot اولیه هستند و قیمت لحظه‌ای نیستند.</p>
+      </section>
+    </div>
   )
 }
 
