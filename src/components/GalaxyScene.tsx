@@ -8,6 +8,7 @@ import { compactGalaxyCenters, localGalaxyFootprint, localGalaxyRadius, overview
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
 import { CAMERA_FAR, clampOrbitDistance, coinFocusDistance, coinFocusTarget, focusDistanceForGalaxy, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
 import { getRenderBudget } from '../renderBudget'
+import { coinSymbolFromIntersection } from '../scenePicking'
 
 type GalaxySceneProps = {
   coins: Coin[]
@@ -180,8 +181,8 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOvervie
         pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1)
         raycaster.setFromCamera(pointer, camera)
         const hits = raycaster.intersectObjects(sceneRef.current?.children ?? [], true)
-        const hit = hits.find((entry) => entry.object.userData?.coinSymbol)
-        const symbol = hit?.object.userData?.coinSymbol as string | undefined
+        const hit = hits.find((entry) => coinSymbolFromIntersection(entry.object))
+        const symbol = hit ? coinSymbolFromIntersection(hit.object) : null
         const coin = symbol ? positioned.get(activeGalaxyRef.current.id)?.find((item) => item.symbol === symbol) : undefined
         if (coin) {
           desiredTarget.current.set(...coinFocusTarget(coin.position))
