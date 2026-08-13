@@ -65,7 +65,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
 .search-results b { direction: ltr; font: 11px var(--mono); }
 .search-results span { flex: 1; color: var(--dim); font-size: 11px; }
 .search-results small { color: var(--faint); font: 9px var(--mono); }
-.galaxy-nav { position: absolute; top: 18vh; right: 34px; width: 205px; direction: rtl; text-align: right; }
+.galaxy-nav { position: absolute; top: 18vh; right: 34px; width: 205px; max-height: 70vh; overflow: auto; direction: rtl; text-align: right; scrollbar-width: thin; scrollbar-color: rgba(190, 215, 255, .32) transparent; }
 .nav-heading { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--dim); font-size: 9px; letter-spacing: .18em; direction: ltr; }
 .nav-heading b { color: #dce8ff; font-weight: 400; }
 .galaxy-list { display: flex; flex-direction: column; }
@@ -93,7 +93,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
 .coin-tooltip b { font-size: 10px; font-weight: 500; }
 .coin-tooltip span { color: var(--dim); font: 8px var(--mono); direction: ltr; }
 .galaxy-info, .coin-details { position: absolute; bottom: 74px; left: 34px; width: 280px; padding: 17px 18px 18px; border: 1px solid rgba(222, 234, 255, .17); background: rgba(6, 11, 27, .77); box-shadow: 0 20px 60px rgba(0, 0, 0, .24); backdrop-filter: blur(20px); direction: rtl; text-align: right; }
-.galaxy-info { border-top: 2px solid var(--accent); }
+.galaxy-info { border-top: 2px solid var(--accent); max-height: min(74vh, 620px); overflow: auto; scrollbar-width: thin; scrollbar-color: rgba(190, 215, 255, .32) transparent; }
 .close-button { position: absolute; top: 8px; left: 11px; width: 24px; height: 24px; color: var(--dim); background: transparent; font-size: 21px; font-weight: 300; line-height: 1; }
 .close-button:hover { color: var(--ink); }
 .galaxy-info > p { margin: 0 0 7px; color: var(--accent); direction: ltr; text-align: left; font-size: 9px; letter-spacing: .16em; }
@@ -138,7 +138,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
   .brand { min-width: 0; }
   .topbar-section { display: none; }
   .hero-copy { left: 7vw; width: 320px; }
-  .galaxy-nav { right: 22px; width: 180px; }
+  .galaxy-nav { right: 22px; width: 180px; max-height: 68vh; }
   .search-wrap { width: 220px; }
   .coin-details { width: 320px; }
 }
@@ -155,13 +155,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 1px solid 
   .hero-description { margin-top: 18px; font-size: 11px; line-height: 1.85; }
   .hero-rule { margin-top: 18px; }
   .search-wrap { top: 66px; left: 20px; right: 20px; width: auto; transform: none; }
-  .galaxy-nav { top: auto; right: 17px; bottom: 67px; width: 155px; }
-  .galaxy-list { max-height: 122px; overflow: auto; }
+  .galaxy-nav { top: auto; right: 17px; bottom: 67px; width: 155px; max-height: 42vh; }
+  .galaxy-list { max-height: none; overflow: visible; }
   .galaxy-list button { min-height: 27px; font-size: 9px; }
   .scroll-hint { display: none; }
   .coordinates, .footer-note { display: none; }
   .galaxy-info, .coin-details { right: 17px; bottom: 17px; left: 17px; width: auto; max-width: none; }
-  .galaxy-info { padding: 13px; }
+  .galaxy-info { padding: 13px; max-height: 58vh; }
   .galaxy-info ol { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
   .coin-details { padding: 14px; }
   .coin-stats { gap: 6px; }

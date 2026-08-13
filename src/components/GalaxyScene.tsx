@@ -6,7 +6,7 @@ import { GalaxyNodes, type HoverTarget } from './GalaxyNodes'
 import { NebulaDust, SceneFog, Starfield } from './Starfield'
 import { compactGalaxyCenters, localGalaxyFootprint, localGalaxyRadius, overviewCoinsForGalaxy, positionCoins } from '../layout'
 import { GALAXIES, type Coin, type GalaxyDefinition, type PositionedCoin } from '../types'
-import { CAMERA_FAR, clampOrbitDistance, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
+import { CAMERA_FAR, clampOrbitDistance, focusDistanceForGalaxy, overviewExplorationProgress, shouldExitGalaxy, orbitPosition, zoomDistance, zoomTargetForPointer, OVERVIEW_DISTANCE } from '../camera'
 import { getRenderBudget } from '../renderBudget'
 
 type GalaxySceneProps = {
@@ -22,7 +22,8 @@ type GalaxySceneProps = {
 
 export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, onSelectGalaxy, onClearSelection, onOverviewZoomChange, onZoomedOut }: GalaxySceneProps) {
   const [hoveredTarget, setHoveredTarget] = useState<HoverTarget | null>(null)
-  const renderBudget = useMemo(() => getRenderBudget(coins.length, Boolean(activeGalaxy)), [coins.length, activeGalaxy])
+  const uniqueSymbolCount = useMemo(() => new Set(coins.map((coin) => coin.symbol)).size, [coins])
+  const renderBudget = useMemo(() => getRenderBudget(uniqueSymbolCount, Boolean(activeGalaxy)), [uniqueSymbolCount, activeGalaxy])
   const handleHoverTarget = (target: HoverTarget | null) => {
     setHoveredTarget(target)
   }
@@ -75,7 +76,7 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
               activeSymbol={activeSymbol}
               activeGalaxy={activeGalaxy?.id ?? null}
               hoveredTarget={hoveredTarget}
-              assetCount={coins.length}
+              assetCount={uniqueSymbolCount}
               renderBudget={renderBudget}
               onSelectCoin={onSelectCoin}
               onSelectGalaxy={onSelectGalaxy}
@@ -84,7 +85,7 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
           )}
         </group>
       ))}
-      <CameraFlight activeGalaxy={activeSceneGalaxy} activeSymbol={activeSymbol} positioned={positioned} onOverviewZoomChange={onOverviewZoomChange} onZoomedOut={onZoomedOut} hoveredTarget={hoveredTarget} />
+      <CameraFlight activeGalaxy={activeSceneGalaxy} activeSymbol={activeSymbol} positioned={positioned} coins={coins} onOverviewZoomChange={onOverviewZoomChange} onZoomedOut={onZoomedOut} hoveredTarget={hoveredTarget} />
       <Environment preset="night" environmentIntensity={0.18} />
     </Canvas>
   )
@@ -94,12 +95,13 @@ type CameraFlightProps = {
   activeGalaxy: GalaxyDefinition | null
   activeSymbol: string | null
   positioned: Map<string, PositionedCoin[]>
+  coins: Coin[]
   onOverviewZoomChange: (progress: number) => void
   onZoomedOut: () => void
   hoveredTarget: HoverTarget | null
 }
 
-function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomChange, onZoomedOut, hoveredTarget }: CameraFlightProps) {
+function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOverviewZoomChange, onZoomedOut, hoveredTarget }: CameraFlightProps) {
   const { camera, gl } = useThree()
   const target = useRef(new THREE.Vector3(0, 0, 0))
   const desiredTarget = useRef(new THREE.Vector3(0, 0, 0))
@@ -124,7 +126,8 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, onOverviewZoomCh
 
   useEffect(() => {
     let nextTarget: [number, number, number] = [0, 0, 0]
-    let nextDistance = activeGalaxy ? 12.5 : OVERVIEW_DISTANCE
+    const activeFootprint = activeGalaxy ? localGalaxyRadius(coins, activeGalaxy, coins.filter((coin) => coin.categories.includes(activeGalaxy.id))) : 0
+    let nextDistance = activeGalaxy ? focusDistanceForGalaxy(activeFootprint) : OVERVIEW_DISTANCE
     const targetKey = activeGalaxy ? `${activeGalaxy.id}:${activeSymbol ?? ''}` : 'overview'
 
     if (activeGalaxy) {

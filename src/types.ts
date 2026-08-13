@@ -1,12 +1,20 @@
 export type CategoryId =
-  | 'core'
-  | 'stablecoins'
-  | 'defi'
-  | 'layer2'
+  | 'global-markets'
+  | 'mainnets'
+  | 'gaming-metaverse'
   | 'ai'
-  | 'gamefi'
-  | 'exchange'
+  | 'stablecoins'
   | 'memes'
+  | 'layer2'
+  | 'oracles'
+  | 'defi'
+  | 'iot'
+  | 'depin'
+  | 'wallet-exchange'
+  | 'privacy'
+  | 'socialfi'
+  | 'nft'
+  | 'fan-tokens'
 
 export type Coin = {
   rank: number
@@ -14,10 +22,13 @@ export type Coin = {
   nameFa: string
   nameEn: string
   slug: string
+  bit24Slug?: string
   marketCap: number
   marketCapCurrency: string
+  marketCapSource?: string
   change24h: number | null
   priceIrt: number | null
+  priceUsd?: number | null
   categories: CategoryId[]
   iconUrl: string
   bit24Url: string
@@ -29,9 +40,14 @@ export type Coin = {
 export type CoinSnapshot = {
   schemaVersion: number
   generatedAt: string
-  source: string
+  source: string | string[]
   selection: string
   note: string
+  categoryCount?: number
+  placementCount?: number
+  uniqueSymbolCount?: number
+  categories: Record<CategoryId, string[]>
+  marketCapProvenance?: Record<string, string>
   coins: Coin[]
 }
 
@@ -87,120 +103,99 @@ export type SearchResult = Coin & {
 }
 
 export const CATEGORY_ORDER: CategoryId[] = [
-  'core',
-  'stablecoins',
-  'defi',
-  'layer2',
+  'global-markets',
+  'mainnets',
+  'gaming-metaverse',
   'ai',
-  'gamefi',
-  'exchange',
+  'stablecoins',
   'memes',
+  'layer2',
+  'oracles',
+  'defi',
+  'iot',
+  'depin',
+  'wallet-exchange',
+  'privacy',
+  'socialfi',
+  'nft',
+  'fan-tokens',
 ]
 
 export const CATEGORY_LABELS: Record<CategoryId, string> = {
-  core: 'ارزهای اصلی',
-  stablecoins: 'استیبل‌کوین‌ها',
-  defi: 'دیفای',
+  'global-markets': 'توکن بازارهای جهانی',
+  mainnets: 'شبکه‌های اصلی',
+  'gaming-metaverse': 'گیمینگ و متاورس',
+  ai: 'هوش مصنوعی',
+  stablecoins: 'استیبل‌کوین',
+  memes: 'میم‌کوین',
   layer2: 'لایه دوم',
-  ai: 'هوش مصنوعی و DePIN',
-  gamefi: 'گیم‌فای و متاورس',
-  exchange: 'توکن صرافی',
-  memes: 'میم‌کوین‌ها',
+  oracles: 'اوراکل',
+  defi: 'دیفای',
+  iot: 'اینترنت اشیاء',
+  depin: 'دپین',
+  'wallet-exchange': 'ارز والت یا صرافی',
+  privacy: 'پرایوسی کوین',
+  socialfi: 'سوشال‌فای',
+  nft: 'ان‌اف‌تی',
+  'fan-tokens': 'توکن هواداری',
 }
 
 export const CATEGORY_COLORS: Record<CategoryId, string> = {
-  core: '#d7f6ff',
-  stablecoins: '#a6dc89',
-  defi: '#bd8cff',
-  layer2: '#ffad62',
+  'global-markets': '#8fb8ff',
+  mainnets: '#d7f6ff',
+  'gaming-metaverse': '#ff83c6',
   ai: '#79e9d5',
-  gamefi: '#ff83c6',
-  exchange: '#ff956d',
+  stablecoins: '#a6dc89',
   memes: '#ff719e',
+  layer2: '#ffad62',
+  oracles: '#7fc8ff',
+  defi: '#bd8cff',
+  iot: '#67d5d0',
+  depin: '#70e0ff',
+  'wallet-exchange': '#ff956d',
+  privacy: '#f0c56c',
+  socialfi: '#d89dff',
+  nft: '#f4a6e8',
+  'fan-tokens': '#ffbf72',
 }
 
-export const GALAXIES: GalaxyDefinition[] = [
-  {
-    id: 'core',
-    label: 'ارزهای اصلی',
-    shortLabel: 'Core',
-    eyebrow: 'THE ANCHORS',
-    description: 'دارایی‌هایی که نقشه بازار را تعریف می‌کنند.',
-    accent: CATEGORY_COLORS.core,
-    accentRgb: '215, 246, 255',
-    position: [-24, 16, -24],
-  },
-  {
-    id: 'stablecoins',
-    label: 'استیبل‌کوین‌ها',
-    shortLabel: 'Stablecoins',
-    eyebrow: 'THE LIQUIDITY',
-    description: 'واحدهای باثبات برای حرکت نقدینگی در بازار.',
-    accent: CATEGORY_COLORS.stablecoins,
-    accentRgb: '166, 220, 137',
-    position: [24, 16, 20],
-  },
-  {
-    id: 'defi',
-    label: 'دیفای',
-    shortLabel: 'DeFi',
-    eyebrow: 'THE OPEN FINANCE',
-    description: 'پروتکل‌ها و دارایی‌های مالی بدون واسطه.',
-    accent: CATEGORY_COLORS.defi,
-    accentRgb: '189, 140, 255',
-    position: [-24, -16, 20],
-  },
-  {
-    id: 'layer2',
-    label: 'لایه دوم',
-    shortLabel: 'Layer 2',
-    eyebrow: 'THE SCALERS',
-    description: 'راهکارهایی برای مقیاس‌پذیری نسل بعدی شبکه‌ها.',
-    accent: CATEGORY_COLORS.layer2,
-    accentRgb: '255, 173, 98',
-    position: [24, -16, -20],
-  },
-  {
-    id: 'ai',
-    label: 'هوش مصنوعی و DePIN',
-    shortLabel: 'AI / DePIN',
-    eyebrow: 'THE INTELLIGENCE',
-    description: 'تقاطع محاسبات، داده و زیرساخت غیرمتمرکز.',
-    accent: CATEGORY_COLORS.ai,
-    accentRgb: '121, 233, 213',
-    position: [-7, -30, 24],
-  },
-  {
-    id: 'gamefi',
-    label: 'گیم‌فای و متاورس',
-    shortLabel: 'GameFi',
-    eyebrow: 'THE WORLDS',
-    description: 'اقتصادهای بازی، جهان‌های مجازی و مالکیت دیجیتال.',
-    accent: CATEGORY_COLORS.gamefi,
-    accentRgb: '255, 131, 198',
-    position: [7, 30, -24],
-  },
-  {
-    id: 'exchange',
-    label: 'توکن صرافی',
-    shortLabel: 'Exchange',
-    eyebrow: 'THE VENUES',
-    description: 'توکن‌های اکوسیستم‌ها و بازارهای مبادله.',
-    accent: CATEGORY_COLORS.exchange,
-    accentRgb: '255, 149, 109',
-    position: [-40, 0, 24],
-  },
-  {
-    id: 'memes',
-    label: 'میم‌کوین‌ها',
-    shortLabel: 'Memes',
-    eyebrow: 'THE CULTURE',
-    description: 'جامعه، شوخی و انرژی جمعی بازار.',
-    accent: CATEGORY_COLORS.memes,
-    accentRgb: '255, 113, 158',
-    position: [40, 0, -24],
-  },
+const GALAXY_POSITIONS: [number, number, number][] = [
+  [-48, 36, -38], [0, 42, -6], [48, 36, 28],
+  [-52, 8, 30], [0, 10, 4], [52, 8, -28],
+  [-48, -24, -30], [0, -22, 8], [48, -24, 34],
+  [-30, -52, 26], [30, -52, -26], [-72, -4, 0],
+  [72, -4, -2], [-30, 54, 28], [30, 54, -30], [0, 70, 0],
 ]
+
+const GALAXY_COPY: Record<CategoryId, { shortLabel: string; eyebrow: string; description: string }> = {
+  'global-markets': { shortLabel: 'Global Markets', eyebrow: 'THE MACRO LAYER', description: 'دارایی‌هایی که بازارهای جهانی را به زنجیره متصل می‌کنند.' },
+  mainnets: { shortLabel: 'Mainnets', eyebrow: 'THE FOUNDATIONS', description: 'شبکه‌های اصلی و زیرساخت‌های پایه اکوسیستم رمزارز.' },
+  'gaming-metaverse': { shortLabel: 'Gaming / Metaverse', eyebrow: 'THE WORLDS', description: 'اقتصادهای بازی، جهان‌های مجازی و مالکیت دیجیتال.' },
+  ai: { shortLabel: 'AI', eyebrow: 'THE INTELLIGENCE', description: 'تقاطع محاسبات، داده و هوش مصنوعی غیرمتمرکز.' },
+  stablecoins: { shortLabel: 'Stablecoins', eyebrow: 'THE LIQUIDITY', description: 'واحدهای باثبات برای حرکت نقدینگی در بازار.' },
+  memes: { shortLabel: 'Memes', eyebrow: 'THE CULTURE', description: 'جامعه، شوخی و انرژی جمعی بازار.' },
+  layer2: { shortLabel: 'Layer 2', eyebrow: 'THE SCALERS', description: 'راهکارهایی برای مقیاس‌پذیری نسل بعدی شبکه‌ها.' },
+  oracles: { shortLabel: 'Oracles', eyebrow: 'THE SIGNALS', description: 'داده‌های بیرونی که قراردادهای هوشمند را تغذیه می‌کنند.' },
+  defi: { shortLabel: 'DeFi', eyebrow: 'THE OPEN FINANCE', description: 'پروتکل‌ها و دارایی‌های مالی بدون واسطه.' },
+  iot: { shortLabel: 'IoT', eyebrow: 'THE SENSORS', description: 'شبکه‌هایی برای داده و ارتباطات ماشین‌به‌ماشین.' },
+  depin: { shortLabel: 'DePIN', eyebrow: 'THE INFRASTRUCTURE', description: 'زیرساخت‌های فیزیکی و خدمات توزیع‌شده.' },
+  'wallet-exchange': { shortLabel: 'Wallet / Exchange', eyebrow: 'THE VENUES', description: 'توکن‌های اکوسیستم‌ها و بازارهای مبادله.' },
+  privacy: { shortLabel: 'Privacy', eyebrow: 'THE VEIL', description: 'پروتکل‌هایی برای حفظ حریم خصوصی و تراکنش‌های محرمانه.' },
+  socialfi: { shortLabel: 'SocialFi', eyebrow: 'THE NETWORKS', description: 'اقتصادهای اجتماعی و مالکیت ارتباطات دیجیتال.' },
+  nft: { shortLabel: 'NFT', eyebrow: 'THE ARTIFACTS', description: 'دارایی‌های کلکسیونی، هنری و کاربردی روی زنجیره.' },
+  'fan-tokens': { shortLabel: 'Fan Tokens', eyebrow: 'THE TRIBES', description: 'دارایی‌های هواداری و اقتصاد مشارکت اجتماعی.' },
+}
+
+export const GALAXIES: GalaxyDefinition[] = CATEGORY_ORDER.map((id, index) => ({
+  id,
+  label: CATEGORY_LABELS[id],
+  shortLabel: GALAXY_COPY[id].shortLabel,
+  eyebrow: GALAXY_COPY[id].eyebrow,
+  description: GALAXY_COPY[id].description,
+  accent: CATEGORY_COLORS[id],
+  accentRgb: CATEGORY_COLORS[id].match(/[0-9a-f]{2}/gi)!.map((part) => Number.parseInt(part, 16)).join(', '),
+  position: GALAXY_POSITIONS[index],
+}))
 
 export function galaxyById(id: CategoryId): GalaxyDefinition {
   return GALAXIES.find((galaxy) => galaxy.id === id) ?? GALAXIES[0]

@@ -32,15 +32,15 @@ export function getRenderBudget(assetCount: number, focused: boolean): RenderBud
   const manyAssets = assetCount > 100
   return {
     mode: 'overview',
-    planetSegments: manyAssets ? 32 : 48,
-    atmosphereSegments: manyAssets ? 16 : 20,
-    sunSegments: manyAssets ? 40 : 48,
-    coronaSegments: manyAssets ? 24 : 32,
+    planetSegments: manyAssets ? 28 : 48,
+    atmosphereSegments: manyAssets ? 12 : 20,
+    sunSegments: manyAssets ? 36 : 48,
+    coronaSegments: manyAssets ? 20 : 32,
     planetNoiseOctaves: manyAssets ? 3 : 4,
-    animatePlanets: !manyAssets,
+    animatePlanets: assetCount <= 180,
     animateSuns: true,
     showLabels: !manyAssets,
-    dpr: manyAssets ? [1, 1.25] : [1, 1.6],
+    dpr: manyAssets ? [1, 1.15] : [1, 1.6],
   }
 }
 
@@ -51,7 +51,7 @@ export function shouldRenderOverviewDecoration(
   highlighted: boolean,
 ): boolean {
   if (focused || highlighted || assetCount <= 100) return true
-  return assetIndex % 4 === 0
+  return assetIndex % Math.max(1, Math.ceil(assetCount / 48)) === 0
 }
 
 export function shouldRenderOverviewLabel(

@@ -15,6 +15,8 @@ export type PlanetProfile = {
   cloudiness: number
 }
 
+const PROFILE_CACHE = new Map<string, PlanetProfile>()
+
 const LOGO_COLORS: Record<string, string> = {
   AAVE: '#9090f0', ADA: '#0033ad', ASTER: '#111111', AVAX: '#e84142', BCH: '#0ac18e', BFUSD: '#f0b808',
   BNB: '#f3ba2f', BTC: '#f7931a', CC: '#f0f890', CRO: '#002d74', DOGE: '#c2a633', DOT: '#e6007a',
@@ -32,11 +34,11 @@ const STYLE_ORDER: PlanetStyle[] = ['ocean', 'marble', 'gas', 'lava', 'ice', 'de
 const CATEGORY_STYLE: Partial<Record<CategoryId, PlanetStyle>> = {
   ai: 'neon',
   defi: 'crystal',
-  gamefi: 'storm',
+  'gaming-metaverse': 'storm',
   layer2: 'aurora',
   memes: 'volcanic',
   stablecoins: 'ice',
-  exchange: 'savanna',
+  'wallet-exchange': 'savanna',
 }
 
 const STYLE_ACCENTS: Record<PlanetStyle, string> = {
@@ -102,6 +104,9 @@ export function logoColor(symbol: string): string {
 }
 
 export function planetProfile(coin: Pick<Coin, 'symbol' | 'categories'>): PlanetProfile {
+  const cacheKey = coin.symbol.toUpperCase()
+  const cached = PROFILE_CACHE.get(cacheKey)
+  if (cached) return cached
   const hash = hashSymbol(coin.symbol)
   const categoryStyle = coin.categories.map((category) => CATEGORY_STYLE[category]).find(Boolean)
   // Category style is a palette bias, not a hard template. This keeps DeFi/AI
@@ -113,7 +118,7 @@ export function planetProfile(coin: Pick<Coin, 'symbol' | 'categories'>): Planet
   const rotationSpeed = 0.04 + ((hash % 1009) / 1009) * 0.12
   const tilt = (((hash >>> 8) % 100) / 100 - 0.5) * 0.9
 
-  return {
+  const profile: PlanetProfile = {
     base,
     accent,
     deep,
@@ -125,6 +130,8 @@ export function planetProfile(coin: Pick<Coin, 'symbol' | 'categories'>): Planet
     atmosphere: 0.14 + ((hash >>> 16) % 18) / 100,
     cloudiness: 0.14 + ((hash >>> 24) % 42) / 100,
   }
+  PROFILE_CACHE.set(cacheKey, profile)
+  return profile
 }
 
 export function hexToColor(hex: string): [number, number, number] {

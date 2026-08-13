@@ -42,7 +42,7 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgres
           <span><b>GALAXY</b><em>DIGITAL ASSET ATLAS</em></span>
         </button>
         <div className="topbar-actions">
-          <span className="topbar-section">{coins.length} ASSETS <i /> {GALAXIES.length} GALAXIES</span>
+          <span className="topbar-section">{coins.length} PLACEMENTS <i /> {GALAXIES.length} GALAXIES</span>
           <button className="menu-trigger" onClick={() => undefined} aria-label="منو">
             <span /> <span />
           </button>
@@ -52,14 +52,14 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgres
       <section className="hero-copy" style={{ opacity: 1 - overviewZoomProgress, transform: `translateY(${-overviewZoomProgress * 18}px)`, pointerEvents: overviewZoomProgress > 0.92 ? 'none' : 'auto' }}>
         <p className="kicker">AN IMMERSIVE ASSET MAP</p>
         <h1>بازار را<br /><i>از بالا ببین.</i></h1>
-        <p className="hero-description">یک اطلس زنده‌نما از ۵۰ دارایی برتر لیست‌شده در بیت۲۴؛ هر کهکشان یک روایت و هر سیاره یک پروژه است.</p>
+        <p className="hero-description">یک اطلس زنده‌نما از دارایی‌های منتخب بیت۲۴؛ هر کهکشان یک روایت و هر سیاره یک پروژه است.</p>
         <div className="hero-rule"><span /> <b>{activeGalaxy ? activeGalaxy.shortLabel : 'OVERVIEW'}</b></div>
       </section>
 
       <SearchBox value={search} results={results} onChange={setSearch} onSelect={(coin) => {
         const galaxy = GALAXIES.find((item) => coin.categories.includes(item.id)) ?? null
         onSelectGalaxy(galaxy)
-        onSelectCoin({ ...coin, galaxyId: galaxy?.id ?? 'core', position: galaxy?.position ?? [0, 0, 0], radius: 0.5 })
+        onSelectCoin({ ...coin, galaxyId: galaxy?.id ?? 'mainnets', position: galaxy?.position ?? [0, 0, 0], radius: 0.5 })
         setSearch('')
       }} />
 
@@ -82,7 +82,7 @@ export function Overlay({ coins, activeGalaxy, selectedCoin, overviewZoomProgres
 
       <div className="scroll-hint"><span className="scroll-line" /><span>DRAG TO ROTATE&nbsp; · &nbsp;SCROLL TO ZOOM</span></div>
       <div className="coordinates">35° 43' 45" N<br />51° 23' 20" E</div>
-      <div className="footer-note">BIT24 DIGITAL ASSET ATLAS <span>—</span> DATA SNAPSHOT</div>
+      <div className="footer-note">BIT24 DIGITAL ASSET ATLAS <span>—</span> STATIC MARKET-CAP SNAPSHOT</div>
 
       {activeGalaxy && <GalaxyInfo galaxy={activeGalaxy} coins={coins} onClose={() => { onSelectGalaxy(null); onSelectCoin(null) }} />}
       {selectedCoin && <CoinDetails coin={selectedCoin} onClose={() => onSelectCoin(null)} />}
@@ -107,7 +107,7 @@ function GalaxyInfo({ galaxy, coins, onClose }: { galaxy: GalaxyDefinition; coin
       <p>{galaxy.eyebrow}</p><h2>{galaxy.label}</h2><span>{galaxy.description}</span>
       <div className="info-divider" />
       <div className="info-stat"><b>{categoryCoins.length}</b><span>ASSETS IN CONSTELLATION</span></div>
-      <ol>{categoryCoins.slice(0, 5).map((coin) => <li key={coin.symbol}><span>{coin.symbol}</span><small>{formatCompactMarketCap(coin.marketCap)} USDT</small></li>)}</ol>
+      <ol>{categoryCoins.map((coin) => <li key={`${galaxy.id}-${coin.symbol}`}><span>{coin.symbol}</span><small>{formatCompactMarketCap(coin.marketCap)} USD</small></li>)}</ol>
     </div>
   )
 }
@@ -117,7 +117,7 @@ function CoinDetails({ coin, onClose }: { coin: PositionedCoin; onClose: () => v
     <section className="coin-details" style={{ '--accent': categoryColor(coin.categories[0]) } as CSSProperties}>
       <button className="close-button" onClick={onClose}>×</button>
       <div className="coin-details-heading"><img src={coinIconUrl(coin)} alt="" /><div><p>ASSET {String(coin.rank).padStart(2, '0')}</p><h2>{coin.symbol}</h2><span>{coin.nameFa}</span></div></div>
-      <div className="coin-stats"><div><span>MARKET CAP</span><b>{formatCompactMarketCap(coin.marketCap)} <small>USDT</small></b></div><div><span>PRICE SNAPSHOT</span><b>{formatIrt(coin.priceIrt)} <small>IRT</small></b></div><div><span>24H CHANGE</span><b className={coin.change24h !== null && coin.change24h >= 0 ? 'positive' : 'negative'}>{formatPercent(coin.change24h)}</b></div></div>
+      <div className="coin-stats"><div><span>MARKET CAP</span><b>{formatCompactMarketCap(coin.marketCap)} <small>USD</small></b></div><div><span>PRICE SNAPSHOT</span><b>{formatIrt(coin.priceIrt)} <small>IRT</small></b></div><div><span>24H CHANGE</span><b className={coin.change24h !== null && coin.change24h >= 0 ? 'positive' : 'negative'}>{formatPercent(coin.change24h)}</b></div></div>
       <div className="coin-tags">{coin.categories.map((category) => <span key={category}>{categoryLabel(category)}</span>)}</div>
       <a className="coin-cta" href={coin.bit24Url} target="_blank" rel="noreferrer">مشاهده صفحه ارز در بیت۲۴ <span>↗</span></a>
       <p className="snapshot-note">این اعداد مربوط به Snapshot اولیه هستند و قیمت لحظه‌ای نیستند.</p>

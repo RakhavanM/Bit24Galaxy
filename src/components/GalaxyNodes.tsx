@@ -3,14 +3,13 @@ import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import type { CSSProperties } from 'react'
 import type { GalaxyDefinition, PositionedCoin } from '../types'
-import { categoryColor, formatCompactMarketCap } from '../types'
+import { formatCompactMarketCap } from '../types'
 import { coinIconUrl } from '../data'
 import { planetProfile } from '../planets'
 import { PlanetMaterial } from './PlanetMaterial'
 import { SunCorona, SunMaterial } from './SunMaterial'
 import { sunProfile } from '../suns'
 import type { RenderBudget } from '../renderBudget'
-import { shouldRenderOverviewDecoration, shouldRenderOverviewLabel } from '../renderBudget'
 import * as THREE from 'three'
 
 export type HoverTarget =
@@ -32,7 +31,7 @@ type GalaxyNodesProps = {
 
 export function GalaxyNodes({ galaxy, coins, activeSymbol, activeGalaxy, hoveredTarget, assetCount, renderBudget, onSelectCoin, onSelectGalaxy, onHoverTarget }: GalaxyNodesProps) {
   const [x, y, z] = galaxy.position
-  const color = categoryColor(galaxy.id)
+  const color = galaxy.accent
   const isActive = activeGalaxy === galaxy.id
   const ringPoints = useMemo(() => {
     const points: [number, number, number][] = []
@@ -50,8 +49,8 @@ export function GalaxyNodes({ galaxy, coins, activeSymbol, activeGalaxy, hovered
       {coins.map((coin, index) => {
         const highlighted = hoveredTarget?.kind === 'planet' && hoveredTarget.id === coin.symbol
         const active = coin.symbol === activeSymbol
-        const showDecoration = shouldRenderOverviewDecoration(assetCount, index, renderBudget.mode === 'focus', Boolean(highlighted))
-        const showLabel = shouldRenderOverviewLabel(assetCount, index, renderBudget.mode === 'focus', Boolean(highlighted))
+        const showDecoration = renderBudget.mode === 'focus' || Boolean(highlighted) || index % Math.max(1, Math.ceil(assetCount / 48)) === 0
+        const showLabel = renderBudget.mode === 'focus' || Boolean(highlighted)
         return <CoinNode key={`${galaxy.id}-${coin.symbol}`} coin={coin} active={active} highlighted={Boolean(highlighted)} showDecoration={showDecoration} showLabel={showLabel} budget={renderBudget} onSelect={onSelectCoin} onHoverTarget={onHoverTarget} />
       })}
     </group>
@@ -141,7 +140,7 @@ function CoinNode({ coin, active, highlighted, showDecoration, showLabel, budget
         <Html position={[0, coin.radius + 0.42, 0]} center distanceFactor={8} style={{ pointerEvents: 'none' }}>
           <div className="coin-tooltip">
             <b>{coin.nameFa}</b>
-            <span>رتبه {coin.rank} · {formatCompactMarketCap(coin.marketCap)} USDT</span>
+            <span>رتبه {coin.rank} · {formatCompactMarketCap(coin.marketCap)} USD</span>
           </div>
         </Html>
       )}

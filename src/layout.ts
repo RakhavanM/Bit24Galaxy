@@ -4,8 +4,8 @@ import { CATEGORY_COLORS, CATEGORY_ORDER } from './types'
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
 const MIN_RADIUS = 0.15
 const MAX_RADIUS = 0.92
-const ORBIT_INNER = 3.1
-const ORBIT_OUTER = 8.8
+const ORBIT_INNER = 3.8
+const ORBIT_OUTER = 11.8
 const INTER_SYSTEM_MARGIN = 2
 const OBJECT_MARGIN = 0.35
 
@@ -24,6 +24,13 @@ export function radiusForMarketCap(marketCap: number, minMarketCap: number, maxM
   return MIN_RADIUS + normalized * (MAX_RADIUS - MIN_RADIUS)
 }
 
+export function canonicalMarketCapBounds(coins: Coin[]): { min: number; max: number } {
+  const values = coins.map((coin) => Math.max(1, coin.marketCap)).sort((a, b) => a - b)
+  if (!values.length) return { min: 1, max: 1 }
+  const quantile = (fraction: number) => values[Math.min(values.length - 1, Math.floor((values.length - 1) * fraction))]
+  return { min: quantile(0.02), max: quantile(0.98) }
+}
+
 export function buildGalaxyLayouts(galaxies: GalaxyDefinition[]): Map<string, GalaxyLayout> {
   return new Map(
     galaxies.map((galaxy) => {
@@ -35,8 +42,9 @@ export function buildGalaxyLayouts(galaxies: GalaxyDefinition[]): Map<string, Ga
 
 export function localGalaxyFootprint(coins: Coin[], galaxy: GalaxyDefinition, categoryCoins: Coin[]): LocalPlanet[] {
   if (!categoryCoins.length) return []
-  const minMarketCap = Math.min(...coins.map((coin) => coin.marketCap))
-  const maxMarketCap = Math.max(...coins.map((coin) => coin.marketCap))
+  const bounds = canonicalMarketCapBounds(coins)
+  const minMarketCap = bounds.min
+  const maxMarketCap = bounds.max
   const sorted = [...categoryCoins].sort((a, b) => b.marketCap - a.marketCap)
   const orbitSpan = ORBIT_OUTER - ORBIT_INNER
   const radialStep = sorted.length > 1 ? orbitSpan / Math.max(2, Math.ceil(Math.sqrt(sorted.length)) + 0.25) : 0
@@ -47,7 +55,7 @@ export function localGalaxyFootprint(coins: Coin[], galaxy: GalaxyDefinition, ca
     const radial = Math.min(ORBIT_OUTER, ORBIT_INNER + ring * radialStep + (index % 2) * 0.18)
     const inclination = 0.68 + (index % 3) * 0.07
     const depthPhase = (index * 1.618 + Math.abs(galaxy.position[2]) * 0.37) % 1
-    const depthBand = (depthPhase - 0.5) * 10.5
+    const depthBand = (depthPhase - 0.5) * 9.5
     return {
       offset: [
         Math.cos(angle) * radial,
@@ -116,9 +124,9 @@ export function compactGalaxyCenters(
 
   galaxies.forEach((galaxy) => {
     result.set(galaxy.id, [
-      center[0] + (galaxy.position[0] - center[0]) * scale,
-      center[1] + (galaxy.position[1] - center[1]) * scale,
-      center[2] + (galaxy.position[2] - center[2]) * scale,
+      (galaxy.position[0] - center[0]) * scale,
+      (galaxy.position[1] - center[1]) * scale,
+      (galaxy.position[2] - center[2]) * scale,
     ])
   })
 
@@ -165,7 +173,7 @@ export function compactGalaxyCenters(
 }
 
 export function primaryCategoryForCoin(coin: Coin): CategoryId {
-  return coin.categories.find((category) => CATEGORY_ORDER.includes(category)) ?? 'core'
+  return coin.categories.find((category) => CATEGORY_ORDER.includes(category)) ?? CATEGORY_ORDER[0]
 }
 
 export function overviewCoinsForGalaxy(coins: Coin[], galaxy: GalaxyDefinition): Coin[] {

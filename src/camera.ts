@@ -1,13 +1,13 @@
 import type { GalaxyFocus } from './types'
 
 export const MIN_ORBIT_DISTANCE = 2.2
-export const MAX_ORBIT_DISTANCE = 110
-export const OVERVIEW_DISTANCE = 78
-export const HERO_FADE_DISTANCE = 42
-export const GALAXY_EXIT_DISTANCE = 25
-export const CAMERA_FAR = 240
-export const FOG_NEAR = 180
-export const FOG_FAR = 520
+export const MAX_ORBIT_DISTANCE = 180
+export const OVERVIEW_DISTANCE = 108
+export const HERO_FADE_DISTANCE = 64
+export const GALAXY_EXIT_DISTANCE = 34
+export const CAMERA_FAR = 420
+export const FOG_NEAR = 300
+export const FOG_FAR = 860
 
 export function clampOrbitDistance(distance: number): number {
   return Math.max(MIN_ORBIT_DISTANCE, Math.min(MAX_ORBIT_DISTANCE, distance))
@@ -20,6 +20,10 @@ export function overviewExplorationProgress(distance: number): number {
 
 export function shouldExitGalaxy(distance: number): boolean {
   return distance >= GALAXY_EXIT_DISTANCE
+}
+
+export function focusDistanceForGalaxy(footprint: number): number {
+  return clampOrbitDistance(Math.max(18, Math.min(30, footprint * 2.05)))
 }
 
 export function focusPoseFor(target: [number, number, number], distance = 7.6): { target: [number, number, number]; position: [number, number, number] } {

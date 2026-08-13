@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { planetProfile } from './planets'
 import type { Coin } from './types'
 
-function coin(symbol: string, categories: Coin['categories'] = ['core']): Coin {
+function coin(symbol: string, categories: Coin['categories'] = ['mainnets']): Coin {
   return {
     rank: 1,
     symbol,
@@ -49,8 +49,8 @@ describe('planet profiles', () => {
   })
 
   it('avoids the old regular banding styles for exchange assets', () => {
-    expect(planetProfile(coin('BNB', ['exchange'])).style).not.toBe('gas')
-    expect(planetProfile(coin('LEO', ['exchange'])).style).not.toBe('desert')
+    expect(planetProfile(coin('BNB', ['wallet-exchange'])).style).not.toBe('gas')
+    expect(planetProfile(coin('LEO', ['wallet-exchange'])).style).not.toBe('desert')
   })
 })
 
