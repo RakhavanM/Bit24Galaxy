@@ -104,6 +104,8 @@ type CameraFlightProps = {
 function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOverviewZoomChange, onZoomedOut, hoveredTarget }: CameraFlightProps) {
   const { camera, gl } = useThree()
   const target = useRef(new THREE.Vector3(0, 0, 0))
+  const raycaster = useMemo(() => new THREE.Raycaster(), [])
+  const pointer = useMemo(() => new THREE.Vector2(), [])
   const desiredTarget = useRef(new THREE.Vector3(0, 0, 0))
   const desiredPosition = useRef(new THREE.Vector3(0, 0.4, OVERVIEW_DISTANCE))
   const distance = useRef(OVERVIEW_DISTANCE)
@@ -170,6 +172,21 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOvervie
     }
     const onPointerDown = (event: PointerEvent) => {
       pointerCount.current += 1
+      if (activeGalaxyRef.current && !drag.current.moved) {
+        const rect = element.getBoundingClientRect()
+        pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1)
+        raycaster.setFromCamera(pointer, camera)
+        const scene = (element as HTMLCanvasElement & { __r3f?: { root?: { children?: THREE.Object3D[] } } }).__r3f?.root
+        const hits = raycaster.intersectObjects(scene?.children ?? [], true)
+        const hit = hits.find((entry) => entry.object.userData?.coinSymbol)
+        const symbol = hit?.object.userData?.coinSymbol as string | undefined
+        const coin = symbol ? positioned.get(activeGalaxyRef.current.id)?.find((item) => item.symbol === symbol) : undefined
+        if (coin) {
+          desiredTarget.current.set(...coinFocusTarget(coin.position))
+          distance.current = coinFocusDistance(coin.radius)
+          lastZoomDistance.current = distance.current
+        }
+      }
       if (pointerCount.current === 1) {
         drag.current = { active: true, x: event.clientX, y: event.clientY, moved: false }
       }
@@ -230,7 +247,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOvervie
       element.removeEventListener('touchmove', onTouchMove)
       element.removeEventListener('touchend', onTouchEnd)
     }
-  }, [gl, hoveredTarget, activeGalaxy])
+  }, [gl, hoveredTarget, activeGalaxy, camera, pointer, positioned, raycaster])
 
   useFrame((_, delta) => {
     const ease = 1 - Math.pow(0.001, delta)

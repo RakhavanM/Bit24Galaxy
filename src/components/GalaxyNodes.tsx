@@ -115,6 +115,7 @@ function CoinNode({ coin, active, highlighted, showDecoration, showLabel, budget
     <group
       ref={group}
       position={coin.position}
+      userData={{ coinSymbol: coin.symbol }}
       onClick={(event) => { event.stopPropagation(); onSelect(coin) }}
       onPointerOver={(event) => { event.stopPropagation(); document.body.style.cursor = 'pointer'; onHoverTarget({ kind: 'planet', id: coin.symbol, position: coin.position, accent: profile.accent }) }}
       onPointerOut={() => { document.body.style.cursor = 'default'; onHoverTarget(null) }}
