@@ -22,6 +22,7 @@ type GalaxySceneProps = {
 
 export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, onSelectGalaxy, onClearSelection, onOverviewZoomChange, onZoomedOut }: GalaxySceneProps) {
   const [hoveredTarget, setHoveredTarget] = useState<HoverTarget | null>(null)
+  const sceneRef = useRef<THREE.Scene | null>(null)
   const uniqueSymbolCount = useMemo(() => new Set(coins.map((coin) => coin.symbol)).size, [coins])
   const renderBudget = useMemo(() => getRenderBudget(uniqueSymbolCount, Boolean(activeGalaxy)), [uniqueSymbolCount, activeGalaxy])
   const handleHoverTarget = (target: HoverTarget | null) => {
@@ -57,7 +58,8 @@ export function GalaxyScene({ coins, activeGalaxy, activeSymbol, onSelectCoin, o
       camera={{ position: [0, 0.4, OVERVIEW_DISTANCE], fov: 47, near: 0.1, far: CAMERA_FAR }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       onPointerMissed={onClearSelection}
-      onCreated={({ gl }) => {
+      onCreated={({ gl, scene }) => {
+        sceneRef.current = scene
         gl.domElement.style.touchAction = 'none'
       }}
     >
@@ -106,6 +108,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOvervie
   const target = useRef(new THREE.Vector3(0, 0, 0))
   const raycaster = useMemo(() => new THREE.Raycaster(), [])
   const pointer = useMemo(() => new THREE.Vector2(), [])
+  const sceneRef = useRef<THREE.Scene | null>(null)
   const desiredTarget = useRef(new THREE.Vector3(0, 0, 0))
   const desiredPosition = useRef(new THREE.Vector3(0, 0.4, OVERVIEW_DISTANCE))
   const distance = useRef(OVERVIEW_DISTANCE)
@@ -176,8 +179,7 @@ function CameraFlight({ activeGalaxy, activeSymbol, positioned, coins, onOvervie
         const rect = element.getBoundingClientRect()
         pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1)
         raycaster.setFromCamera(pointer, camera)
-        const scene = (element as HTMLCanvasElement & { __r3f?: { root?: { children?: THREE.Object3D[] } } }).__r3f?.root
-        const hits = raycaster.intersectObjects(scene?.children ?? [], true)
+        const hits = raycaster.intersectObjects(sceneRef.current?.children ?? [], true)
         const hit = hits.find((entry) => entry.object.userData?.coinSymbol)
         const symbol = hit?.object.userData?.coinSymbol as string | undefined
         const coin = symbol ? positioned.get(activeGalaxyRef.current.id)?.find((item) => item.symbol === symbol) : undefined
